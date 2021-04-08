@@ -3,18 +3,18 @@ name: Integration Testsuite
 on:
   push:
     branches:
-    - master
+    - main
   pull_request:
     paths:
     - '.github/workflows/integration.yml'
-    - 'test/**'
-    - '!test/adapters/**'
-    - 'test/adapters/substrate/**'
-    - '!test/fixtures/**'
-    - 'test/fixtures/genesis/**'
-    - '!test/helpers/AdapterFixture.jl'
-    - '!test/runtimes/hostapi/**'
-    - '!test/README.md'
+    - '**'
+    - '!adapters/**'
+    - 'adapters/substrate/**'
+    - '!fixtures/**'
+    - 'fixtures/genesis/**'
+    - '!helpers/AdapterFixture.jl'
+    - '!runtimes/hostapi/**'
+    - '!README.md'
 
 jobs:
   build-host-substrate:
@@ -38,21 +38,21 @@ jobs:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
-        key: cargo-cache-host-substrate-${{ hashFiles('test/hosts/substrate/Cargo.lock') }}
+        key: cargo-cache-host-substrate-${{ hashFiles('hosts/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-host-substrate-
     - name: Cache cargo build output
       uses: actions/cache@v2.1.4
       with:
-        path: test/hosts/substrate/target
-        key: cargo-build-host-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('test/hosts/substrate/Cargo.lock') }}
+        path: hosts/substrate/target
+        key: cargo-build-host-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('hosts/substrate/Cargo.lock') }}
         restore-keys: cargo-build-host-substrate-${{ steps.rustup.outputs.rustc_hash }}-
     - name: Build substrate
-      run: make -C test substrate-host
+      run: make substrate-host
     - name: Upload substrate
       uses: actions/upload-artifact@v2
       with:
         name: substrate-host
-        path: test/bin/polkadot
+        path: bin/polkadot
 
   build-host-kagome:
     name: "[build] kagome-host"
@@ -66,20 +66,20 @@ jobs:
       uses: actions/cache@v2.1.4
       with:
         path: ~/.hunter
-        key: hunter-host-kagome-${{ hashFiles('test/hosts/kagome/CMakeLists.txt') }}
+        key: hunter-host-kagome-${{ hashFiles('hosts/kagome/CMakeLists.txt') }}
         restore-keys: hunter-host-kagome-
     - name: Build kagome
       env:
         CC: gcc-9
         CXX: g++-9
-      run: make -C test kagome-host
+      run: make kagome-host
     - name: Upload kagome hosts
       uses: actions/upload-artifact@v2
       with:
         name: kagome-host
         path: |
-          test/bin/kagome_full_syncing
-          test/bin/kagome_validating
+          bin/kagome_full_syncing
+          bin/kagome_validating
 
   build-host-gossamer:
     name: "[build] gossamer-host"
@@ -93,20 +93,20 @@ jobs:
       uses: actions/cache@v2.1.4
       with:
         path: ~/go/pkg/mod
-        key: go-mod-host-gossamer-${{ hashFiles('test/hosts/gossamer/go.sum') }}
+        key: go-mod-host-gossamer-${{ hashFiles('hosts/gossamer/go.sum') }}
         restore-keys: go-mod-host-gossamer-
     - name: Build gossamer
-      run: make -C test gossamer-host
+      run: make gossamer-host
     - name: Upload gossamer and libwasmer
       uses: actions/upload-artifact@v2
       with:
         name: gossamer-host
-        path: test/bin/gossamer
+        path: bin/gossamer
     - name: Upload libwasmer.so
       uses: actions/upload-artifact@v2
       with:
         name: gossamer-host
-        path: test/lib/libwasmer.so
+        path: lib/libwasmer.so
 
 
   build-adapter-substrate:
@@ -128,21 +128,21 @@ jobs:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
-        key: cargo-cache-adapter-substrate-${{ hashFiles('test/adapters/substrate/Cargo.lock') }}
+        key: cargo-cache-adapter-substrate-${{ hashFiles('adapters/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-adapter-substrate-
     - name: Cache cargo build ouput
       uses: actions/cache@v2.1.4
       with:
-        path: test/adapters/substrate/target
-        key: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('test/adapters/substrate/Cargo.lock') }}
+        path: adapters/substrate/target
+        key: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('adapters/substrate/Cargo.lock') }}
         restore-keys: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-
     - name: Build substrate adapters
-      run: make -C test substrate-adapter
+      run: make substrate-adapter
     - name: Upload substrate adapter
       uses: actions/upload-artifact@v2
       with:
         name: substrate-adapter
-        path: test/bin/substrate-adapter
+        path: bin/substrate-adapter
 
 
   build-runtime-tester:
@@ -170,28 +170,28 @@ jobs:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
-        key: cargo-cache-runtime-tester-${{ hashFiles('test/runtimes/tester/Cargo.lock') }}
+        key: cargo-cache-runtime-tester-${{ hashFiles('runtimes/tester/Cargo.lock') }}
         restore-keys: cargo-cache-runtime-tester-
     - name: Cache cargo build output
       uses: actions/cache@v2.1.4
       with:
-        path: test/runtimes/tester/target
-        key: cargo-build-runtime-tester-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('test/runtimes/tester/Cargo.lock') }}
+        path: runtimes/tester/target
+        key: cargo-build-runtime-tester-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('runtimes/tester/Cargo.lock') }}
         restore-keys: cargo-build-runtime-tester-${{ steps.rustup.outputs.rustc_hash }}-
     - name: Build and generate host tester genesis
-      run: make -C test tester-runtime
+      run: make tester-runtime
     - name: Upload host tester runtime
       uses: actions/upload-artifact@v2
       with:
         name: tester_runtime.compact.wasm
-        path: test/runtimes/tester/target/release/wbuild/tester-runtime/tester_runtime.compact.wasm
+        path: runtimes/tester/target/release/wbuild/tester-runtime/tester_runtime.compact.wasm
     - name: Upload host tester genesis and state file
       uses: actions/upload-artifact@v2
       with:
         name: tester-runtime-genesis
         path: |
-          test/runtimes/tester/genesis.json
-          test/runtimes/tester/genesis.yaml
+          runtimes/tester/genesis.json
+          runtimes/tester/genesis.yaml
 
 
   test-substrate:
@@ -204,19 +204,19 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: substrate-host
-        path: test/bin
-    - run: chmod +x test/bin/polkadot
+        path: bin
+    - run: chmod +x bin/polkadot
     - uses: actions/download-artifact@v2
       with:
         name: substrate-adapter
-        path: test/bin
-    - run: chmod +x test/bin/substrate-adapter
+        path: bin
+    - run: chmod +x bin/substrate-adapter
     - uses: actions/download-artifact@v2
       with:
         name: tester-runtime-genesis
-        path: test/runtimes/tester
+        path: runtimes/tester
     - name: Run substrate with tester genesis
-      run: test/runtests.jl substrate genesis
+      run: ./runtests.jl substrate genesis
 
   test-kagome:
     needs: [ build-host-kagome, build-adapter-substrate, build-runtime-tester ]
@@ -228,19 +228,19 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: kagome-host
-        path: test/bin
-    - run: chmod +x test/bin/kagome_validating
+        path: bin
+    - run: chmod +x bin/kagome_validating
     - uses: actions/download-artifact@v2
       with:
         name: substrate-adapter
-        path: test/bin
-    - run: chmod +x test/bin/substrate-adapter
+        path: bin
+    - run: chmod +x bin/substrate-adapter
     - uses: actions/download-artifact@v2
       with:
         name: tester-runtime-genesis
-        path: test/runtimes/tester
+        path: runtimes/tester
     - name: Run kagome with tester genesis
-      run: test/runtests.jl kagome genesis
+      run: ./runtests.jl kagome genesis
 
   test-gossamer:
     needs: [ build-host-gossamer, build-adapter-substrate, build-runtime-tester ]
@@ -252,19 +252,19 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: gossamer-host
-        path: test/bin
+        path: bin
     - run: |
-        chmod +x test/bin/gossamer
-        mkdir -p test/lib
-        mv test/bin/libwasmer.so test/lib/
+        chmod +x bin/gossamer
+        mkdir -p lib
+        mv bin/libwasmer.so lib/
     - uses: actions/download-artifact@v2
       with:
         name: substrate-adapter
-        path: test/bin
-    - run: chmod +x test/bin/substrate-adapter
+        path: bin
+    - run: chmod +x bin/substrate-adapter
     - uses: actions/download-artifact@v2
       with:
         name: tester-runtime-genesis
-        path: test/runtimes/tester
+        path: runtimes/tester
     - name: Run gossamer with tester genesis
-      run: test/runtests.jl gossamer genesis
+      run: ./runtests.jl gossamer genesis

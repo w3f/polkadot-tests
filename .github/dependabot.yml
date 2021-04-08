@@ -13,7 +13,7 @@ updates:
   # Runtimes (not synced with submodules)
 
   - package-ecosystem: "cargo"
-    directory: "/test/runtimes/hostapi"
+    directory: "/runtimes/hostapi"
     schedule:
       interval: "weekly"
     commit-message:

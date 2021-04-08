@@ -3,17 +3,17 @@ name: Conformance Testsuite
 on:
   push:
     branches:
-    - master
+    - main
   pull_request:
     paths:
     - '.github/workflows/testsuite.yml'
-    - 'test/**'
-    - '!test/fixtures/genesis/**'
-    - '!test/helpers/ImplementationFixture.jl'
-    - '!test/runtimes/tester/**'
-    - '!test/hosts/Makefile'
-    - '!test/hosts/substrate'
-    - '!test/README.md'
+    - '**'
+    - '!fixtures/genesis/**'
+    - '!helpers/ImplementationFixture.jl'
+    - '!runtimes/tester/**'
+    - '!hosts/Makefile'
+    - '!hosts/substrate'
+    - '!README.md'
 
 jobs:
   build-adapter-substrate:
@@ -35,21 +35,21 @@ jobs:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
-        key: cargo-cache-adapter-substrate-${{ hashFiles('test/adapters/substrate/Cargo.lock') }}
+        key: cargo-cache-adapter-substrate-${{ hashFiles('adapters/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-adapter-substrate-
     - name: Cache cargo build ouput
       uses: actions/cache@v2.1.4
       with:
-        path: test/adapters/substrate/target
-        key: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('test/adapters/substrate/Cargo.lock') }}
+        path: adapters/substrate/target
+        key: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('adapters/substrate/Cargo.lock') }}
         restore-keys: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-
     - name: Build substrate adapters
-      run: make -C test substrate-adapter
+      run: make substrate-adapter
     - name: Upload substrate adapter
       uses: actions/upload-artifact@v2
       with:
         name: substrate-adapter
-        path: test/bin/substrate-adapter
+        path: bin/substrate-adapter
 
   build-adapter-kagome:
     name: "[build] kagome-adapter"
@@ -63,18 +63,18 @@ jobs:
       uses: actions/cache@v2.1.4
       with:
         path: ~/.hunter
-        key: hunter-adapter-kagome-${{ hashFiles('test/adapters/kagome/CMakeLists.txt') }}
+        key: hunter-adapter-kagome-${{ hashFiles('adapters/kagome/CMakeLists.txt') }}
         restore-keys: hunter-adapter-kagome-
     - name: Build kagome adapter
       env:
         CC: gcc-9
         CXX: g++-9
-      run: make -C test kagome-adapter 
+      run: make kagome-adapter 
     - name: Upload kagome adapter
       uses: actions/upload-artifact@v2
       with:
         name: kagome-adapter
-        path: test/bin/kagome-adapter
+        path: bin/kagome-adapter
 
   build-adapter-gossamer:
     name: "[build] gossamer-adapter"
@@ -88,20 +88,20 @@ jobs:
       uses: actions/cache@v2.1.4
       with:
         path: ~/go/pkg/mod
-        key: go-mod-adapter-gossamer-${{ hashFiles('test/adapters/gossamer/go.sum') }}
+        key: go-mod-adapter-gossamer-${{ hashFiles('adapters/gossamer/go.sum') }}
         restore-keys: go-mod-adapter-gossamer-
     - name: Build gossamer adapter
-      run: make -C test gossamer-adapter 
+      run: make gossamer-adapter 
     - name: Upload gossamer adapter
       uses: actions/upload-artifact@v2
       with:
         name: gossamer-adapter
-        path: test/bin/gossamer-adapter
+        path: bin/gossamer-adapter
     - name: Upload libwasmer.so
       uses: actions/upload-artifact@v2
       with:
         name: gossamer-adapter
-        path: test/lib/libwasmer.so
+        path: lib/libwasmer.so
 
 
   build-runtime-hostapi:
@@ -123,21 +123,21 @@ jobs:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
-        key: cargo-cache-runtime-hostapi-${{ hashFiles('test/runtimes/hostapi/Cargo.lock') }}
+        key: cargo-cache-runtime-hostapi-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
         restore-keys: cargo-cache-runtime-hostapi-
     - name: Cache cargo build ouput
       uses: actions/cache@v2.1.4
       with:
-        path: test/runtimes/hostapi/target
-        key: cargo-build-runtime-hostapi-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('test/runtimes/hostapi/Cargo.lock') }}
+        path: runtimes/hostapi/target
+        key: cargo-build-runtime-hostapi-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
         restore-keys: cargo-build-runtime-hostapi-${{ steps.rustup.outputs.rustc_hash }}-
     - name: Build hostapi runtime
-      run: make -C test hostapi-runtime
+      run: make hostapi-runtime
     - name: Upload hostapi runtime
       uses: actions/upload-artifact@v2
       with:
         name: hostapi-runtime.compact.wasm
-        path: test/bin/hostapi_runtime.compact.wasm
+        path: bin/hostapi_runtime.compact.wasm
 
 
   test-substrate:
@@ -154,10 +154,10 @@ jobs:
     - uses: actions/download-artifact@v2.0.8
       with:
         name: substrate-adapter
-        path: test/bin
-    - run: chmod +x test/bin/substrate-adapter
+        path: bin
+    - run: chmod +x bin/substrate-adapter
     - name: Run test fixture
-      run: test/runtests.jl substrate ${{ matrix.fixture }}
+      run: ./runtests.jl substrate ${{ matrix.fixture }}
 
   test-substrate-hostapi:
     needs: build-adapter-substrate
@@ -173,10 +173,10 @@ jobs:
     - uses: actions/download-artifact@v2.0.8
       with:
         name: substrate-adapter
-        path: test/bin
-    - run: chmod +x test/bin/substrate-adapter
+        path: bin
+    - run: chmod +x bin/substrate-adapter
     - name: Run test fixture
-      run: test/runtests.jl substrate host-api ${{ matrix.environment }}
+      run: ./runtests.jl substrate host-api ${{ matrix.environment }}
 
 
   test-kagome:
@@ -193,14 +193,14 @@ jobs:
     - uses: actions/download-artifact@v2.0.8
       with:
         name: substrate-adapter
-        path: test/bin
+        path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
         name: kagome-adapter
-        path: test/bin
-    - run: cd test/bin && chmod +x substrate-adapter kagome-adapter
+        path: bin
+    - run: cd bin && chmod +x substrate-adapter kagome-adapter
     - name: Run test fixture
-      run: test/runtests.jl kagome ${{ matrix.fixture }}
+      run: ./runtests.jl kagome ${{ matrix.fixture }}
 
   test-kagome-hostapi:
     needs: [ build-adapter-kagome, build-runtime-hostapi ]
@@ -212,14 +212,14 @@ jobs:
     - uses: actions/download-artifact@v2.0.8
       with:
         name: kagome-adapter
-        path: test/bin
+        path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
         name: hostapi-runtime.compact.wasm
-        path: test/bin
-    - run: chmod +x test/bin/kagome-adapter
+        path: bin
+    - run: chmod +x bin/kagome-adapter
     - name: Run test fixture
-      run: test/runtests.jl kagome host-api
+      run: ./runtests.jl kagome host-api
 
 
   test-gossamer:
@@ -236,17 +236,17 @@ jobs:
     - uses: actions/download-artifact@v2.0.8
       with:
         name: substrate-adapter
-        path: test/bin
+        path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
         name: gossamer-adapter
-        path: test/bin
+        path: bin
     - run: |
-        chmod +x test/bin/substrate-adapter test/bin/gossamer-adapter
-        mkdir -p test/lib
-        mv test/bin/libwasmer.so test/lib/
+        chmod +x bin/substrate-adapter bin/gossamer-adapter
+        mkdir -p lib
+        mv bin/libwasmer.so lib/
     - name: Run test fixture
-      run: test/runtests.jl gossamer ${{ matrix.fixture }}
+      run: ./runtests.jl gossamer ${{ matrix.fixture }}
 
   test-gossamer-hostapi:
     needs: [ build-adapter-gossamer, build-runtime-hostapi]
@@ -262,14 +262,14 @@ jobs:
     - uses: actions/download-artifact@v2.0.8
       with:
         name: gossamer-adapter
-        path: test/bin
+        path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
         name: hostapi-runtime.compact.wasm
-        path: test/bin
+        path: bin
     - run: |
-        chmod +x test/bin/gossamer-adapter
-        mkdir -p test/lib
-        mv test/bin/libwasmer.so test/lib/
+        chmod +x bin/gossamer-adapter
+        mkdir -p lib
+        mv bin/libwasmer.so lib/
     - name: Run test fixture
-      run: test/runtests.jl gossamer host-api ${{ matrix.environment }}
+      run: ./runtests.jl gossamer host-api ${{ matrix.environment }}

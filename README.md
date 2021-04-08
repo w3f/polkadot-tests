@@ -1,6 +1,9 @@
 # Polkadot Conformance Testsuite
 
-This `test/` directory contains specification tests of the different components of Polkadot, which are run against the different implementations (i.e in Rust, C++ and Golang) of Polkadot
+[![Conformance Testsuite](https://github.com/w3f/polkadot-tests/workflows/Conformance%20Testsuite/badge.svg)](https://github.com/w3f/polkadot-tests/actions?query=workflow%3A%22Conformance+Testsuite%22)
+[![Integration Testsuite](https://github.com/w3f/polkadot-tests/workflows/Integration%20Testsuite/badge.svg)](https://github.com/w3f/polkadot-tests/actions?query=workflow%3A%22Integration+Testsuite%22)
+
+This repository contains specification tests of the different components of Polkadot, which are run against the different implementations (i.e in Rust, C++ and Golang) of Polkadot
 
 Currently the testsuite contains the following tests:
 
