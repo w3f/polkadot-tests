@@ -12,7 +12,7 @@ Currently the testsuite contains the following tests:
 - Polkadot Host API ([host-api](fixtures/host-api))
 - Genesis Import ([genesis](fixtures/genesis))
 
-The goal is to ensures that the different implementations behave in the same way and produce the identical output.
+The goal is to ensures that the different implementations behave in the same way and produce the identical output, which is the necessary basis for the interoperability of all Polkadot clients.
 
 # Dependencies
 
