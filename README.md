@@ -14,6 +14,8 @@ Currently the testsuite contains the following tests:
 
 The goal is to ensures that the different implementations behave in the same way and produce the identical output, which is the necessary basis for the interoperability of all Polkadot clients.
 
+The implementation under test is made available via git submodules, so it is recommended to clone this repository with `--recurse-submodules` or to intialize them after the fact with `git submodule init`.
+
 # Dependencies
 
 To run the test against various implementation, the suite utilizes mutliple binaries that have to be compiled or downloaded before the test suite can be run.
