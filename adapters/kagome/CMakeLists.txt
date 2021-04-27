@@ -40,8 +40,8 @@ set(
 # Setup hunter
 include(cmake/HunterGate.cmake)
 HunterGate(
-  URL https://github.com/soramitsu/soramitsu-hunter/archive/4ef28bbfcf5bf6d496c9d159d9b266cd0ffbbb63.zip
-  SHA1 deb079c8089e36754e7de2bc7f6efe95d9135188
+  URL  "https://github.com/soramitsu/soramitsu-hunter/archive/tags/v0.23.257-soramitsu7.tar.gz"
+  SHA1 "24f3cae2b6b3212b87daf643cdaad0f9afc1b54b"
   FILEPATH "${CMAKE_SOURCE_DIR}/cmake/HunterConfig.cmake"
 )
 
@@ -68,6 +68,9 @@ add_executable(kagome-adapter
   src/host_api/storage.cpp
   src/host_api/child_storage.cpp
 )
+
+# FIXME This should not be necessary, but kagome lacks a modern package config
+target_include_directories(kagome-adapter PRIVATE ${kagome_INCLUDE_DIRS})
 
 target_link_libraries(kagome-adapter
   Boost::program_options
