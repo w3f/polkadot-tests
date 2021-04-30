@@ -78,8 +78,7 @@ jobs:
       with:
         name: kagome-host
         path: |
-          bin/kagome_full_syncing
-          bin/kagome_validating
+          bin/kagome
 
   build-host-gossamer:
     name: "[build] gossamer-host"
@@ -229,7 +228,7 @@ jobs:
       with:
         name: kagome-host
         path: bin
-    - run: chmod +x bin/kagome_validating
+    - run: chmod +x bin/kagome
     - uses: actions/download-artifact@v2
       with:
         name: substrate-adapter
