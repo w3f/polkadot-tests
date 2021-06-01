@@ -3,8 +3,8 @@
  *
  * This file is part of Polkadot Host Test Suite
  *
- * Polkadot Host Test Suite is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * Polkadot Host Test Suite is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -33,44 +33,50 @@ namespace scale = kagome::scale;
 
 namespace helpers {
 
-  using kagome::common::hex_lower;
+using kagome::common::hex_lower;
 
-  using kagome::common::Buffer;
-  using MaybeBuffer = boost::optional<Buffer>;
+using kagome::common::Buffer;
+using MaybeBuffer = boost::optional<Buffer>;
 
-  using kagome::runtime::binaryen::RuntimeApi;
-  using kagome::runtime::binaryen::RuntimeEnvironmentFactory;
+using kagome::runtime::binaryen::RuntimeApi;
+using kagome::runtime::binaryen::RuntimeEnvironmentFactory;
 
-  using kagome::blockchain::KeyValueBlockHeaderRepository;
+using kagome::blockchain::KeyValueBlockHeaderRepository;
 
-  class RuntimeEnvironment {
-
-    public:
-      // Initialize a runtime environment
-      RuntimeEnvironment();
-
-      // Call function with provided arguments in wasm adapter
-      template <typename R, typename... Args>
-      R execute(std::string_view name, Args &&... args) {
-        auto result = runtime_->execute<R>(
-          name,
-          RuntimeApi::CallConfig{.persistency = RuntimeApi::CallPersistency::PERSISTENT},
-          std::forward<Args>(args)...
-        );
-
-        BOOST_ASSERT_MSG(result, result.error().message().data());
-
-        return result.value();
-      }
-
-    private:
-      // Overwrite to get access to protected function
-      struct RawRuntimeApi : public RuntimeApi {
-        using RuntimeApi::RuntimeApi;
-        using RuntimeApi::execute;
-      };
-
-      // Main object used to execute calls
-      std::shared_ptr<RawRuntimeApi> runtime_;
+class RuntimeEnvironment {
+  // required due to protected access modifier for CallConfig in RuntimeApi
+  struct RuntimeApiCallConfigAccessor : public RuntimeApi {
+    static CallConfig createCallConfig(CallPersistency persistency) {
+      return CallConfig{.persistency = persistency};
+    }
   };
-}
+
+public:
+  // Initialize a runtime environment
+  RuntimeEnvironment();
+
+  // Call function with provided arguments in wasm adapter
+  template <typename R, typename... Args>
+  R execute(std::string_view name, Args &&...args) {
+    auto result =
+        runtime_->execute<R>(name,
+                             RuntimeApiCallConfigAccessor::createCallConfig(
+                                 RuntimeApi::CallPersistency::PERSISTENT),
+                             std::forward<Args>(args)...);
+
+    BOOST_ASSERT_MSG(result, result.error().message().data());
+
+    return result.value();
+  }
+
+private:
+  // Overwrite to get access to protected function
+  struct RawRuntimeApi : public RuntimeApi {
+    using RuntimeApi::execute;
+    using RuntimeApi::RuntimeApi;
+  };
+
+  // Main object used to execute calls
+  std::shared_ptr<RawRuntimeApi> runtime_;
+};
+} // namespace helpers

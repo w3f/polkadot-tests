@@ -11,8 +11,7 @@ substrate:
 kagome:
 	cmake -DCMAKE_BUILD_TYPE=Release -S kagome -B kagome/build
 	cmake --build kagome/build
-	cp kagome/build/node/kagome_validating/kagome_validating           ../bin/
-	cp kagome/build/node/kagome_full_syncing/kagome_full_syncing       ../bin/
+	cp kagome/build/node/kagome          ../bin/
 
 gossamer:
 	cd gossamer && go build -v ./cmd/gossamer

@@ -25,7 +25,6 @@
 #include <boost/program_options.hpp>
 
 #include <common/hexutil.hpp>
-#include <common/logger.hpp>
 #include <scale/scale.hpp>
 
 #include "subcommand.hpp"

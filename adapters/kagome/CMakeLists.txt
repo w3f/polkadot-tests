@@ -17,6 +17,13 @@
 
 cmake_minimum_required(VERSION 3.12)
 
+find_program(CCACHE_FOUND ccache)
+if (CCACHE_FOUND)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif (CCACHE_FOUND)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Setup toolchain (required by kagome and libp2p)
 set(CMAKE_TOOLCHAIN_FILE
@@ -40,9 +47,9 @@ set(
 # Setup hunter
 include(cmake/HunterGate.cmake)
 HunterGate(
-  URL https://github.com/soramitsu/soramitsu-hunter/archive/4ef28bbfcf5bf6d496c9d159d9b266cd0ffbbb63.zip
-  SHA1 deb079c8089e36754e7de2bc7f6efe95d9135188
-  FILEPATH "${CMAKE_SOURCE_DIR}/cmake/HunterConfig.cmake"
+    URL  https://github.com/soramitsu/soramitsu-hunter/archive/v0.23.257-soramitsu9.tar.gz
+    SHA1 c0a8929426b9d9ae663388c8343184cfc6321086
+    FILEPATH "${CMAKE_SOURCE_DIR}/cmake/HunterConfig.cmake"
 )
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ${HUNTER_ENABLED})
@@ -69,11 +76,29 @@ add_executable(kagome-adapter
   src/host_api/child_storage.cpp
 )
 
+message(STATUS "SORALOG LIBS ${soralog_LIBRARIES}")
+message(STATUS "KAGOME LIBS ${kagome_LIBRARIES}")
+
 target_link_libraries(kagome-adapter
   Boost::program_options
-  yaml-cpp
+# #  yaml-cpp
   ${kagome_LIBRARIES}
   kagome::binaryen_wasm_memory_factory
+  kagome::log_configurator
+  soralog::logger
+  soralog::logging_system
+  soralog::group
+  soralog::sink
+  soralog::sink_to_nowhere
+  soralog::sink_to_console
+  soralog::sink_to_file
+  soralog::configurator
+  soralog::fallback_configurator
+  soralog::configurator_yaml
+  fmt::fmt
+  soralog::soralog
+  p2p::p2p_logger
+  ${soralog_LIBRARIES}
 )
 
 
