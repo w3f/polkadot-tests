@@ -22,11 +22,6 @@
 #include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
-//#include "log/configurator.hpp"
-//#include <libp2p/log/configurator.hpp>
-//#include <soralog/logger.hpp>
-//#include <soralog/logging_system.hpp>
-
 #include "subcommand.hpp"
 
 #include "host_api.hpp"
@@ -40,31 +35,6 @@
  * Tree compatibility tests
  */
 int main(int argc, char **argv) {
-  {
-//    auto logging_system = std::make_shared<soralog::LoggingSystem>(
-//        std::make_shared<kagome::log::Configurator>(
-//            std::make_shared<libp2p::log::Configurator>()));
-
-    //    auto r = logging_system->configure();
-    //    if (not r.message.empty()) {
-    //      (r.has_error ? std::cerr : std::cout) << r.message << std::endl;
-    //    }
-    //    if (r.has_error) {
-    //      exit(EXIT_FAILURE);
-    //    }
-
-    //    kagome::log::setLoggingSystem(logging_system);
-  }
-  //  auto logger = kagome::log::createLogger("Kagome Adaptor", "main");
-
-  //  if (argc > 1 and argv[1] == std::string_view("--verbose")) {
-  //    kagome::log::setLevelOfGroup("*", kagome::log::Level::TRACE);
-  //    argc--;
-  //    argv++;
-  //  } else {
-  //    kagome::log::setLevelOfGroup("*", kagome::log::Level::INFO);
-  //  }
-
   SubcommandRouter<int, char **> router;
   router.addSubcommand("scale-codec", [](int argc, char **argv) {
     processScaleCodecCommand(extractScaleArgs(argc, argv));

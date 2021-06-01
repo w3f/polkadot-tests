@@ -75,10 +75,6 @@ add_executable(kagome-adapter
   src/host_api/storage.cpp
   src/host_api/child_storage.cpp
 )
-
-message(STATUS "SORALOG LIBS ${soralog_LIBRARIES}")
-message(STATUS "KAGOME LIBS ${kagome_LIBRARIES}")
-
 target_link_libraries(kagome-adapter
   Boost::program_options
 # #  yaml-cpp
@@ -98,7 +94,6 @@ target_link_libraries(kagome-adapter
   fmt::fmt
   soralog::soralog
   p2p::p2p_logger
-  ${soralog_LIBRARIES}
 )
 
 
