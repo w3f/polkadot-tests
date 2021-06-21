@@ -4,7 +4,7 @@ using Test
 
 tester = HostFixture.Tester("Genesis", "tester")
 
-HostFixture.execute(tester, 5) do (root, result)
+HostFixture.execute(tester, 10) do (root, result)
     # Extract all hashes returned from log
     hashes = map(m -> m[1], eachmatch(r"##([^#\n]+)##", result)) 
 
