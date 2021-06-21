@@ -75,9 +75,10 @@ add_executable(kagome-adapter
   src/host_api/storage.cpp
   src/host_api/child_storage.cpp
 )
+
 target_link_libraries(kagome-adapter
   Boost::program_options
-# #  yaml-cpp
+  yaml-cpp
   ${kagome_LIBRARIES}
   kagome::binaryen_wasm_memory_factory
   kagome::log_configurator

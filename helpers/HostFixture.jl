@@ -87,8 +87,8 @@ function run_tester(self::Tester, host::String, duration::Number)
         args = `--alice --chain $genesis -d $datadir`
         ENV["RUST_LOG"] = "runtime=debug"
     elseif host == "kagome"
-        exec = `kagome_validating`
-        args = `--genesis $genesis -d $datadir --bootnodes /dns/localhost/tcp/30363/p2p/12D3KooWEgUjBV5FJAuBSoNMRYFRHjV7PjZwRQ7b43EKX9g7D6xV`
+        exec = `kagome`
+        args = `--chain $genesis -d $datadir --bootnodes /dns/localhost/tcp/30363/p2p/12D3KooWEgUjBV5FJAuBSoNMRYFRHjV7PjZwRQ7b43EKX9g7D6xV`
     elseif host == "gossamer"
         exec = `gossamer`
         args = `--key=alice --config $config --basepath $datadir --log debug`
