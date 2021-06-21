@@ -69,9 +69,6 @@ add_executable(kagome-adapter
   src/host_api/child_storage.cpp
 )
 
-# FIXME This should not be necessary, but kagome lacks a modern package config
-target_include_directories(kagome-adapter PRIVATE ${kagome_INCLUDE_DIRS})
-
 target_link_libraries(kagome-adapter
   Boost::program_options
   yaml-cpp
