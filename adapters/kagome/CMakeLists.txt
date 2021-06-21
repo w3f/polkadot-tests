@@ -40,8 +40,8 @@ set(
 # Setup hunter
 include(cmake/HunterGate.cmake)
 HunterGate(
-  URL  "https://github.com/soramitsu/soramitsu-hunter/archive/tags/v0.23.257-soramitsu7.tar.gz"
-  SHA1 "24f3cae2b6b3212b87daf643cdaad0f9afc1b54b"
+  URL https://github.com/soramitsu/soramitsu-hunter/archive/tags/v0.23.257-soramitsu9.tar.gz
+  SHA1 5a74567147b7b6c04cc29b7da0d7241d31af60f4
   FILEPATH "${CMAKE_SOURCE_DIR}/cmake/HunterConfig.cmake"
 )
 
