@@ -22,7 +22,8 @@
 #include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
-#include <common/logger.hpp>
+#include <log/logger.hpp>
+#include <soralog/impl/fallback_configurator.hpp>
 
 #include "subcommand.hpp"
 
@@ -37,14 +38,24 @@
  * Tree compatibility tests
  */
 int main(int argc, char **argv) {
+  // Initialize logging system
+  auto loglevel = kagome::log::Level::ERROR;
   if (argc > 1 and argv[1] == std::string_view("--verbose")) {
-    kagome::common::setLogLevel(kagome::common::LogLevel::trace);
+    loglevel = kagome::log::Level::DEBUG;
     argc--;
     argv++;
-  } else {
-    kagome::common::setLogLevel(kagome::common::LogLevel::err);
   }
 
+  auto config = std::make_shared<soralog::FallbackConfigurator>(loglevel);
+  auto logger = std::make_shared<soralog::LoggingSystem>(config);
+
+  auto result = logger->configure();
+  auto e0 = "Failed to configure logger: " + result.message;
+  BOOST_ASSERT_MSG(!result.has_error, e0.data());
+
+  kagome::log::setLoggingSystem(logger);
+
+  // Initialize subcommand router with known commands
   SubcommandRouter<int, char **> router;
   router.addSubcommand("scale-codec", [](int argc, char **argv) {
     processScaleCodecCommand(extractScaleArgs(argc, argv));
@@ -56,6 +67,7 @@ int main(int argc, char **argv) {
     processHostApiCommands(extractHostApiArgs(argc, argv));
   });
 
+  // Check if subcommand is provided
   std::string commands_list = "Valid subcommands are: ";
   for (auto &&name : router.collectSubcommandNames()) {
     commands_list += name;
@@ -65,6 +77,7 @@ int main(int argc, char **argv) {
   auto e1 = "Subcommand is not provided\n" + commands_list;
   BOOST_ASSERT_MSG(argc > 1, e1.data());
 
+  // Try to run subcommand
   try {
     auto e2 = "Invalid subcommand\n" + commands_list;
     BOOST_VERIFY_MSG(router.executeSubcommand(argv[1], argc - 1, argv + 1),

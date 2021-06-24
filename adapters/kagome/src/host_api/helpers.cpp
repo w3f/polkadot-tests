@@ -39,6 +39,7 @@
 #include <storage/changes_trie/impl/storage_changes_tracker_impl.hpp>
 
 #include <runtime/common/trie_storage_provider_impl.hpp>
+#include <runtime/binaryen/binaryen_wasm_memory_factory.hpp>
 #include <runtime/binaryen/runtime_environment_factory.hpp>
 #include <runtime/binaryen/module/wasm_module_factory_impl.hpp>
 #include <runtime/binaryen/runtime_api/core_factory_impl.hpp>
