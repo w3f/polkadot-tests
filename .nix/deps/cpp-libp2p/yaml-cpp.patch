@@ -1,0 +1,10 @@
+diff --git a/src/log/CMakeLists.txt b/src/log/CMakeLists.txt
+index 8590bc0..a51aa2e 100644
+--- a/src/log/CMakeLists.txt
++++ b/src/log/CMakeLists.txt
+@@ -11,5 +11,4 @@ target_link_libraries(p2p_logger
+     soralog::soralog
+     soralog::fallback_configurator
+     soralog::configurator_yaml
+-    yaml-cpp::yaml-cpp
+     )
