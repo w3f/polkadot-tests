@@ -1,0 +1,22 @@
+diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
+index e9eb5b6..bf16c6d 100644
+--- a/cmake/dependencies.cmake
++++ b/cmake/dependencies.cmake
+@@ -5,7 +5,7 @@ find_package(GMock CONFIG REQUIRED)
+ 
+ # https://docs.hunter.sh/en/latest/packages/pkg/Boost.html
+ hunter_add_package(Boost COMPONENTS random filesystem program_options)
+-find_package(Boost CONFIG REQUIRED random filesystem program_options)
++find_package(Boost REQUIRED random filesystem program_options)
+ 
+ # added from hunter_config
+ hunter_add_package(Microsoft.GSL)
+@@ -16,7 +16,7 @@ find_package(OpenSSL REQUIRED)
+ 
+ # https://developers.google.com/protocol-buffers/
+ hunter_add_package(Protobuf)
+-find_package(Protobuf CONFIG REQUIRED)
++find_package(Protobuf REQUIRED)
+ 
+ # https://docs.hunter.sh/en/latest/packages/pkg/spdlog.html
+ hunter_add_package(spdlog)

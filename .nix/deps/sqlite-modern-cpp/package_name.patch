@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f130229..fd32200 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,7 +18,7 @@ project("SQLiteModernCpp"
+   )
+ 
+ hunter_add_package(sqlite3)
+-find_package(sqlite3 CONFIG REQUIRED)
++find_package(SQLite3 REQUIRED)
+ 
+ add_library(${PROJECT_NAME} INTERFACE)
+ target_include_directories(
+@@ -26,7 +26,7 @@ target_include_directories(
+   $<BUILD_INTERFACE:"${CMAKE_CURRENT_SOURCE_DIR}/hdr">
+   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDE_DIR}>
+ )
+-target_link_libraries(${PROJECT_NAME} INTERFACE sqlite3::sqlite3)
++target_link_libraries(${PROJECT_NAME} INTERFACE SQLite::SQLite3)
+ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
+ 
+ include(GNUInstallDirs)
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index 3858941..669f010 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -1,6 +1,6 @@
+ @PACKAGE_INIT@
+ 
+-find_package(sqlite3 CONFIG REQUIRED)
++find_package(SQLite3 REQUIRED)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+ check_required_components("@PROJECT_NAME@")

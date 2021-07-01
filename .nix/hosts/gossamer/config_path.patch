@@ -1,0 +1,144 @@
+diff --git a/chain/dev/config.toml b/chain/dev/config.toml
+index a9d31d18..f4c46359 100644
+--- a/chain/dev/config.toml
++++ b/chain/dev/config.toml
+@@ -13,9 +13,6 @@ babe = ""
+ grandpa = ""
+ sync = ""
+ 
+-[init]
+-genesis = "./chain/dev/genesis.json"
+-
+ [account]
+ key = "alice"
+ unlock = ""
+diff --git a/chain/dev/defaults.go b/chain/dev/defaults.go
+index 68a9bc4f..c7b8ffd6 100644
+--- a/chain/dev/defaults.go
++++ b/chain/dev/defaults.go
+@@ -29,7 +29,7 @@ var (
+ 	// DefaultID is the chain ID
+ 	DefaultID = string("dev")
+ 	// DefaultConfig is the toml configuration path
+-	DefaultConfig = string("./chain/dev/config.toml")
++	DefaultConfig = string("@out@/share/dev/config.toml")
+ 	// DefaultBasePath is the node base directory path
+ 	DefaultBasePath = string("~/.gossamer/dev")
+ 
+@@ -47,7 +47,7 @@ var (
+ 	// InitConfig
+ 
+ 	// DefaultGenesis is the default genesis configuration path
+-	DefaultGenesis = string("./chain/dev/genesis.json")
++	DefaultGenesis = string("@out@/share/dev/genesis.json")
+ 
+ 	// AccountConfig
+ 
+diff --git a/chain/gssmr/config.toml b/chain/gssmr/config.toml
+index bff58944..eee4af43 100644
+--- a/chain/gssmr/config.toml
++++ b/chain/gssmr/config.toml
+@@ -13,9 +13,6 @@ babe = ""
+ grandpa = ""
+ sync = ""
+ 
+-[init]
+-genesis = "./chain/gssmr/genesis.json"
+-
+ [account]
+ key = ""
+ unlock = ""
+diff --git a/chain/gssmr/defaults.go b/chain/gssmr/defaults.go
+index 5d7ebfc7..358ec6d7 100644
+--- a/chain/gssmr/defaults.go
++++ b/chain/gssmr/defaults.go
+@@ -29,7 +29,7 @@ var (
+ 	// DefaultID Default chain ID
+ 	DefaultID = string("gssmr")
+ 	// DefaultConfig Default toml configuration path
+-	DefaultConfig = string("./chain/gssmr/config.toml")
++	DefaultConfig = string("@out@/share/gssmr/config.toml")
+ 	// DefaultBasePath Default node base directory path
+ 	DefaultBasePath = string("~/.gossamer/gssmr")
+ 
+@@ -47,7 +47,7 @@ var (
+ 	// InitConfig
+ 
+ 	// DefaultGenesis is the default genesis configuration path
+-	DefaultGenesis = string("./chain/gssmr/genesis.json")
++	DefaultGenesis = string("@out@/share/gssmr/genesis.json")
+ 
+ 	// AccountConfig
+ 
+diff --git a/chain/kusama/config.toml b/chain/kusama/config.toml
+index 941df4b6..f4d9b748 100644
+--- a/chain/kusama/config.toml
++++ b/chain/kusama/config.toml
+@@ -13,9 +13,6 @@ babe = ""
+ grandpa = ""
+ sync = ""
+ 
+-[init]
+-genesis = "./chain/kusama/genesis.json"
+-
+ [account]
+ key = ""
+ unlock = ""
+diff --git a/chain/kusama/defaults.go b/chain/kusama/defaults.go
+index e4c2e265..15234094 100644
+--- a/chain/kusama/defaults.go
++++ b/chain/kusama/defaults.go
+@@ -29,7 +29,7 @@ var (
+ 	// DefaultID Default chain ID
+ 	DefaultID = string("ksmcc3")
+ 	// DefaultConfig Default toml configuration path
+-	DefaultConfig = string("./chain/kusama/config.toml")
++	DefaultConfig = string("@out@/share/kusama/config.toml")
+ 	// DefaultBasePath Default node base directory path
+ 	DefaultBasePath = string("~/.gossamer/kusama")
+ 
+@@ -47,7 +47,7 @@ var (
+ 	// InitConfig
+ 
+ 	// DefaultGenesis is the default genesis configuration path
+-	DefaultGenesis = string("./chain/kusama/genesis.json")
++	DefaultGenesis = string("@out@/share/kusama/genesis.json")
+ 
+ 	// AccountConfig
+ 
+diff --git a/chain/polkadot/config.toml b/chain/polkadot/config.toml
+index a7166b5a..b22c6878 100644
+--- a/chain/polkadot/config.toml
++++ b/chain/polkadot/config.toml
+@@ -12,9 +12,6 @@ babe = ""
+ grandpa = ""
+ sync = ""
+ 
+-[init]
+-genesis = "./chain/polkadot/genesis.json"
+-
+ [account]
+ key = ""
+ unlock = ""
+diff --git a/chain/polkadot/defaults.go b/chain/polkadot/defaults.go
+index 4af96caf..5986043c 100644
+--- a/chain/polkadot/defaults.go
++++ b/chain/polkadot/defaults.go
+@@ -29,7 +29,7 @@ var (
+ 	// DefaultID Default chain ID
+ 	DefaultID = string("polkadot")
+ 	// DefaultConfig Default toml configuration path
+-	DefaultConfig = string("./chain/polkadot/config.toml")
++	DefaultConfig = string("@out@/share/polkadot/config.toml")
+ 	// DefaultBasePath Default node base directory path
+ 	DefaultBasePath = string("~/.gossamer/polkadot")
+ 
+@@ -44,7 +44,7 @@ var (
+ 	// InitConfig
+ 
+ 	// DefaultGenesis is the default genesis configuration path
+-	DefaultGenesis = string("./chain/polkadot/genesis.json")
++	DefaultGenesis = string("@out@/share/polkadot/genesis.json")
+ 
+ 	// AccountConfig
+ 
