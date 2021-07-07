@@ -1,6 +1,6 @@
 [package]
 name = 'host-tester'
-version = "0.8.28-c55af37"
+version = "0.8.28-470633a"
 edition = '2018'
 
 
