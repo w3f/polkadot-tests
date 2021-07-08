@@ -24,29 +24,54 @@
 #include "helpers.hpp"
 
 namespace crypto {
+
+  // execute ext_crypto_ed25519_public_keys_version_1 test
+  void ed25519_public_keys_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+  // execute ext_crypto_ed25519_generate_version_1 test
+  void ed25519_generate_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+  // execute ext_crypto_ed25519_sign_version_1 test
+  void ed25519_sign_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+  // execute ext_crypto_ed25519_verify_version_1 test
+  void ed25519_verify_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string>& inputs
+  );
+
+
   // execute ext_crypto_sr25519_public_keys_version_1 test
-  void processEd25519PublicKeys(const std::string_view seed1, const std::string_view seed2);
+  void sr25519_public_keys_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
 
   // execute ext_crypto_sr25519_generate_version_1 test
-  void processEd25519Generate(const std::string_view seed);
+  void sr25519_generate_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
 
   // execute ext_crypto_sr25519_sign_version_1 test
-  void processEd25519Sign(const std::string_view seed, const std::string_view message);
+  void sr25519_sign_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
 
   // execute ext_crypto_sr25519_verify_version_1 test
-  void processEd25519Verify(const std::string_view seed, const std::string_view message);
-
-
-  // execute ext_crypto_sr25519_public_keys_version_1 test
-  void processSr25519PublicKeys(const std::string_view seed1, const std::string_view seed2);
-
-  // execute ext_crypto_sr25519_generate_version_1 test
-  void processSr25519Generate(const std::string_view seed);
-
-  // execute ext_crypto_sr25519_sign_version_1 test
-  void processSr25519Sign(const std::string_view seed, const std::string_view message);
-
-  // execute ext_crypto_sr25519_verify_version_1 test
-  void processSr25519Verify(const std::string_view seed, const std::string_view message);
+  void sr25519_verify_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string>& inputs
+  );
 
 } // namespace crypto

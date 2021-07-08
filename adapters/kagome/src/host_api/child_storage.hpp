@@ -22,33 +22,52 @@
 #include <string>
 #include <vector>
 
+#include "helpers.hpp"
+
 // TODO update and implement module
 namespace child_storage {
+
   // executes ext_default_child_storage_set_version_1 and
   // ext_default_child storage_get_version_1 test
-  void processSetGet(
-    const std::string_view child1, const std::string_view child2,
-    const std::string_view key, const std::string_view value
+  void set_get_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string>& inputs
   );
 
 
-  // executes ext_clear_child_prefix tests according to provided args
-  // Input: prefix, child1, child2, key1, value1, key2, value2
-  // not implemented
-  void processExtClearChildPrefix(const std::vector<std::string> &args);
+  void read_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  );
 
-  // executes ext_clear_child_storage tests according to provided args
-  // Input: child1, child2, key, value
-  // not implemented
-  void processExtClearChildStorage(const std::vector<std::string> &args);
+  void clear_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  );
 
-  // executes ext_exists_child_storage tests according to provided args
-  // Input: child1, child2, key, value
-  // not implemented
-  void processExtExistsChildStorage(const std::vector<std::string> &args);
+  void storage_kill_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  );
 
-  // executes ext_kill_child_storage tests according to provided args
-  // Input: child1, child2, key, value
-  // not implemented
-  void processExtKillChildStorage(const std::vector<std::string> &args);
+  void exists_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  );
+
+  void clear_prefix_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  );
+
+  void root_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  );
+
+  void next_key_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  );
+
 } // namespace storage

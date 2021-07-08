@@ -22,50 +22,62 @@
 #include <string>
 #include <vector>
 
+#include "helpers.hpp"
+
 namespace storage {
 
   // executes ext_storage_init test
-  void processInit();
+  void test_init(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
 
   // executes ext_storage_set_version_1/ext_storage_get_version_1 test
-  void processSetGet(const std::string_view key, const std::string_view value);
+  void set_get_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
 
-  // executes ext_storage_set_version_1/ext_storage_get_version_1 test
-  void processRead(
-      const std::string_view key,
-      const std::string_view value,
-      const uint32_t offset,
-      const uint32_t length
+  // executes ext_storage_read_version_1 test
+  void read_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   );
 
   // executes ext_storage_clear_version_1 test
-  void processClear(const std::string_view key, const std::string_view value);
+  void clear_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
 
   // executes ext_storage_exists_version_1 test
-  void processExists(const std::string_view key, const std::string_view value);
+  void exists_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
 
   // executes ext_storage_clear_prefix_version_1 test
-  void processClearPrefix(const std::string_view prefix,
-    const std::string_view key1, const std::string_view value1,
-    const std::string_view key2, const std::string_view value2
+  void clear_prefix_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   );
 
   // executes ext_storage_append_version_1 test
-  void processAppend(
-    const std::string_view key1, const std::string_view value1,
-    const std::string_view key2, const std::string_view value2
+  void append_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   );
 
   // executes ext_storage_root_version_1 test
-  void processRoot(
-    const std::string_view key1, const std::string_view value1,
-    const std::string_view key2, const std::string_view value2
+  void root_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   );
 
   // executes ext_storage_next_key_version_1 test
-  void processNextKey(
-    const std::string_view key1, const std::string_view value1,
-    const std::string_view key2, const std::string_view value2
+  void next_key_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   );
 
 } // namespace storage

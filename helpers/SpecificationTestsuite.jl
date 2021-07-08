@@ -19,6 +19,8 @@ module SpecificationTestsuite
         "wasmtime"
         "wasmer"
         "life"
+        "binaryen"
+        "wavm"
     ]
 
     module Config

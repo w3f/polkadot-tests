@@ -54,7 +54,7 @@ namespace helpers {
 
   using kagome::primitives::BlockHash;
 
-  using kagome::blockchain::BlockHeaderRepository;
+  using kagome::blockchain::KeyValueBlockHeaderRepository;
 
   using kagome::crypto::Bip39ProviderImpl;
   using kagome::crypto::BoostRandomGenerator;
@@ -90,15 +90,15 @@ namespace helpers {
 
   using SubscriptionEngineType = SubscriptionEngine<Buffer, SessionPtr, Buffer, BlockHash>;
 
-  // Path to wasm adapter shim runtime
-  const char* WASM_ADAPTER_RUNTIME_PATH = "bin/hostapi_runtime.compact.wasm";
+  // Default runtime location
+  const char* DEFAULT_RUNTIME_PATH = "bin/hostapi_runtime.compact.wasm";
 
   // Simple wasm provider to provide wasm adapter runtime shim to kagome
   class WasmAdapterProvider : public WasmProvider {
   public:
-    WasmAdapterProvider() {
+    WasmAdapterProvider(const std::string path) {
       // Open file and determine size (ios::ate jumps to end on open)
-      std::ifstream file(WASM_ADAPTER_RUNTIME_PATH, std::ios::binary | std::ios::ate);
+      std::ifstream file(path, std::ios::binary | std::ios::ate);
       if (!file) {
         throw std::invalid_argument("Wasm adapter runtime not found!");
       }
@@ -118,20 +118,22 @@ namespace helpers {
     Buffer code_;
   };
 
+  // Default backend to use
+  const RuntimeEnvironment::Backend RuntimeEnvironment::DEFAULT_BACKEND = RuntimeEnvironment::Backend::Binaryen;
 
-  RuntimeEnvironment::RuntimeEnvironment() {
+  RuntimeEnvironment::RuntimeEnvironment(const std::string path, Backend backend) {
     // Load wasm adapter shim
-    auto wasm_provider = std::make_shared<WasmAdapterProvider>();
+    auto wasm_provider = std::make_shared<WasmAdapterProvider>(path);
 
     // Build storage provider
-    auto backend = std::make_shared<TrieStorageBackendImpl>(
+    auto storage_backend = std::make_shared<TrieStorageBackendImpl>(
       std::make_shared<InMemoryStorage>(), Buffer{}
     );
 
     auto trie_factory = std::make_shared<PolkadotTrieFactoryImpl>();
     auto codec = std::make_shared<PolkadotCodec>();
     auto serializer = std::make_shared<TrieSerializerImpl>(
-      trie_factory, codec, backend
+      trie_factory, codec, storage_backend
     );
 
     auto trie_db = TrieStorageImpl::createEmpty(
@@ -175,6 +177,9 @@ namespace helpers {
       crypto_store,
       bip39_provider
     );
+
+    // Waiting for https://github.com/soramitsu/kagome/pull/794
+    BOOST_ASSERT_MSG(backend == Backend::Binaryen, "Only binaryen environment is currently supported");
 
     // Build and assmble core factory
     auto header_repo = std::make_shared<KeyValueBlockHeaderRepository>(

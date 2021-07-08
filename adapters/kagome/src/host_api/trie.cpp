@@ -27,12 +27,16 @@
 
 namespace trie {
 
-  void processOrderedRoot(
-    const std::string_view value1,
-    const std::string_view value2,
-    const std::string_view value3
+  void blake2_256_ordered_root_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   ) {
-    helpers::RuntimeEnvironment environment;
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 3);
+
+    const std::string_view value1 = inputs[0];
+    const std::string_view value2 = inputs[1];
+    const std::string_view value3 = inputs[2];
 
     // Compute ordered trie root
     auto hash = environment.execute<helpers::Buffer>(
@@ -44,15 +48,21 @@ namespace trie {
     std::cout << hash.toHex() << std::endl;
   }
 
-  void processRoot(
-    const std::string_view key1,
-    const std::string_view value1,
-    const std::string_view key2,
-    const std::string_view value2,
-    const std::string_view key3,
-    const std::string_view value3
+  void blake2_256_root_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   ) {
-    helpers::RuntimeEnvironment environment;
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 6);
+
+    const std::string_view key1 = inputs[0];
+    const std::string_view value1 = inputs[1];
+
+    const std::string_view key2 = inputs[2];
+    const std::string_view value2 = inputs[3];
+
+    const std::string_view key3 = inputs[4];
+    const std::string_view value3 = inputs[5];
 
     // Compute trie root
     auto hash = environment.execute<helpers::Buffer>(
