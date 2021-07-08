@@ -6,14 +6,19 @@ mod storage;
 mod trie;
 mod utils;
 
+use std::path::Path;
+
 use clap::ArgMatches;
 use utils::ParsedInput;
+
+const DEFAULT_RUNTIME_PATH: &str = "bin/hostapi_runtime.compact.wasm";
 
 pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
     if let Some(func) = subcmd_matches.value_of("function") {
         let input : ParsedInput = subcmd_matches.values_of("input").into();
 
-        let mut rtm = utils::Runtime::new();
+        let rtm_path = subcmd_matches.value_of("runtime").unwrap_or(DEFAULT_RUNTIME_PATH);
+        let mut rtm = utils::Runtime::new(Path::new(rtm_path));
 
         if let Some(env) = subcmd_matches.value_of("environment") {
             match env {

@@ -46,12 +46,20 @@ subcommands:
     - host-api:
         about: host API related tests 
         args:
+          - runtime:
+              long: runtime
+              short: r
+              takes_value: true
+              value_name: RUNTIME_PATH
           - function:
               long: function  
+              short: f
+              required: true
               takes_value: true
               value_name: FUNCTION
           - input:
               long: input
+              short: i
               takes_value: true
               use_delimiter: true
               value_name: TEST_DATA
