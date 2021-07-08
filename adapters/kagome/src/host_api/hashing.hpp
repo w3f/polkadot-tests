@@ -22,17 +22,46 @@
 #include <string>
 #include <vector>
 
+#include "helpers.hpp"
+
 namespace hashing {
 
-  // execute hash function test by calling the select hash function
-  // and target hash size with provided input.
-  //
-  // @param name is the name of the hash (e.g. blake2, keccak, sha2 or twox)
-  // @param size is the expected size of the hash output
-  // @param input to pass to the function
-  void processHashFunction(
-    const std::string_view name, uint32_t size, const std::string_view input
+  void blake2_128_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+  void blake2_256_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+
+  void keccak_256_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+
+  void sha2_256_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+
+  void twox_64_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+  void twox_128_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  );
+
+  void twox_256_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   );
 
 } // namespace hashing
-

@@ -25,8 +25,14 @@
 
 namespace allocator {
 
-  void processMallocFree(const std::string_view value) {
-    helpers::RuntimeEnvironment environment;
+  void malloc_free_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string>& inputs
+  ) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 1);
+
+    const std::string_view value = inputs[0];
 
     // The Wasm function tests both the allocation and freeing of the buffer
     auto result = environment.execute<helpers::Buffer>(

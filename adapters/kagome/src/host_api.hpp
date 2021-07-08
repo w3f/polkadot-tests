@@ -22,12 +22,18 @@
 #include <string>
 #include <vector>
 
-struct HostApiCommandArgs {
-  std::string function;
-  std::vector<std::string> input;
-};
+#include "host_api/helpers.hpp"
 
-// parses CLI input
-HostApiCommandArgs extractHostApiArgs(int argc, char **argv);
+namespace host_api {
 
-void processHostApiCommands(const HostApiCommandArgs& args);
+  struct CommandArgs {
+    std::string runtime;
+    std::string function;
+    std::vector<std::string> inputs;
+    helpers::RuntimeEnvironment::Backend environment;
+  };
+
+  CommandArgs extractArgs(int argc, char **argv);
+
+  void processCommand(const CommandArgs& args);
+}

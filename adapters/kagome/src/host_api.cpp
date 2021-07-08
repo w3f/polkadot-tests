@@ -34,251 +34,129 @@
 
 namespace po = boost::program_options;
 
-HostApiCommandArgs extractHostApiArgs(int argc, char **argv) {
-  po::options_description desc("HostApi codec related tests\nAllowed options:");
-  boost::optional<std::string> function;
-  boost::optional<std::string> inputStr;
+namespace host_api {
 
-  desc.add_options()
-    ("help", "produce help message")
-    ("function", po::value(&function), "specify a function")
-    ("input", po::value(&inputStr), "specify a input");
+  CommandArgs extractArgs(int argc, char **argv) {
+    po::options_description desc("HostApi environment tests\nAllowed options:");
 
-  po::positional_options_description pd;
-  pd.add("function", 1);
+    boost::optional<std::string> runtime;
+    boost::optional<std::string> function;
+    boost::optional<std::string> input;
+    boost::optional<std::string> environment;
 
-  po::variables_map vm;
-  po::store(
-    po::command_line_parser(argc, argv).options(desc).positional(pd).run(),
-    vm
-  );
-  po::notify(vm);
+    desc.add_options()
+      ("help", "produce help message")
+      ("runtime", po::value(&runtime), "specify runtime file to use")
+      ("function", po::value(&function), "specify function to run")
+      ("input", po::value(&input), "specify a input to function")
+      ("environment", po::value(&environment), "specify environment to run");
 
-  BOOST_ASSERT_MSG(function, "Function is not stated");
+    po::variables_map varmap;
+    po::store(
+      po::command_line_parser(argc, argv).options(desc).run(),
+      varmap
+    );
+    po::notify(varmap);
 
-  HostApiCommandArgs args;
+    // Parse command args:
+    CommandArgs args;
 
-  args.function = *function;
-
-  if (inputStr) {
-    std::stringstream inputStream(*inputStr);
-    std::string inputElement;
-    while (std::getline(inputStream, inputElement, ',')) {
-      args.input.push_back(inputElement);
+    // - runtime flag
+    if (runtime) {
+      args.runtime = *runtime;
+    } else {
+      args.runtime = helpers::DEFAULT_RUNTIME_PATH;
     }
+
+    // - function flag
+    BOOST_ASSERT_MSG(function, "Function is not stated");
+    args.function = *function;
+
+    // - input flag
+    if (input) {
+      std::stringstream inputStream(*input);
+      std::string inputElement;
+      while (std::getline(inputStream, inputElement, ',')) {
+        args.inputs.push_back(inputElement);
+      }
+    }
+
+    // - environment flag
+    if (environment) {
+      if (*environment == "binaryen") {
+        args.environment = helpers::RuntimeEnvironment::Backend::Binaryen;
+      } else if (*environment == "wavm") {
+        args.environment = helpers::RuntimeEnvironment::Backend::WAVM;
+      } else {
+        std::cout << "Unknown environment: " << *environment << std::endl;
+        exit(1);
+      }
+    } else {
+      args.environment = helpers::RuntimeEnvironment::DEFAULT_BACKEND;
+    }
+
+    return std::move(args);
   }
 
-  return std::move(args);
-}
+  void processCommand(const CommandArgs &args) {
+    SubcommandRouter<helpers::RuntimeEnvironment&, const std::vector<std::string>&> router({
+        // test storage
+        {"test_storage_init", storage::test_init},
+        {"ext_storage_set_version_1", storage::set_get_version_1},
+        {"ext_storage_get_version_1", storage::set_get_version_1},
+        {"ext_storage_read_version_1", storage::read_version_1},
+        {"ext_storage_clear_version_1", storage::clear_version_1},
+        {"ext_storage_exists_version_1", storage::exists_version_1},
+        {"ext_storage_clear_prefix_version_1", storage::clear_prefix_version_1},
+        {"ext_storage_append_version_1", storage::append_version_1},
+        {"ext_storage_root_version_1", storage::root_version_1},
+        {"ext_storage_next_key_version_1", storage::next_key_version_1},
+        // test child storage
+        {"ext_default_child_storage_set_version_1", child_storage::set_get_version_1},
+        {"ext_default_child_storage_get_version_1", child_storage::set_get_version_1},
+        {"ext_default_child_storage_read_version_1", child_storage::read_version_1},
+        {"ext_default_child_storage_clear_version_1", child_storage::clear_version_1},
+        {"ext_default_child_storage_storage_kill_version_1", child_storage::storage_kill_version_1},
+        {"ext_default_child_storage_exists_version_1", child_storage::exists_version_1},
+        {"ext_default_child_storage_clear_prefix_version_1", child_storage::clear_prefix_version_1},
+        {"ext_default_child_storage_root_version_1", child_storage::root_version_1},
+        {"ext_default_child_storage_next_key_version_1", child_storage::next_key_version_1},
+        // test crypto ed25519 api
+        {"ext_crypto_ed25519_public_keys_version_1", crypto::ed25519_public_keys_version_1},
+        {"ext_crypto_ed25519_generate_version_1", crypto::ed25519_generate_version_1},
+        {"ext_crypto_ed25519_sign_version_1", crypto::ed25519_sign_version_1},
+        {"ext_crypto_ed25519_verify_version_1", crypto::ed25519_verify_version_1},
+        // test crypto sr25519 api
+        {"ext_crypto_sr25519_public_keys_version_1", crypto::sr25519_public_keys_version_1},
+        {"ext_crypto_sr25519_generate_version_1", crypto::sr25519_generate_version_1},
+        {"ext_crypto_sr25519_sign_version_1", crypto::sr25519_sign_version_1},
+        {"ext_crypto_sr25519_verify_version_1", crypto::sr25519_verify_version_1},
+        // test hashing api
+        {"ext_hashing_blake2_128_version_1", hashing::blake2_128_version_1},
+        {"ext_hashing_blake2_256_version_1", hashing::blake2_256_version_1},
+        {"ext_hashing_keccak_256_version_1", hashing::keccak_256_version_1},
+        {"ext_hashing_sha2_256_version_1", hashing::sha2_256_version_1},
+        {"ext_hashing_twox_64_version_1", hashing::twox_64_version_1},
+        {"ext_hashing_twox_128_version_1", hashing::twox_128_version_1},
+        {"ext_hashing_twox_256_version_1", hashing::twox_256_version_1},
+        // test allocator api
+        {"ext_allocator_malloc_version_1", allocator::malloc_free_version_1},
+        {"ext_allocator_free_version_1", allocator::malloc_free_version_1},
+        // test trie api
+        {"ext_trie_blake2_256_root_version_1", trie::blake2_256_root_version_1},
+        {"ext_trie_blake2_256_ordered_root_version_1", trie::blake2_256_ordered_root_version_1},
+    });
 
-void processHostApiCommands(const HostApiCommandArgs &args) {
-  SubcommandRouter<const std::vector<std::string> &> router;
+    helpers::RuntimeEnvironment environment(args.runtime, args.environment);
 
-  // test storage api
-  router.addSubcommand("test_storage_init",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 0);
-                         storage::processInit();
-                       });
-  router.addSubcommand("ext_storage_set_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         storage::processSetGet(args[0], args[1]);
-                       });
-  router.addSubcommand("ext_storage_get_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         storage::processSetGet(args[0], args[1]);
-                       });
-  router.addSubcommand("ext_storage_read_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 4);
-                         storage::processRead(args[0], args[1], std::stoul(args[2]), std::stoul(args[3]));
-                       });
-  router.addSubcommand("ext_storage_clear_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         storage::processClear(args[0], args[1]);
-                       });
-  router.addSubcommand("ext_storage_exists_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         storage::processExists(args[0], args[1]);
-                       });
-  router.addSubcommand("ext_storage_clear_prefix_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 5);
-                         storage::processClearPrefix(args[0], args[1], args[2], args[3], args[4]);
-                       });
-  router.addSubcommand("ext_storage_append_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 4);
-                         storage::processAppend(args[0], args[1], args[2], args[3]);
-                       });
-  router.addSubcommand("ext_storage_root_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 4);
-                         storage::processRoot(args[0], args[1], args[2], args[3]);
-                       });
-  router.addSubcommand("ext_storage_next_key_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 4);
-                         storage::processNextKey(args[0], args[1], args[2], args[3]);
-                       });
-
-  // test child storage (currentyl no upstream support)
-  router.addSubcommand("ext_default_child_storage_set_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 4);
-                         //child_storage::processSetGet(args[0], args[1], args[2], args[3]);
-                         throw NotImplemented(); // Child storage not implemented upstream
-                       });
-  router.addSubcommand("ext_default_child_storage_get_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 4);
-                         //child_storage::processSetGet(args[0], args[1], args[2], args[3]);
-                         throw NotImplemented(); // Child storage not implemented upstream
-                       });
-  router.addSubcommand("ext_default_child_storage_read_version_1",
-                       [](const std::vector<std::string> &args) {
-                         throw NotImplemented(); // TODO not implemented
-                       });
-  router.addSubcommand("ext_default_child_storage_clear_version_1",
-                       [](const std::vector<std::string> &args) {
-                         throw NotImplemented(); // TODO not implemented
-                       });
-  router.addSubcommand("ext_default_child_storage_storage_kill_version_1",
-                       [](const std::vector<std::string> &args) {
-                         throw NotImplemented(); // TODO not implemented
-                       });
-  router.addSubcommand("ext_default_child_storage_exists_version_1",
-                       [](const std::vector<std::string> &args) {
-                         throw NotImplemented(); // TODO not implemented
-                       });
-  router.addSubcommand("ext_default_child_storage_clear_prefix_version_1",
-                       [](const std::vector<std::string> &args) {
-                         throw NotImplemented(); // TODO not implemented
-                       });
-  router.addSubcommand("ext_default_child_storage_root_version_1",
-                       [](const std::vector<std::string> &args) {
-                         throw NotImplemented(); // TODO not implemented
-                       });
-  router.addSubcommand("ext_default_child_storage_next_key_version_1",
-                       [](const std::vector<std::string> &args) {
-                         throw NotImplemented(); // TODO not implemented
-                       });
-
-  // test crypto api
-  router.addSubcommand("ext_crypto_ed25519_public_keys_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         crypto::processEd25519PublicKeys(args[0], args[1]);
-                       });
-  router.addSubcommand("ext_crypto_ed25519_generate_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         crypto::processEd25519Generate(args[0]);
-                       });
-  router.addSubcommand("ext_crypto_ed25519_sign_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         crypto::processEd25519Sign(args[0], args[1]);
-                       });
-  router.addSubcommand("ext_crypto_ed25519_verify_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         crypto::processEd25519Verify(args[0], args[1]);
-                       });
-
-  router.addSubcommand("ext_crypto_sr25519_public_keys_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         crypto::processSr25519PublicKeys(args[0], args[1]);
-                       });
-  router.addSubcommand("ext_crypto_sr25519_generate_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         crypto::processSr25519Generate(args[0]);
-                       });
-  router.addSubcommand("ext_crypto_sr25519_sign_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         crypto::processSr25519Sign(args[0], args[1]);
-                       });
-  router.addSubcommand("ext_crypto_sr25519_verify_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 2);
-                         crypto::processSr25519Verify(args[0], args[1]);
-                       });
-
-  // test hashing api
-  router.addSubcommand("ext_hashing_blake2_128_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         hashing::processHashFunction("blake2", 16, args[0]);
-                       });
-  router.addSubcommand("ext_hashing_blake2_256_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         hashing::processHashFunction("blake2", 32, args[0]);
-                       });
-  router.addSubcommand("ext_hashing_keccak_256_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         hashing::processHashFunction("keccak", 32, args[0]);
-                       });
-  router.addSubcommand("ext_hashing_sha2_256_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         hashing::processHashFunction("sha2", 32, args[0]);
-                       });
-  router.addSubcommand("ext_hashing_twox_64_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         hashing::processHashFunction("twox", 8, args[0]);
-                       });
-  router.addSubcommand("ext_hashing_twox_128_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         hashing::processHashFunction("twox", 16, args[0]);
-                       });
-  router.addSubcommand("ext_hashing_twox_256_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         hashing::processHashFunction("twox", 32, args[0]);
-                       });
-
-  // test allocator api
-  router.addSubcommand("ext_allocator_malloc_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         allocator::processMallocFree(args[0]);
-                       });
-  router.addSubcommand("ext_allocator_free_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 1);
-                         allocator::processMallocFree(args[0]);
-                       });
-
-  // test trie api
-  router.addSubcommand("ext_trie_blake2_256_root_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 6);
-                         trie::processRoot(args[0], args[1], args[2], args[3], args[4], args[5]);
-                       });
-  router.addSubcommand("ext_trie_blake2_256_ordered_root_version_1",
-                       [](const std::vector<std::string> &args) {
-                         BOOST_ASSERT(args.size() == 3);
-                         trie::processOrderedRoot(args[0], args[1], args[2]);
-                       });
-
-  std::string commands_list = "Valid function are: ";
-  for (auto &&name : router.collectSubcommandNames()) {
-    commands_list += name;
-    commands_list += " ";
+    std::string commands_list = "Valid function are: ";
+    for (auto &&name : router.collectSubcommandNames()) {
+      commands_list += name;
+      commands_list += " ";
+    }
+    auto e1 = "function is not provided\n" + commands_list;
+    auto e2 = "Invalid function\n" + commands_list;
+    BOOST_VERIFY_MSG(router.executeSubcommand(args.function, environment, args.inputs),
+                     "Invalid function");
   }
-  auto e1 = "function is not provided\n" + commands_list;
-  auto e2 = "Invalid function\n" + commands_list;
-  BOOST_VERIFY_MSG(router.executeSubcommand(args.function, args.input),
-                   "Invalid function");
 }

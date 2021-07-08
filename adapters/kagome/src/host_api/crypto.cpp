@@ -52,8 +52,14 @@ namespace crypto {
   const kagome::runtime::WasmSize TEST_KEY_TYPE = 0xDEADBEEF;
 
   template <typename Suite>
-  void processPublicKeys(const std::string_view seed1, const std::string_view seed2) {
-    helpers::RuntimeEnvironment environment;
+  void public_keys(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    BOOST_ASSERT(inputs.size() == 2);
+
+    const std::string_view seed1 = inputs[0];
+    const std::string_view seed2 = inputs[1];
 
     auto pk1 = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
@@ -80,8 +86,13 @@ namespace crypto {
   }
 
   template <typename Suite>
-  void processGenerate(std::string_view seed) {
-    helpers::RuntimeEnvironment environment;
+  void generate(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    BOOST_ASSERT(inputs.size() == 1);
+
+    std::string_view seed = inputs[0];
 
     auto key = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
@@ -91,8 +102,14 @@ namespace crypto {
   }
 
   template <typename Suite>
-  void processSign(std::string_view seed, std::string_view message) {
-    helpers::RuntimeEnvironment environment;
+  void sign(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    BOOST_ASSERT(inputs.size() == 2);
+
+    std::string_view seed = inputs[0];
+    std::string_view message = inputs[1];
 
     auto pk = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
@@ -110,8 +127,14 @@ namespace crypto {
   }
 
   template <typename Suite>
-  void processVerify(std::string_view seed, std::string_view message) {
-    helpers::RuntimeEnvironment environment;
+  void verify(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    BOOST_ASSERT(inputs.size() == 2);
+
+    std::string_view seed = inputs[0];
+    std::string_view message = inputs[1];
 
     auto pk = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
@@ -139,36 +162,61 @@ namespace crypto {
   }
 
 
-  void processEd25519PublicKeys(const std::string_view seed1, const std::string_view seed2) {
-    processPublicKeys<Ed25519Suite>(seed1, seed2);
+  void ed25519_public_keys_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    public_keys<Ed25519Suite>(environment, inputs);
   }
 
-  void processEd25519Generate(const std::string_view seed) {
-    processGenerate<Ed25519Suite>(seed);
+  void ed25519_generate_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    generate<Ed25519Suite>(environment, inputs);
   }
 
-  void processEd25519Sign(const std::string_view seed, const std::string_view message) {
-    processSign<Ed25519Suite>(seed, message);
+  void ed25519_sign_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    sign<Ed25519Suite>(environment, inputs);
   }
 
-  void processEd25519Verify(const std::string_view seed, const std::string_view message) {
-    processVerify<Ed25519Suite>(seed, message);
+  void ed25519_verify_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string>& inputs
+  ) {
+    verify<Ed25519Suite>(environment, inputs);
   }
 
 
-  void processSr25519PublicKeys(const std::string_view seed1, const std::string_view seed2) {
-    processPublicKeys<Sr25519Suite>(seed1, seed2);
+  void sr25519_public_keys_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    public_keys<Sr25519Suite>(environment, inputs);
   }
 
-  void processSr25519Generate(const std::string_view seed) {
-    processGenerate<Sr25519Suite>(seed);
+  void sr25519_generate_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    generate<Sr25519Suite>(environment, inputs);
   }
 
-  void processSr25519Sign(const std::string_view seed, const std::string_view message) {
-    processSign<Sr25519Suite>(seed, message);
+  void sr25519_sign_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    sign<Sr25519Suite>(environment, inputs);
   }
 
-  void processSr25519Verify(const std::string_view seed, const std::string_view message) {
-    processVerify<Sr25519Suite>(seed, message);
+  void sr25519_verify_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string>& inputs
+  ) {
+    verify<Sr25519Suite>(environment, inputs);
   }
+
 }

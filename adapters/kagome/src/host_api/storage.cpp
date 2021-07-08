@@ -29,9 +29,12 @@
 
 namespace storage {
 
-
-  void processInit() {
-    helpers::RuntimeEnvironment environment;
+  void test_init(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    // Check inputs
+    BOOST_ASSERT(inputs.size() == 0);
 
     // Compute and print storage root hash
     auto hash = environment.execute<helpers::Buffer>("rtm_ext_storage_root_version_1");
@@ -39,9 +42,15 @@ namespace storage {
     std::cout << hash.toHex() << std::endl;
   }
 
+  void set_get_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 2);
 
-  void processSetGet(const std::string_view key, const std::string_view value) {
-    helpers::RuntimeEnvironment environment;
+    const std::string_view key = inputs[0];
+    const std::string_view value = inputs[1];
 
     // Check that key has not been set
     auto result = environment.execute<helpers::MaybeBuffer>(
@@ -66,13 +75,18 @@ namespace storage {
     std::cout << result.value().toString() << std::endl;
   }
 
-  void processRead(
-      const std::string_view key,
-      const std::string_view value,
-      const uint32_t offset,
-      const uint32_t length
+  void read_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   ) {
-    helpers::RuntimeEnvironment environment;
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 4);
+
+    const std::string_view key = inputs[0];
+    const std::string_view value = inputs[1];
+
+    const uint32_t offset = std::stoul(inputs[2]);
+    const uint32_t length = std::stoul(inputs[3]);
 
     // Check that key has not been set
     auto result = environment.execute<helpers::MaybeBuffer>(
@@ -104,8 +118,15 @@ namespace storage {
     std::cout << result.value().toString() << std::endl;
   }
 
-  void processClear(const std::string_view key, const std::string_view value) {
-    helpers::RuntimeEnvironment environment;
+  void clear_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+   ) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 2);
+
+    const std::string_view key = inputs[0];
+    const std::string_view value = inputs[1];
 
     // Insert data
     environment.execute<void>("rtm_ext_storage_set_version_1", key, value);
@@ -129,9 +150,15 @@ namespace storage {
     BOOST_ASSERT_MSG(!cleared, "Value wasn't deleted");
   }
 
+  void exists_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
+  ) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 2);
 
-  void processExists(const std::string_view key, const std::string_view value) {
-    helpers::RuntimeEnvironment environment;
+    const std::string_view key = inputs[0];
+    const std::string_view value = inputs[1];
 
     // Check for no data
     auto exists = environment.execute<bool>("rtm_ext_storage_exists_version_1", key);
@@ -150,12 +177,20 @@ namespace storage {
     std::cout << "true" << std::endl;
   }
 
-
-  void processClearPrefix(const std::string_view prefix,
-    const std::string_view key1, const std::string_view value1,
-    const std::string_view key2, const std::string_view value2
+  void clear_prefix_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   ) {
-    helpers::RuntimeEnvironment environment;
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 5);
+
+    const std::string_view prefix = inputs[0];
+
+    const std::string_view key1 = inputs[1];
+    const std::string_view value1 = inputs[2];
+
+    const std::string_view key2 = inputs[3];
+    const std::string_view value2 = inputs[4];
 
     // Insert both key value pair
     environment.execute<void>("rtm_ext_storage_set_version_1", key1, value1);
@@ -191,14 +226,21 @@ namespace storage {
     }
   }
 
-
-  void processAppend(
-    const std::string_view key1, const std::string_view value1,
-    const std::string_view key2, const std::string_view value2
+  void append_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   ) {
-    helpers::RuntimeEnvironment environment;
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 4);
+
+    const std::string_view key1 = inputs[0];
+    const std::string_view value1 = inputs[1];
 
     auto value1_enc = scale::encode(value1).value();
+
+    const std::string_view key2 = inputs[2];
+    const std::string_view value2 = inputs[3];
+
     auto value2_enc = scale::encode(value2).value();
 
     // Check that key1 is unset
@@ -262,12 +304,18 @@ namespace storage {
     std::cout << joined << std::endl;
   }
 
-
-  void processRoot(
-    const std::string_view key1, const std::string_view value1,
-    const std::string_view key2, const std::string_view value2
+  void root_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   ) {
-    helpers::RuntimeEnvironment environment;
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 4);
+
+    const std::string_view key1 = inputs[0];
+    const std::string_view value1 = inputs[1];
+
+    const std::string_view key2 = inputs[2];
+    const std::string_view value2 = inputs[3];
 
     // Insert data
     environment.execute<void>("rtm_ext_storage_set_version_1", key1, value1);
@@ -278,12 +326,18 @@ namespace storage {
     std::cout << hash.toHex() << std::endl;
   }
 
-
-  void processNextKey(
-    const std::string_view key1, const std::string_view value1,
-    const std::string_view key2, const std::string_view value2
+  void next_key_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   ) {
-    helpers::RuntimeEnvironment environment;
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 4);
+
+    const std::string_view key1 = inputs[0];
+    const std::string_view value1 = inputs[1];
+
+    const std::string_view key2 = inputs[2];
+    const std::string_view value2 = inputs[3];
 
     // No next key available
     auto next = environment.execute<helpers::MaybeBuffer>("rtm_ext_storage_next_key_version_1", key1);

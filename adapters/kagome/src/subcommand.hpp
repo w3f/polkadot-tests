@@ -31,6 +31,21 @@
  */
 template <typename... Args> class SubcommandRouter {
 public:
+  using HandlerMap = std::map<std::string, std::function<void(Args...)>>;
+
+  /** Default constructor to add subcommands via addSubcommand.
+    */
+  SubcommandRouter() = default;
+
+  /** Constructor to allow static initialization.
+    * @param map intial list of handlers to start with
+    */
+  SubcommandRouter(HandlerMap&& inital) : handlers(std::move(inital)) {}
+
+  /**
+   * @param name name of subcommand to add
+   * @param handler callback to handle execution of subcommand
+   */
   void addSubcommand(std::string name, std::function<void(Args...)> handler) {
     handlers[std::move(name)] = std::move(handler);
   }
@@ -63,5 +78,5 @@ public:
   }
 
 private:
-  std::map<std::string, std::function<void(Args...)>> handlers;
+  HandlerMap handlers;
 };

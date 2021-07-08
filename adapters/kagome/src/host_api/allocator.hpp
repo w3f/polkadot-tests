@@ -22,10 +22,14 @@
 #include <string>
 #include <vector>
 
+#include "helpers.hpp"
+
 namespace allocator {
-  // executes ext_allocator_malloc and ext_allocator_free tests according to provided arg
-  // Input: value
-  void processMallocFree(const std::string_view value);
 
-} // namespace allocator
+  // executes ext_allocator_malloc and ext_allocator_free tests
+  void malloc_free_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string>& inputs
+  );
 
+}// namespace allocator

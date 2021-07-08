@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
     processTrieCommand(extractTrieArgs(argc, argv));
   });
   router.addSubcommand("host-api", [](int argc, char **argv) {
-    processHostApiCommands(extractHostApiArgs(argc, argv));
+    host_api::processCommand(host_api::extractArgs(argc, argv));
   });
 
   // Check if subcommand is provided

@@ -21,23 +21,20 @@
 
 #include <string>
 
+#include "helpers.hpp"
+
 namespace trie {
 
   // executes ext_trie_blake2_256_ordered_root_version_1 test
-  void processOrderedRoot(
-    const std::string_view value1,
-    const std::string_view value2,
-    const std::string_view value3
+  void blake2_256_ordered_root_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   );
 
   // executes ext_trie_blake2_256_root_version_1 test
-  void processRoot(
-    const std::string_view key1,
-    const std::string_view value1,
-    const std::string_view key2,
-    const std::string_view value2,
-    const std::string_view key3,
-    const std::string_view value3
+  void blake2_256_root_version_1(
+    helpers::RuntimeEnvironment& environment,
+    const std::vector<std::string>& inputs
   );
 
 } // namespace trie

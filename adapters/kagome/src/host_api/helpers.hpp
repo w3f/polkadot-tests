@@ -39,15 +39,27 @@ namespace helpers {
   using MaybeBuffer = boost::optional<Buffer>;
 
   using kagome::runtime::binaryen::RuntimeApi;
-  using kagome::runtime::binaryen::RuntimeEnvironmentFactory;
 
-  using kagome::blockchain::KeyValueBlockHeaderRepository;
+  // Default path of runtime
+  extern const char* DEFAULT_RUNTIME_PATH;
 
   class RuntimeEnvironment {
-
     public:
+
+      // Available backends
+      enum class Backend {
+        Binaryen,
+        WAVM,
+      };
+
+      // Default backend to use
+      static const Backend DEFAULT_BACKEND;
+
       // Initialize a runtime environment
-      RuntimeEnvironment();
+      RuntimeEnvironment(
+        const std::string path = DEFAULT_RUNTIME_PATH,
+        Backend backend = DEFAULT_BACKEND
+      );
 
       // Call function with provided arguments in wasm adapter
       template <typename R, typename... Args>

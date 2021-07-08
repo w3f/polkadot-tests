@@ -25,11 +25,21 @@
 
 namespace child_storage {
 
-  void processSetGet(
-    const std::string_view child1, const std::string_view child2,
-    const std::string_view key, const std::string_view value
+  void set_get_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string>& inputs
   ) {
-    helpers::RuntimeEnvironment environment;
+    // FIXME Child storage not implemented upstream
+    throw NotImplemented();
+
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 4);
+
+    const std::string_view child1 = inputs[0];
+    const std::string_view child2 = inputs[1];
+
+    const std::string_view key = inputs[2];
+    const std::string_view value = inputs[3];
 
     // Check that key has not been set
     auto result = environment.execute<helpers::MaybeBuffer>(
@@ -64,15 +74,57 @@ namespace child_storage {
   }
 
 
+  void read_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  ) {
+    throw NotImplemented(); // TODO not implemented
+  }
+
+  // Input: child1, child2, key, value
+  void clear_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  ) {
+    throw NotImplemented(); // TODO not implemented
+  }
+
+  // Input: child1, child2, key, value
+  void storage_kill_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  ) {
+    throw NotImplemented(); // TODO not implemented
+  }
+
+  // Input: child1, child2, key, value
+  void exists_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  ) {
+    throw NotImplemented(); // TODO not implemented
+  }
+
   // Input: prefix, child1, child2, key1, value1, key2, value2
-  void processExtClearChildPrefix(const std::vector<std::string> &args){}
+  void clear_prefix_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  ) {
+    throw NotImplemented(); // TODO not implemented
+  }
 
-  // Input: child1, child2, key, value
-  void processExtClearChildStorage(const std::vector<std::string> &args){}
+  void root_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  ) {
+    throw NotImplemented(); // TODO not implemented
+  }
 
-  // Input: child1, child2, key, value
-  void processExtExistsChildStorage(const std::vector<std::string> &args){}
+  void next_key_version_1(
+    helpers::RuntimeEnvironment environment,
+    const std::vector<std::string> &args
+  ) {
+    throw NotImplemented(); // TODO not implemented
+  }
 
-  // Input: child1, child2, key, value
-  void processExtKillChildStorage(const std::vector<std::string> &args){}
 }
