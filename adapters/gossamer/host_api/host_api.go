@@ -23,7 +23,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
 	"strings"
 	"strconv"
 
@@ -39,7 +38,7 @@ import (
 import "C"
 
 // Configuration
-const RELATIVE_WASM_ADAPTER_PATH = "bin/hostapi_runtime.compact.wasm"
+const DEFAULT_RUNTIME_PATH = "bin/hostapi_runtime.compact.wasm"
 
 // String to Integer conversion helper
 func ToUint32(input string) uint32 {
@@ -51,15 +50,6 @@ func ToUint32(input string) uint32 {
 	return uint32(output)
 }
 
-// Return absolute runtime patch
-func GetRuntimePath() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		panic("failed to get current working directory")
-	}
-	return path.Join(dir, RELATIVE_WASM_ADAPTER_PATH)
-}
-
 // Main hostapi test argument parser
 func ProcessHostApiCommand(args []string) {
 
@@ -68,7 +58,7 @@ func ProcessHostApiCommand(args []string) {
 	inputTextPtr := flag.String("input", "", "Input to pass on call.")
 
 	environmentTextPtr := flag.String("environment", "wasmer", "WASM environment to use:  wasmer, wasmtime or life")
-	runtimeTextPtr := flag.String("runtime", GetRuntimePath(), "Override path to hostapi test runtime to use.")
+	runtimeTextPtr := flag.String("runtime", DEFAULT_RUNTIME_PATH, "Override path to hostapi test runtime to use.")
 
 	// Parse provided argument list
 	flag.CommandLine.Parse(args)
