@@ -160,7 +160,7 @@ jobs:
       run: ./runtests.jl substrate ${{ matrix.fixture }}
 
   test-substrate-hostapi:
-    needs: build-adapter-substrate
+    needs: [ build-adapter-substrate, build-runtime-hostapi ]
     strategy:
       fail-fast: false
       matrix:
@@ -173,6 +173,10 @@ jobs:
     - uses: actions/download-artifact@v2.0.8
       with:
         name: substrate-adapter
+        path: bin
+    - uses: actions/download-artifact@v2.0.8
+      with:
+        name: hostapi-runtime.compact.wasm
         path: bin
     - run: chmod +x bin/substrate-adapter
     - name: Run test fixture
