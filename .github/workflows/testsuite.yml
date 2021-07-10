@@ -208,7 +208,11 @@ jobs:
 
   test-kagome-hostapi:
     needs: [ build-adapter-kagome, build-runtime-hostapi ]
-    name: "[test-host-api] kagome"
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [ binaryen ]
+    name: "[test-host-api] kagome ${{ matrix.environment }}"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -223,7 +227,7 @@ jobs:
         path: bin
     - run: chmod +x bin/kagome-adapter
     - name: Run test fixture
-      run: ./runtests.jl kagome host-api
+      run: ./runtests.jl kagome host-api ${{ matrix.environment }}
 
 
   test-gossamer:
