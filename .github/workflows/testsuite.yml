@@ -139,6 +139,41 @@ jobs:
         name: hostapi-runtime.compact.wasm
         path: bin/hostapi_runtime.compact.wasm
 
+  build-runtime-hostapi-expmem:
+    name: "[build] hostapi-runtime expmem"
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup rust toolchain
+      id: rustup
+      uses: actions-rs/toolchain@v1
+      with:
+        target: wasm32-unknown-unknown
+        default: true
+        profile: minimal
+    - name: Cache cargo registry and index
+      uses: actions/cache@v2.1.6
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+        key: cargo-cache-runtime-hostapi-expmem-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
+        restore-keys: cargo-cache-runtime-hostapi-expmem-
+    - name: Cache cargo build ouput
+      uses: actions/cache@v2.1.6
+      with:
+        path: runtimes/hostapi/target
+        key: cargo-build-runtime-hostapi-expmem-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
+        restore-keys: cargo-build-runtime-hostapi-expmem-${{ steps.rustup.outputs.rustc_hash }}-
+    - name: Build hostapi runtime with exported memory
+      run: make hostapi-runtime-expmem
+    - name: Upload hostapi runtime with exported memory
+      uses: actions/upload-artifact@v2
+      with:
+        name: hostapi-runtime.expmem.compact.wasm
+        path: bin/hostapi_runtime.expmem.compact.wasm
+
 
   test-substrate:
     needs: build-adapter-substrate

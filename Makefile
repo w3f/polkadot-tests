@@ -29,6 +29,9 @@ runtimes: $(ALIASES_RUNTIMES)
 $(ALIASES_RUNTIME): %-runtime: init
 	$(MAKE) -C runtimes/$*
 
+hostapi-runtime-expmem: init
+	$(MAKE) -C runtimes/hostapi install-expmem
+
 
 hosts: $(ALIASES_HOST)
 
