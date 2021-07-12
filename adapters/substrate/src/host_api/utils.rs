@@ -7,15 +7,14 @@ use std::sync::Arc;
 use parity_scale_codec::Decode;
 use sc_executor::{
     WasmExecutor,
-    CallInWasm,
     WasmExecutionMethod,
     sp_wasm_interface::HostFunctions,
 };
+use sc_executor_common::runtime_blob::RuntimeBlob;
 use sp_io::SubstrateHostFunctions;
 use sp_core::{
     offchain::testing::TestOffchainExt,
     offchain::OffchainWorkerExt,
-    traits::MissingHostFunctions,
     Blake2Hasher,
 };
 use sp_keystore::{KeystoreExt, testing::KeyStore};
@@ -115,13 +114,12 @@ impl Runtime {
             SubstrateHostFunctions::host_functions(),
             8, // max_runtime_instances
             None // cache_path
-        ).call_in_wasm(
-            &self.blob,
-            None, // Optional<Hash>
-            func,
-            args,
+        ).uncached_call(
+            RuntimeBlob::uncompress_if_needed(&self.blob[..]).unwrap(),
             &mut extext,
-            MissingHostFunctions::Disallow,
+            false, // allow_missing_host_functions
+            func,
+            args
         ).unwrap()
     }
     pub fn call_and_decode<T: Decode>(&mut self, func: &str, args: &[u8]) -> T {
