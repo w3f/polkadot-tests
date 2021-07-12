@@ -6,7 +6,7 @@ using .SpecificationTestsuite
 
 
 function print_usage()
-    println("usage: $PROGRAM_FILE [OPTIONS] [FILTERS ...]")
+    println("usage: $PROGRAM_FILE [OPTIONS] [FILTERS ...] --args [ARGS ...]")
     println()
     println("OPTIONS:")
     println("  --help       Display this message")
@@ -20,21 +20,31 @@ function print_usage()
     println("IMPLEMENTATIONS:")
     println(join(ALL_IMPLEMENTATIONS, ", "))
     println()
-    println("FIXTURES: ")
+    println("FIXTURES:")
     println(join(ALL_FIXTURES, ", "))
     println()
-    println("ENVIRONMENTS: (host-api only)")
-    println(join(ALL_ENVIRONMENTS, ", "))
+    println("EXTRA ARGUMENTS:")
+    println("To run the underlying adapter or host with additional arguments, any extra")
+    println("arguments passed after --args will be forwarded to the binary.")
 end
 
 
 # Collect filters
 implementations = Vector{String}()
 fixtures = Vector{String}()
-environments = Vector{String}()
+
+# Collect additional arguments
+forward_args = false
+extra_args = Vector{String}()
 
 # Process all command line arguments
 for arg in ARGS
+
+    if forward_args
+        push!(extra_args, arg)
+        continue
+    end
+
     if arg == "--help"
         print_usage()
         exit()
@@ -50,6 +60,11 @@ for arg in ARGS
         continue
     end
 
+    if arg == "--args"
+        global forward_args = true
+        continue
+    end
+
     if arg in ALL_IMPLEMENTATIONS
         push!(implementations, arg)
         continue
@@ -57,11 +72,6 @@ for arg in ARGS
 
     if arg in ALL_FIXTURES
         push!(fixtures, arg)
-        continue
-    end
-
-    if arg in ALL_ENVIRONMENTS
-        push!(environments, arg)
         continue
     end
 
@@ -80,8 +90,9 @@ if !isempty(fixtures)
     Config.set_fixtures(fixtures)
 end
 
-if !isempty(environments)
-    Config.set_environments(environments)
+# Forward any extra flags
+if !isempty(extra_args)
+    Config.set_extra_args(extra_args)
 end
 
 # Display config
@@ -90,11 +101,7 @@ println("Loglevel:        " * (Config.verbose ? "verbose"   : "info"))
 println("Binaries:        " * (Config.docker  ? "container" : "local"))
 println("Implementations: " * join(Config.implementations, ", "))
 println("Fixtures:        " * join(Config.fixtures, ", "))
-if isempty(Config.environments)
-    println("Environments:    (default)")
-else
-    println("Environments:    " * join(Config.environments, ", "))
-end
+println("Extra Arguments: " * string(Config.extra_args))
 println()
 
 # Add locally build or downloaded adapters, testers and hosts to PATH

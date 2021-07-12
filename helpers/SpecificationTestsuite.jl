@@ -4,7 +4,7 @@ module SpecificationTestsuite
     include("StringHelpers.jl")
 
 
-    export ALL_IMPLEMENTATIONS, ALL_ENVIRONMENTS, ALL_FIXTURES, Config, execute
+    export ALL_IMPLEMENTATIONS, ALL_FIXTURES, Config, execute
 
     "List of all known implementations"
     const ALL_IMPLEMENTATIONS = [
@@ -13,19 +13,9 @@ module SpecificationTestsuite
       "gossamer"
     ]
 
-    "List of all known environments"
-    const ALL_ENVIRONMENTS = [
-        "wasmi"
-        "wasmtime"
-        "wasmer"
-        "life"
-        "binaryen"
-        "wavm"
-    ]
-
     module Config
         import ..SpecificationTestsuite: ALL_IMPLEMENTATIONS
-        import ..StringHelpers: StringList
+        import ..StringHelpers: StringList, CmdString, CmdStringList, cmdjoin
 
         "By default we log on a warning level."
         verbose = false
@@ -43,8 +33,8 @@ module SpecificationTestsuite
         "By default all implementations are enabled."
         implementations = ALL_IMPLEMENTATIONS
 
-        "By default no special environment is selected."
-        environments = []
+        "By default no additional arguments are passed."
+        extra_args = ``
 
         "Path of folder containing all fixtures."
         function fixdir()::String
@@ -74,9 +64,14 @@ module SpecificationTestsuite
             global fixtures = selected
         end
 
-        "Update selected fixtures in config"
-        function set_environments(selected::StringList)
-            global environments = selected
+        "Update additional arguments to pass to executable"
+        function set_extra_args(selected::CmdString)
+            global extra_args = selected
+        end
+
+        "Update additional arguments to pass to executable"
+        function set_extra_args(selected::CmdStringList)
+            set_extra_args(cmdjoin(selected))
         end
 
         "Update docker settings in config"

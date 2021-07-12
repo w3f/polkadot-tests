@@ -110,7 +110,7 @@ function run_tester(self::Tester, host::String, duration::Number)
         exec = `docker run -e RUST_LOG=runtime=debug -v $tempdir:$datadir --rm -i $image`
     end
 
-    cmd = `$exec $args`
+    cmd = `$exec $args $(Config.extra_args)`
 
     if Config.verbose
         println("┌ [COMMAND] ", cmd)
