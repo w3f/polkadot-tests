@@ -195,13 +195,16 @@ jobs:
       run: ./runtests.jl substrate ${{ matrix.fixture }}
 
   test-substrate-hostapi:
-    needs: [ build-adapter-substrate, build-runtime-hostapi ]
+    needs: [ build-adapter-substrate, build-runtime-hostapi, build-runtime-hostapi-expmem ]
     strategy:
       fail-fast: false
       matrix:
         environment: [ wasmi, wasmtime ]
-    name: "[test-host-api] substrate ${{ matrix.environment }}"
+        runtime: [ default, expmem ]
+    name: "[test-host-api] substrate ${{ matrix.environment }} ${{ matrix.runtime }}"
     runs-on: ubuntu-20.04
+    env:
+      RUNTIME_FILE: hostapi-runtime.${{ matrix.runtime }}.wasm
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -211,11 +214,11 @@ jobs:
         path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
-        name: hostapi-runtime.default.wasm
+        name: ${{ env.RUNTIME_FILE }}
         path: bin
     - run: chmod +x bin/substrate-adapter
     - name: Run test fixture
-      run: ./runtests.jl substrate host-api --args --environment ${{ matrix.environment }}
+      run: ./runtests.jl substrate host-api --args --environment ${{ matrix.environment }} --runtime bin/$RUNTIME_FILE
 
 
   test-kagome:
@@ -242,13 +245,16 @@ jobs:
       run: ./runtests.jl kagome ${{ matrix.fixture }}
 
   test-kagome-hostapi:
-    needs: [ build-adapter-kagome, build-runtime-hostapi ]
+    needs: [ build-adapter-kagome, build-runtime-hostapi, build-runtime-hostapi-expmem ]
     strategy:
       fail-fast: false
       matrix:
         environment: [ binaryen ]
-    name: "[test-host-api] kagome ${{ matrix.environment }}"
+        runtime: [ default, expmem ]
+    name: "[test-host-api] kagome ${{ matrix.environment }} ${{ matrix.runtime }}"
     runs-on: ubuntu-20.04
+    env:
+      RUNTIME_FILE: hostapi-runtime.${{ matrix.runtime }}.wasm
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -258,11 +264,11 @@ jobs:
         path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
-        name: hostapi-runtime.default.wasm
+        name: ${{ env.RUNTIME_FILE }}
         path: bin
     - run: chmod +x bin/kagome-adapter
     - name: Run test fixture
-      run: ./runtests.jl kagome host-api --args --environment ${{ matrix.environment }}
+      run: ./runtests.jl kagome host-api --args --environment ${{ matrix.environment }} --runtime bin/$RUNTIME_FILE
 
 
   test-gossamer:
@@ -292,13 +298,16 @@ jobs:
       run: ./runtests.jl gossamer ${{ matrix.fixture }}
 
   test-gossamer-hostapi:
-    needs: [ build-adapter-gossamer, build-runtime-hostapi]
+    needs: [ build-adapter-gossamer, build-runtime-hostapi, build-runtime-hostapi-expmem ]
     strategy:
       fail-fast: false
       matrix:
         environment: [ wasmer ]
-    name: "[test-host-api] gossamer ${{ matrix.environment }}"
+        runtime: [ default, expmem ]
+    name: "[test-host-api] gossamer ${{ matrix.environment }} ${{ matrix.runtime }}"
     runs-on: ubuntu-20.04
+    env:
+      RUNTIME_FILE: hostapi-runtime.${{ matrix.runtime }}.wasm
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -308,11 +317,11 @@ jobs:
         path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
-        name: hostapi-runtime.default.wasm
+        name: ${{ env.RUNTIME_FILE }}
         path: bin
     - run: |
         chmod +x bin/gossamer-adapter
         mkdir -p lib
         mv bin/libwasmer.so lib/
     - name: Run test fixture
-      run: ./runtests.jl gossamer host-api --args --environment ${{ matrix.environment }}
+      run: ./runtests.jl gossamer host-api --args --environment ${{ matrix.environment }} --runtime bin/$RUNTIME_FILE
