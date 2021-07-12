@@ -91,7 +91,7 @@ namespace helpers {
   using SubscriptionEngineType = SubscriptionEngine<Buffer, SessionPtr, Buffer, BlockHash>;
 
   // Default runtime location
-  const char* DEFAULT_RUNTIME_PATH = "bin/hostapi_runtime.compact.wasm";
+  const char* DEFAULT_RUNTIME_PATH = "bin/hostapi-runtime.default.wasm";
 
   // Simple wasm provider to provide wasm adapter runtime shim to kagome
   class WasmAdapterProvider : public WasmProvider {

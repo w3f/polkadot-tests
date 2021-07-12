@@ -38,7 +38,7 @@ import (
 import "C"
 
 // Configuration
-const DEFAULT_RUNTIME_PATH = "bin/hostapi_runtime.compact.wasm"
+const DEFAULT_RUNTIME_PATH = "bin/hostapi-runtime.default.wasm"
 
 // String to Integer conversion helper
 func ToUint32(input string) uint32 {

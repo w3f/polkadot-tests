@@ -11,7 +11,7 @@ use std::path::Path;
 use clap::ArgMatches;
 use utils::ParsedInput;
 
-const DEFAULT_RUNTIME_PATH: &str = "bin/hostapi_runtime.compact.wasm";
+const DEFAULT_RUNTIME_PATH: &str = "bin/hostapi-runtime.default.wasm";
 
 pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
     if let Some(func) = subcmd_matches.value_of("function") {
