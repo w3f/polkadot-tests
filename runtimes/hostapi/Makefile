@@ -1,19 +1,22 @@
 .PHONY: all build install build-expmem install-expmem version clean
 
+RELEASE_WASM_PATH := target/release/wbuild/hostapi-runtime/hostapi_runtime.compact.wasm
+
+
 all: install
 
 build:
 	cargo build --release
 
 install: build
-	cp target/release/wbuild/hostapi-runtime/hostapi_runtime.compact.wasm ../../bin/
+	cp $(RELEASE_WASM_PATH) ../../bin/hostapi-runtime.default.wasm
 
 
 build-expmem:
 	cargo build --features export-memory --release
 
 install-expmem: build-expmem
-	cp target/release/wbuild/hostapi-runtime/hostapi_runtime.compact.wasm ../../bin/hostapi_runtime.expmem.compact.wasm
+	cp $(RELEASE_WASM_PATH) ../../bin/hostapi-runtime.expmem.wasm
 
 
 version:
