@@ -117,7 +117,7 @@ function prepare!(self::Builder, implementation="substrate")
 end
 
 "Run all commited test for specified adapter."
-function run(self::Builder, adapter::CmdString, args::CmdString=``)
+function run(self::Builder, adapter::CmdString)
     if length(self.inputs) != length(self.outputs)
         error("Missing or outdated cached reference outputs")
     end
@@ -125,7 +125,8 @@ function run(self::Builder, adapter::CmdString, args::CmdString=``)
     for (input, output) in zip(self.inputs, self.outputs)
 
         # Execute adapter and collect output and exit code
-        cmd = cmdjoin(adapter, cmdjoin(input, args))
+        args = cmdjoin(input, Config.extra_args)
+        cmd = cmdjoin(adapter, args)
 
         if Config.verbose
             println("┌ [COMMAND] ", cmd)
@@ -181,17 +182,7 @@ function execute(self::Builder)
     @testset "$(self.name)" begin
         for implementation in Config.implementations
             adapter = "$implementation-adapter"
-
-
-            if isempty(Config.environments)
-                run(self, adapter)
-            else
-                for environment in Config.environments
-                    @testset "$environment" begin
-                        run(self, adapter, `--environment $environment`)
-                    end
-                end # for environments
-            end
+            run(self, adapter)
         end # for implementations
     end # testset over execute
 end
