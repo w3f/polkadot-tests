@@ -215,7 +215,7 @@ jobs:
         path: bin
     - run: chmod +x bin/substrate-adapter
     - name: Run test fixture
-      run: ./runtests.jl substrate host-api ${{ matrix.environment }}
+      run: ./runtests.jl substrate host-api --args --environment ${{ matrix.environment }}
 
 
   test-kagome:
@@ -262,7 +262,7 @@ jobs:
         path: bin
     - run: chmod +x bin/kagome-adapter
     - name: Run test fixture
-      run: ./runtests.jl kagome host-api ${{ matrix.environment }}
+      run: ./runtests.jl kagome host-api --args --environment ${{ matrix.environment }}
 
 
   test-gossamer:
@@ -315,4 +315,4 @@ jobs:
         mkdir -p lib
         mv bin/libwasmer.so lib/
     - name: Run test fixture
-      run: ./runtests.jl gossamer host-api ${{ matrix.environment }}
+      run: ./runtests.jl gossamer host-api --args --environment ${{ matrix.environment }}
