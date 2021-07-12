@@ -136,8 +136,8 @@ jobs:
     - name: Upload hostapi runtime
       uses: actions/upload-artifact@v2
       with:
-        name: hostapi-runtime.compact.wasm
-        path: bin/hostapi_runtime.compact.wasm
+        name: hostapi-runtime.default.wasm
+        path: bin/hostapi-runtime.default.wasm
 
   build-runtime-hostapi-expmem:
     name: "[build] hostapi-runtime expmem"
@@ -171,8 +171,8 @@ jobs:
     - name: Upload hostapi runtime with exported memory
       uses: actions/upload-artifact@v2
       with:
-        name: hostapi-runtime.expmem.compact.wasm
-        path: bin/hostapi_runtime.expmem.compact.wasm
+        name: hostapi-runtime.expmem.wasm
+        path: bin/hostapi-runtime.expmem.wasm
 
 
   test-substrate:
@@ -211,7 +211,7 @@ jobs:
         path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
-        name: hostapi-runtime.compact.wasm
+        name: hostapi-runtime.default.wasm
         path: bin
     - run: chmod +x bin/substrate-adapter
     - name: Run test fixture
@@ -258,7 +258,7 @@ jobs:
         path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
-        name: hostapi-runtime.compact.wasm
+        name: hostapi-runtime.default.wasm
         path: bin
     - run: chmod +x bin/kagome-adapter
     - name: Run test fixture
@@ -308,7 +308,7 @@ jobs:
         path: bin
     - uses: actions/download-artifact@v2.0.8
       with:
-        name: hostapi-runtime.compact.wasm
+        name: hostapi-runtime.default.wasm
         path: bin
     - run: |
         chmod +x bin/gossamer-adapter
