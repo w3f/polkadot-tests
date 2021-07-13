@@ -100,7 +100,6 @@ func executeHostApiTest(function string, inputs []string, environment, runtimePa
 	}
 
 	store.Set([]byte(":code"), []byte{})
-	store.Set([]byte(":heappages"), []byte{8, 0, 0, 0, 0, 0, 0, 0})
 
 	// Initialize runtime environment..
 	var rtm runtime.Instance
