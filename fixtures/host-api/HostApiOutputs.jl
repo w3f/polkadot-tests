@@ -1,7 +1,7 @@
 module HostApiOutputs
     const none = [
         # test_storage_init
-        "2747ab7c0dc38b7f2afba82bd5e2d6acef8c31e09800f660b75ec84a7005099f\n"
+        "04e4d34bfc8a3dcd61aa59402df7816d297b0a54ee9aeec04dc96f2415a6cf4d\n"
     ]
 
     const value = [
@@ -275,16 +275,16 @@ module HostApiOutputs
         "Reactive;Automated\nAutomated;Reactive;Automated;Reactive",
         "secondary;toolset\ntoolset;secondary;toolset;secondary",
         # ext_storage_root_version_1
-        "88642528f17282b87fabd1f04e75228e2a167b847e6656c9b95beda1ffd24d87",
-        "aba4e533d278005c1814c64ccb1f524d5eb425bdaf74870895ce4d0148ede0e9",
-        "38e58296e627090ba24d4fb4a2aa321550709f9474cda22a86650f5383916101",
-        "2ea5608acee55be4551b39f44e70135289600930bebd7c5e33d2363bf832695b",
-        "ef892cfb7c591bcd1d93ff7d7453e10353d82b30ec71c3f87b73bd8936d419c3",
-        "dfeb34bd1bf7caced1c12bb8c04a9d614982a587db2ad084b30319f82d7b6868",
-        "cc1431d76ada06cc9beb5a41dead5b2ded9035d14a5a69b3e7a00284e52ce5ce",
-        "f5ab2ad6934f2e3b2408aced5bfd774d75f84f3b981b6654298592d12c4775a0",
-        "6693bcbbccc2dccc664ab5b12bdc933d52f0b20f247c64a43c5ef8f6b40f0150",
-        "c8d46590a11e29e65b2ea147421c8aaf49997101469dd78190fcbe59712639c2",
+        "a54c5eb76c943ad2e90bc0d82bea13e77b7d8e0e1d421584414f3497cb146ea6",
+        "de9878c7704ba0578d90425899364759490f4a7581a1653d69e36e4c55d86e2c",
+        "4ee0517ed1b18afcfc8cc256ed201178235f1abf293e541e7677580268076309",
+        "efa42bdd3bf3b26af40df10ea1f67ac1a8313be09bf7b45397244438c5d65217",
+        "7f8f52894f915ac067ecdd9fd6bf70c358adef076a7238293153e4e731441ec1",
+        "baf7c9cda844112e43acaec7a72e07d3876daefc0578c0be87c08a45466dbe13",
+        "57dc8e61a0dcae020a2d4739b6562f0f277f675b24178415b1d69936d87e82c3",
+        "934f3cf76c59e8f94b6f6a367dbe074d2ac207d52ec21f8a678447010658068f",
+        "716de2cf52b09f63109737b4f2757686e73857e074a2a143d601be9145e52d71",
+        "7dbcf6c4fddc90f6e739b13c7110771ef62de9a228877e05bdb8c5fb9668caa9",
         # ext_storage_next_key_version_1
         "static",
         "function",

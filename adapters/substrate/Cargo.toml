@@ -1,6 +1,6 @@
 [package]
 name = "substrate-adapter"
-version = "0.8.28-470633a"
+version = "0.9.8-567cfb9"
 authors = ["Skalman <skalman@riseup.net>"]
 edition = "2018"
 
@@ -29,8 +29,9 @@ hash256-std-hasher = { version = "0.12", default-features = false }
 blake2-rfc         = "*"
 
 # host-api
-sp-core           = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-io             = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sc-executor       = { git = "https://github.com/paritytech/substrate", branch = "master", features = ["wasmtime"] }
-sp-keystore       = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-state-machine  = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sp-core            = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sp-io              = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sc-executor        = { git = "https://github.com/paritytech/substrate", branch = "master", features = ["wasmtime"] }
+sc-executor-common = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sp-keystore        = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sp-state-machine   = { git = "https://github.com/paritytech/substrate", branch = "master" }
