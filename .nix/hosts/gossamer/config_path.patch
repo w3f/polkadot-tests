@@ -1,5 +1,5 @@
 diff --git a/chain/dev/config.toml b/chain/dev/config.toml
-index a9d31d18..f4c46359 100644
+index 8c96c07e..f4c46359 100644
 --- a/chain/dev/config.toml
 +++ b/chain/dev/config.toml
 @@ -13,9 +13,6 @@ babe = ""
@@ -7,13 +7,13 @@ index a9d31d18..f4c46359 100644
  sync = ""
  
 -[init]
--genesis = "./chain/dev/genesis.json"
+-genesis = "./chain/dev/genesis-spec.json"
 -
  [account]
  key = "alice"
  unlock = ""
 diff --git a/chain/dev/defaults.go b/chain/dev/defaults.go
-index 68a9bc4f..c7b8ffd6 100644
+index 38b6fa71..30fa239f 100644
 --- a/chain/dev/defaults.go
 +++ b/chain/dev/defaults.go
 @@ -29,7 +29,7 @@ var (
@@ -29,13 +29,13 @@ index 68a9bc4f..c7b8ffd6 100644
  	// InitConfig
  
  	// DefaultGenesis is the default genesis configuration path
--	DefaultGenesis = string("./chain/dev/genesis.json")
-+	DefaultGenesis = string("@out@/share/dev/genesis.json")
+-	DefaultGenesis = string("./chain/dev/genesis-spec.json")
++	DefaultGenesis = string("@out@/share/dev/genesis-spec.json")
  
  	// AccountConfig
  
 diff --git a/chain/gssmr/config.toml b/chain/gssmr/config.toml
-index bff58944..eee4af43 100644
+index 893fd41a..1e66a4dd 100644
 --- a/chain/gssmr/config.toml
 +++ b/chain/gssmr/config.toml
 @@ -13,9 +13,6 @@ babe = ""
@@ -43,16 +43,16 @@ index bff58944..eee4af43 100644
  sync = ""
  
 -[init]
--genesis = "./chain/gssmr/genesis.json"
+-genesis = "./chain/gssmr/genesis-spec.json"
 -
  [account]
  key = ""
  unlock = ""
 diff --git a/chain/gssmr/defaults.go b/chain/gssmr/defaults.go
-index 5d7ebfc7..358ec6d7 100644
+index b537f6b1..c0ee4d73 100644
 --- a/chain/gssmr/defaults.go
 +++ b/chain/gssmr/defaults.go
-@@ -29,7 +29,7 @@ var (
+@@ -31,7 +31,7 @@ var (
  	// DefaultID Default chain ID
  	DefaultID = string("gssmr")
  	// DefaultConfig Default toml configuration path
@@ -61,12 +61,12 @@ index 5d7ebfc7..358ec6d7 100644
  	// DefaultBasePath Default node base directory path
  	DefaultBasePath = string("~/.gossamer/gssmr")
  
-@@ -47,7 +47,7 @@ var (
+@@ -49,7 +49,7 @@ var (
  	// InitConfig
  
  	// DefaultGenesis is the default genesis configuration path
--	DefaultGenesis = string("./chain/gssmr/genesis.json")
-+	DefaultGenesis = string("@out@/share/gssmr/genesis.json")
+-	DefaultGenesis = string("./chain/gssmr/genesis-spec.json")
++	DefaultGenesis = string("@out@/share/gssmr/genesis-spec.json")
  
  	// AccountConfig
  
@@ -107,10 +107,10 @@ index e4c2e265..15234094 100644
  	// AccountConfig
  
 diff --git a/chain/polkadot/config.toml b/chain/polkadot/config.toml
-index a7166b5a..b22c6878 100644
+index 6ec7c857..82745f5a 100644
 --- a/chain/polkadot/config.toml
 +++ b/chain/polkadot/config.toml
-@@ -12,9 +12,6 @@ babe = ""
+@@ -13,9 +13,6 @@ babe = ""
  grandpa = ""
  sync = ""
  
