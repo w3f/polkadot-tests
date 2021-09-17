@@ -5,9 +5,6 @@
     # Nix base libraries
     utils.url = "github:numtide/flake-utils";
 
-    # Basis for included packages
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
-
     # Overlay used for nightly rust support
     mozilla = { url = "github:mozilla/nixpkgs-mozilla"; flake = false; };
 
