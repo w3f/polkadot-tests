@@ -13,12 +13,15 @@
 , xxHash_cmake
 , libsecp256k1_cmake
 , binaryen_cmake
+, wavm
 , cpp-libp2p
 , tsl_hat_trie
 , boost_di
 , prometheus-cpp
 , schnorrkel_crust
 , libnsl
+, libllvm
+, zstd
 }:
 
 stdenv.mkDerivation rec {
@@ -29,6 +32,7 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./dependencies.patch
+    ./zstd.patch
   ];
 
   nativeBuildInputs = [
@@ -39,6 +43,7 @@ stdenv.mkDerivation rec {
     # Working upstream dependencies 
     protobuf
     libnsl
+    libllvm
 
     # Patched upstream dependencies
     gtest_cmake
@@ -55,6 +60,7 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [
     boost172
     openssl
+    zstd
 
     microsoft_gsl_cmake
     binaryen_cmake
@@ -64,6 +70,7 @@ stdenv.mkDerivation rec {
     cpp-libp2p
     schnorrkel_crust
     libsecp256k1_cmake
+    wavm
   ];
 
   cmakeFlags = [ "-DHUNTER_ENABLED=false" "-DTESTING=false" ];

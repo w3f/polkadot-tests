@@ -1,0 +1,13 @@
+diff --git a/core/runtime/common/CMakeLists.txt b/core/runtime/common/CMakeLists.txt
+index 517c3317..97840cb6 100644
+--- a/core/runtime/common/CMakeLists.txt
++++ b/core/runtime/common/CMakeLists.txt
+@@ -11,7 +11,7 @@ target_link_libraries(storage_wasm_provider
+     blob
+     buffer
+     logger
+-    zstd::libzstd_static
++    zstd
+     )
+ kagome_install(storage_wasm_provider)
+ 
