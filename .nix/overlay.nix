@@ -51,6 +51,8 @@ let
 
     prometheus-cpp = callPackage ./deps/prometheus-cpp.nix {};
 
+    wavm = callPackage ./deps/wavm.nix {};
+
     # Newer then stable, often forks with additional cmake support
     binaryen_cmake      = callPackage ./deps/binaryen.nix {};
     gtest_cmake         = callPackage ./deps/googletest.nix {};
