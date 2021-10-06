@@ -8,13 +8,13 @@
 
 stdenv.mkDerivation rec {
   pname = "soralog";
-  version = "0.0.7";
+  version = "0.0.9";
 
   src = fetchFromGitHub {
     owner  = "soramitsu";
     repo   = "soralog";
     rev    = "v${version}";
-    sha256 = "15dkb9mvzcjfzr305zip2p359a9w6d6rgki93ycpmjdb39kjpab7";
+    sha256 = "d2wufgRbEHF1Kzu8QH6RncTkRfCMZTjP9qqtbtJoNrI=";
   };
 
   patches = [ ./yaml-cpp.patch ];
