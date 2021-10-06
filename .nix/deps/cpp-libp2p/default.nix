@@ -18,18 +18,17 @@
 
 stdenv.mkDerivation rec {
   name = "cpp-libp2p-${lib.substring 0 7 version}";
-  version = "393119ee18a6a3f6b8d8deeaaa77e2ad401bd8cb";
+  version = "c904db6c5fd4925082b9139776b3a87914393fa7";
 
   src = fetchFromGitHub {
     owner = "soramitsu";
     repo = "cpp-libp2p";
     rev = version;
-    sha256 = "0xjs27xshfhqbdvhya4hj55a6k5y256hv2vrj41qmq1vdjcwmrqq";
+    sha256 = "SGrYrW7JSYuPi81ohRDgRJNoJKCQCNq+ka/+GUoTmVE=";
   };
 
   patches = [
     ./dependencies.patch
-    ./yaml-cpp.patch
   ] ++ lib.optionals withTests [
     ./test-cares.patch
   ];
