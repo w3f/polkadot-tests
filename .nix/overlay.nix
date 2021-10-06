@@ -7,15 +7,7 @@ let
   sources = {
     # Add polkadot-tests source
     polkadot-tests = {
-      src = builtins.fetchGit {
-        url = "git://github.com/w3f/polkadot-tests";
-        ref = "nix";
-
-        # Currently the only way to make sure submodules can be fetched
-        # https://github.com/NixOS/nix/pull/4922
-        rev = assert final.lib.assertMsg (self ? rev) "Requires clean git repo"; self.rev;
-        submodules = true;
-      };
+      src = self;
 
       version = if self ? rev then (builtins.substring 0 7 self.rev)
                 else if self ? lastModifiedDate then self.lastModifiedDate
