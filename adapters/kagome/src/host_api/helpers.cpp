@@ -21,30 +21,47 @@
 
 #include <fstream>
 
+#include <blockchain/impl/key_value_block_header_repository.hpp>
+
+#include <crypto/bip39/impl/bip39_provider_impl.hpp>
+#include <crypto/crypto_store/crypto_store_impl.hpp>
+#include <crypto/ed25519/ed25519_provider_impl.hpp>
+#include <crypto/hasher/hasher_impl.hpp>
 #include <crypto/pbkdf2/impl/pbkdf2_provider_impl.hpp>
 #include <crypto/random_generator/boost_generator.hpp>
-#include <crypto/ed25519/ed25519_provider_impl.hpp>
-#include <crypto/sr25519/sr25519_provider_impl.hpp>
 #include <crypto/secp256k1/secp256k1_provider_impl.hpp>
-#include <crypto/hasher/hasher_impl.hpp>
-#include <crypto/crypto_store/crypto_store_impl.hpp>
-#include <crypto/bip39/impl/bip39_provider_impl.hpp>
+#include <crypto/sr25519/sr25519_provider_impl.hpp>
+
+#include <host_api/impl/host_api_factory_impl.hpp>
+
+#include <outcome/outcome.hpp>
+
+#include <runtime/module.hpp>
+#include <runtime/module_instance.hpp>
+#include <runtime/runtime_code_provider.hpp>
+
+#include <runtime/binaryen/instance_environment_factory.hpp>
+#include <runtime/binaryen/module/module_factory_impl.hpp>
+
+//#include <runtime/common/module_repository_impl.hpp>
+//#include <runtime/common/runtime_upgrade_tracker_impl.hpp>
+
+#include <runtime/wavm/compartment_wrapper.hpp>
+#include <runtime/wavm/instance_environment_factory.hpp>
+#include <runtime/wavm/module_factory_impl.hpp>
+#include <runtime/wavm/intrinsics/intrinsic_functions.hpp>
+#include <runtime/wavm/intrinsics/intrinsic_module.hpp>
+
+#include <storage/changes_trie/impl/storage_changes_tracker_impl.hpp>
 
 #include <storage/in_memory/in_memory_storage.hpp>
+
 #include <storage/trie/polkadot_trie/polkadot_trie_factory_impl.hpp>
 #include <storage/trie/serialization/polkadot_codec.hpp>
 #include <storage/trie/serialization/trie_serializer_impl.hpp>
 #include <storage/trie/impl/trie_storage_backend_impl.hpp>
 #include <storage/trie/impl/trie_storage_impl.hpp>
-#include <storage/changes_trie/impl/storage_changes_tracker_impl.hpp>
 
-#include <runtime/common/trie_storage_provider_impl.hpp>
-#include <runtime/binaryen/binaryen_wasm_memory_factory.hpp>
-#include <runtime/binaryen/runtime_environment_factory.hpp>
-#include <runtime/binaryen/module/wasm_module_factory_impl.hpp>
-#include <runtime/binaryen/runtime_api/core_factory_impl.hpp>
-
-#include <host_api/impl/host_api_factory_impl.hpp>
 
 namespace helpers {
 
@@ -68,20 +85,21 @@ namespace helpers {
   using kagome::crypto::Pbkdf2ProviderImpl;
   using kagome::crypto::Secp256k1ProviderImpl;
 
+  using kagome::primitives::events::StorageSubscriptionEngine;
+  using kagome::primitives::events::ChainSubscriptionEngine;
+
   using kagome::host_api::HostApiFactoryImpl;
 
-  using kagome::runtime::TrieStorageProviderImpl;
-  using kagome::runtime::WasmProvider;
+  using namespace kagome::runtime;
 
-  using kagome::runtime::binaryen::CoreFactoryImpl;
-  using kagome::runtime::binaryen::RuntimeEnvironmentFactoryImpl;
-  using kagome::runtime::binaryen::WasmModuleFactoryImpl;
-  using kagome::runtime::binaryen::BinaryenWasmMemoryFactory;
+  //using binaryen = kagome::runtime::binaryen;
+  //using wasm = kagome::runtime::wasm;
 
   using kagome::storage::InMemoryStorage;
   using kagome::storage::changes_trie::StorageChangesTrackerImpl;
   using kagome::storage::trie::PolkadotCodec;
   using kagome::storage::trie::PolkadotTrieFactoryImpl;
+  using kagome::storage::trie::RootHash;
   using kagome::storage::trie::TrieSerializerImpl;
   using kagome::storage::trie::TrieStorageImpl;
   using kagome::storage::trie::TrieStorageBackendImpl;
@@ -93,10 +111,13 @@ namespace helpers {
   // Default runtime location
   const char* DEFAULT_RUNTIME_PATH = "bin/hostapi-runtime.default.wasm";
 
+  using ByteSpan = gsl::span<const uint8_t>;
+  using ByteSpanResult = outcome::result<ByteSpan>;
+
   // Simple wasm provider to provide wasm adapter runtime shim to kagome
-  class WasmAdapterProvider : public WasmProvider {
+  class FileCodeProvider : public RuntimeCodeProvider {
   public:
-    WasmAdapterProvider(const std::string path) {
+    FileCodeProvider(const std::string path) {
       // Open file and determine size (ios::ate jumps to end on open)
       std::ifstream file(path, std::ios::binary | std::ios::ate);
       if (!file) {
@@ -110,7 +131,11 @@ namespace helpers {
       file.read(reinterpret_cast<char *>(code_.data()), size);
     }
 
-    const Buffer &getStateCodeAt(const kagome::primitives::BlockHash &at) const override {
+    ByteSpan getCode() const {
+      return code_;
+    }
+
+    ByteSpanResult getCodeAt(const RootHash &state) const override {
       return code_;
     }
 
@@ -122,10 +147,10 @@ namespace helpers {
   const RuntimeEnvironment::Backend RuntimeEnvironment::DEFAULT_BACKEND = RuntimeEnvironment::Backend::Binaryen;
 
   RuntimeEnvironment::RuntimeEnvironment(const std::string path, Backend backend) {
-    // Load wasm adapter shim
-    auto wasm_provider = std::make_shared<WasmAdapterProvider>(path);
+    // Load wasm runtime from file
+    auto code_provider = std::make_shared<FileCodeProvider>(path);
 
-    // Build storage provider
+    // Initialize trie factory and storage
     auto storage_backend = std::make_shared<TrieStorageBackendImpl>(
       std::make_shared<InMemoryStorage>(), Buffer{}
     );
@@ -136,21 +161,19 @@ namespace helpers {
       trie_factory, codec, storage_backend
     );
 
-    auto trie_db = TrieStorageImpl::createEmpty(
+    std::shared_ptr<TrieStorageImpl> trie_db = TrieStorageImpl::createEmpty(
       trie_factory, codec, serializer, boost::none
     ).value();
 
-    auto storage_provider = std::make_shared<TrieStorageProviderImpl>(
-      std::move(trie_db)
-    );
-
     // Build change tracker
-    auto sub_engine = std::make_shared<SubscriptionEngineType>();
+    auto storage_sub_engine = std::make_shared<StorageSubscriptionEngine>();
+    auto chain_sub_engine = std::make_shared<ChainSubscriptionEngine>();
+
     auto changes_tracker = std::make_shared<StorageChangesTrackerImpl>(
-      trie_factory, codec, sub_engine
+      trie_factory, codec, storage_sub_engine, chain_sub_engine
     );
 
-    // Build crypto providers
+    // Initialize crypto providers
     auto pbkdf2_provider = std::make_shared<Pbkdf2ProviderImpl>();
     auto random_generator = std::make_shared<BoostRandomGenerator>();
     auto ed25519_provider = std::make_shared<Ed25519ProviderImpl>(random_generator);
@@ -167,8 +190,8 @@ namespace helpers {
       KeyFileStorage::createAt(keystore_path).value()
     );
 
-    // Assemble host api factory
-    auto hostapi_factory = std::make_shared<HostApiFactoryImpl>(
+    // Initialize host api factory
+    auto host_api_factory = std::make_shared<HostApiFactoryImpl>(
       changes_tracker,
       sr25519_provider,
       ed25519_provider,
@@ -178,32 +201,90 @@ namespace helpers {
       bip39_provider
     );
 
-    // Waiting for https://github.com/soramitsu/kagome/pull/794
-    BOOST_ASSERT_MSG(backend == Backend::Binaryen, "Only binaryen environment is currently supported");
-
-    // Build and assmble core factory
+    // Initialize header repo
     auto header_repo = std::make_shared<KeyValueBlockHeaderRepository>(
       std::make_shared<InMemoryStorage>(), hasher
     );
 
-    auto core_factory = std::make_shared<CoreFactoryImpl>(changes_tracker, header_repo);
+    // Initialize module factory (backend dependent)
+    std::shared_ptr<kagome::runtime::ModuleFactory> module_factory;
 
-    // Assmble runtime environment factory and runtime api
-    auto memory_factory = std::make_shared<BinaryenWasmMemoryFactory>();
+    switch(backend) {
+      case Backend::Binaryen: {
+        // Initialize module factory
+        auto instance_env_factory = std::make_shared<binaryen::InstanceEnvironmentFactory>(
+          trie_db,
+          host_api_factory,
+          header_repo,
+          changes_tracker
+        );
 
-    auto module_factory = std::make_shared<WasmModuleFactoryImpl>();
+        module_factory = std::make_shared<binaryen::ModuleFactoryImpl>(instance_env_factory, trie_db);
+      } break;
 
-    auto environment_factory = std::make_shared<RuntimeEnvironmentFactoryImpl>(
-        core_factory,
-        memory_factory,
-        hostapi_factory,
-        module_factory,
-        wasm_provider,
-        storage_provider,
-        hasher
+      case Backend::WAVM: {
+        // Prepare wavm environment
+        auto compartment = std::make_shared<wavm::CompartmentWrapper>("host-api");
+
+        auto intrinsic_module = std::make_shared<wavm::IntrinsicModule>(compartment);
+        wavm::registerHostApiMethods(*intrinsic_module);
+
+        // Initialize module factory
+        auto instance_env_factory = std::make_shared<wavm::InstanceEnvironmentFactory>(
+          trie_db,
+          compartment,
+          intrinsic_module,
+          host_api_factory,
+          header_repo,
+          changes_tracker
+        );
+
+        module_factory = std::make_shared<wavm::ModuleFactoryImpl>(compartment, instance_env_factory, intrinsic_module);
+      } break;
+    };
+
+    // Instantiate wasm module instance from code
+    auto module = module_factory->make(code_provider->getCode());
+    BOOST_ASSERT_MSG(module.has_value(), module.error().message().data());
+
+    auto module_instance = module.value()->instantiate();
+    BOOST_ASSERT_MSG(module_instance.has_value(), module_instance.error().message().data());
+
+    module_instance_ = module_instance.value();
+
+    // Get memory provider
+    memory_provider_ = module_instance_->getEnvironment().memory_provider;
+
+    // Intialize storage batch
+    auto batch = module_instance_->getEnvironment().storage_provider->setToPersistent();
+    BOOST_ASSERT_MSG(batch, batch.error().message().data());
+
+    // Set up heap base
+    auto opt_heap_base = module_instance_->getGlobal("__heap_base");
+    BOOST_ASSERT_MSG(opt_heap_base.has_value() && opt_heap_base.value(), "Failed to obtain __heap_base from a runtime module");
+
+    int32_t heap_base = boost::get<int32_t>(opt_heap_base.value().value());
+
+    auto reset = memory_provider_->resetMemory(heap_base);
+    BOOST_ASSERT_MSG(reset.has_value(), reset.error().message().data());
+
+    /*
+    auto upgrade_tracker = std::make_shared<kagome::runtime::RuntimeUpgradeTrackerImpl>(
+      header_repo,
+      std::make_shared<InMemoryStorage>(),
+      {} // no code substitutions
     );
 
-    runtime_ = std::make_shared<RawRuntimeApi>(environment_factory);
+    auto module_repo = std::make_shared<kagome::runtime::ModuleRepositoryImpl>(upgrade_tracker, module_factory);
+
+    auto runtime_env_factory =std::make_shared<kagome::runtime::RuntimeEnvironmentFactory>(
+      code_provider,
+      module_repo,
+      header_repo,
+    );
+
+    executor_ = std::make_shared<Executor>(header_repo, runtime_env_factory);
+    */
 
     // Set expected defaults in storage
     execute<void>("rtm_ext_storage_set_version_1", ":code", "");
