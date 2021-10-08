@@ -25,9 +25,8 @@
 
 #include <scale/scale.hpp>
 
-#include <blockchain/impl/key_value_block_header_repository.hpp>
-
-#include <runtime/binaryen/runtime_api/runtime_api.hpp>
+#include <runtime/executor.hpp>
+#include <runtime/module_instance.hpp>
 
 namespace scale = kagome::scale;
 
@@ -38,7 +37,10 @@ namespace helpers {
   using kagome::common::Buffer;
   using MaybeBuffer = boost::optional<Buffer>;
 
-  using kagome::runtime::binaryen::RuntimeApi;
+  using kagome::runtime::Executor;
+  using kagome::runtime::MemoryProvider;
+  using kagome::runtime::ModuleInstance;
+  using kagome::runtime::PtrSize;
 
   // Default path of runtime
   extern const char* DEFAULT_RUNTIME_PATH;
@@ -61,12 +63,38 @@ namespace helpers {
         Backend backend = DEFAULT_BACKEND
       );
 
-      // Call function with provided arguments in wasm adapter
+      // Call function with provided arguments
+      template <typename Result, typename... Args>
+      Result execute(std::string_view name, Args &&...args) {
+        auto &memory = memory_provider_->getCurrentMemory().value();
+
+        Buffer encoded_args{};
+        if constexpr (sizeof...(args) > 0) {
+          auto res = scale::encode(std::forward<Args>(args)...);
+          BOOST_ASSERT_MSG(res.has_value(), res.error().message().data());
+          encoded_args.put(std::move(res.value()));
+        }
+
+        PtrSize args_span{memory.storeBuffer(encoded_args)};
+
+        auto result = module_instance_->callExportFunction(name, args_span);
+        BOOST_ASSERT_MSG(result.has_value(), result.error().message().data());
+
+        auto reset = module_instance_->resetEnvironment();
+        BOOST_ASSERT_MSG(reset.has_value(), reset.error().message().data());
+
+        if constexpr (not std::is_void_v<Result>) {
+          auto res = scale::decode<Result>(memory.loadN(result.value().ptr, result.value().size));
+          BOOST_ASSERT_MSG(res.has_value(), res.error().message().data());
+          return res.value();
+        }
+      }
+
+      // Currently broken and not used, because executor is missing headers
       template <typename R, typename... Args>
-      R execute(std::string_view name, Args &&... args) {
-        auto result = runtime_->execute<R>(
+      R execute_sub(std::string_view name, Args &&... args) {
+        auto result = executor_->callAtGenesis<R>(
           name,
-          RuntimeApi::CallConfig{.persistency = RuntimeApi::CallPersistency::PERSISTENT},
           std::forward<Args>(args)...
         );
 
@@ -76,13 +104,11 @@ namespace helpers {
       }
 
     private:
-      // Overwrite to get access to protected function
-      struct RawRuntimeApi : public RuntimeApi {
-        using RuntimeApi::RuntimeApi;
-        using RuntimeApi::execute;
-      };
+      // Main objects used to execute calls
+      std::shared_ptr<ModuleInstance> module_instance_;
+      std::shared_ptr<MemoryProvider> memory_provider_;
 
-      // Main object used to execute calls
-      std::shared_ptr<RawRuntimeApi> runtime_;
+      // Old main object used to execute calls, currently not initalized
+      std::shared_ptr<Executor> executor_;
   };
 }
