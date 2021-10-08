@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
   } catch (const NotImplemented& e) {
     return EOPNOTSUPP;
   } catch (const std::exception& e) {
-    std::cout << e.what() << std::endl;
+    std::cout << "Exception: " << e.what() << std::endl;
     return EXIT_FAILURE;
   }
 
