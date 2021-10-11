@@ -249,7 +249,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [ binaryen ]
+        environment: [ binaryen, wavm ]
         runtime: [ default, expmem ]
     name: "[test-host-api] kagome ${{ matrix.environment }} ${{ matrix.runtime }}"
     runs-on: ubuntu-20.04
