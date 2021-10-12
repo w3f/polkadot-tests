@@ -20,7 +20,7 @@ let
     # Default rust to use for all build
     rustWasm = fenix.fromToolchainFile {
       file = ../rust-toolchain.toml;
-      sha256 = "Jvo1IAcWBBG7o1OcEIYX+6ZDxHuivDDLlRPQHnC6kLY=";
+      sha256 = "9+zeT1DZM0WEs3FoHnzVh7XRHiT4Xc7IWZnYOJFGYF8=";
     };
 
     # Platform with nightly wasm rust
