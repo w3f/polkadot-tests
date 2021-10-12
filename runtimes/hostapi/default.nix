@@ -10,7 +10,7 @@ naerskWasm.buildPackage rec {
     name = "hostapi-runtime-${version}.compact.wasm";
 
     installPhase = ''
-      cp target/release/wbuild/hostapi-runtime/hostapi_runtime.compact.wasm $out
+      cp out/release/wbuild/hostapi-runtime/hostapi_runtime.compact.wasm $out
     '';
   };
 }
