@@ -49,6 +49,7 @@
 
         packages = pkgs.implementations // pkgs.testsuite;
 
+        legacyPackages = pkgs;
       }
     ) // {
       checks.x86_64-linux = self.packages.x86_64-linux;
