@@ -30,7 +30,7 @@ import (
 	"github.com/ChainSafe/gossamer/lib/runtime"
 	"github.com/ChainSafe/gossamer/lib/runtime/storage"
 	"github.com/ChainSafe/gossamer/lib/runtime/wasmer"
-	"github.com/ChainSafe/gossamer/lib/runtime/wasmtime"
+//	"github.com/ChainSafe/gossamer/lib/runtime/wasmtime"
 	"github.com/ChainSafe/gossamer/lib/runtime/life"
 )
 
@@ -57,7 +57,7 @@ func ProcessHostApiCommand(args []string) {
 	functionTextPtr := flag.String("function", "", "Function to call (required).")
 	inputTextPtr := flag.String("input", "", "Input to pass on call.")
 
-	environmentTextPtr := flag.String("environment", "wasmer", "WASM environment to use:  wasmer, wasmtime or life")
+	environmentTextPtr := flag.String("environment", "wasmer", "WASM environment to use:  wasmer or life")
 	runtimeTextPtr := flag.String("runtime", DEFAULT_RUNTIME_PATH, "Override path to hostapi test runtime to use.")
 
 	// Parse provided argument list
@@ -117,6 +117,7 @@ func executeHostApiTest(function string, inputs []string, environment, runtimePa
 		if err != nil {
 			return fmt.Errorf("Failed to intialize wasmer environment: %w", err)
 		}
+	/*
 	case "wasmtime":
 		// ... using wasmtime
 		cfg := &wasmtime.Config{
@@ -130,6 +131,7 @@ func executeHostApiTest(function string, inputs []string, environment, runtimePa
 		if err != nil {
 			return fmt.Errorf("Failed to intialize wasmtime environment: %w", err)
 		}
+	*/
 	case "life":
 		// ... using life
 		cfg := &life.Config{
