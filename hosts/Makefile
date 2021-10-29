@@ -9,7 +9,7 @@ substrate:
 	cp substrate/target/release/polkadot ../bin/
 
 kagome:
-	cmake -DCMAKE_BUILD_TYPE=Release -S kagome -B kagome/build
+	cmake -DCMAKE_BUILD_TYPE=Release -DHUNTER_CONFIGURATION_TYPES=Release -S kagome -B kagome/build
 	cmake --build kagome/build
 	cp kagome/build/node/kagome ../bin/
 
