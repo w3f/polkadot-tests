@@ -56,6 +56,7 @@ TrieCommandArgs extractTrieArgs(int argc, char **argv) {
   boost::optional<std::string> subcommand;
   boost::optional<std::string> state_file_name;
   bool keys_in_hex;
+  bool values_in_hex;
   bool log_trie;
 
   // clang-format off
@@ -66,6 +67,10 @@ TrieCommandArgs extractTrieArgs(int argc, char **argv) {
       ("keys-in-hex",
           po::bool_switch(&keys_in_hex)->default_value(false),
           "regard the keys in the trie file as hex values"
+          " and convert them to binary before inserting into the trie")
+      ("values-in-hex",
+          po::bool_switch(&values_in_hex)->default_value(false),
+          "regard the values in the trie file as hex values"
           " and convert them to binary before inserting into the trie")
       ("state-file,i",
           po::value(&state_file_name)->required(),
@@ -89,12 +94,13 @@ TrieCommandArgs extractTrieArgs(int argc, char **argv) {
 
   return TrieCommandArgs{.subcommand = *subcommand,
                          .keys_in_hex = keys_in_hex,
+                         .values_in_hex = values_in_hex,
                          .log_trie = log_trie,
                          .state_file_name = *state_file_name};
 }
 
 std::pair<std::vector<Buffer>, std::vector<Buffer>>
-parseYamlStateFile(const std::string &filename, bool keys_in_hex) {
+parseYamlStateFile(const std::string &filename, bool keys_in_hex, bool values_in_hex) {
   YAML::Node state = YAML::LoadFile(filename);
   std::vector<Buffer> keys;
   keys.reserve(state["keys"].size());
@@ -118,8 +124,14 @@ parseYamlStateFile(const std::string &filename, bool keys_in_hex) {
   for (auto &&val_entry : state["values"]) {
     Buffer b_val;
     auto val_str = val_entry.as<std::string>();
+    if (values_in_hex) {
+      auto res = unhex(val_str);
+      BOOST_ASSERT_MSG(res, "Invalid hex value");
+      b_val = Buffer{res.value()};
+    } else {
     std::copy(val_str.begin(), val_str.end(),
               std::back_inserter(b_val.asVector()));
+    }
     values.push_back(b_val);
   }
   BOOST_ASSERT_MSG(keys.size() == values.size(),
@@ -178,7 +190,7 @@ void processTrieCommand(const TrieCommandArgs &args) {
   });
 
   auto [keys, values] =
-      parseYamlStateFile(args.state_file_name, args.keys_in_hex);
+    parseYamlStateFile(args.state_file_name, args.keys_in_hex, args.values_in_hex);
 
   BOOST_VERIFY_MSG(router.executeSubcommand(args.subcommand, std::move(keys),
                                             std::move(values)),

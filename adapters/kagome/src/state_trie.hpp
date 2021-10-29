@@ -25,6 +25,7 @@
 struct TrieCommandArgs {
     std::string subcommand;
     bool keys_in_hex;
+    bool values_in_hex;
     bool log_trie;
     std::string state_file_name;
 };
