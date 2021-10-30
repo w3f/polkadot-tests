@@ -1,6 +1,6 @@
 [package]
 name = 'tester-runtime'
-version = "0.9.8-567cfb9"
+version = "0.9.9-a19b9ef"
 edition = '2018'
 
 [profile.release]
@@ -21,6 +21,11 @@ optional = true
 [dependencies.codec]
 package = 'parity-scale-codec'
 version = '2.0.0'
+default-features = false
+features = ['derive']
+
+[dependencies.scale-info]
+version = '1.0'
 default-features = false
 features = ['derive']
 

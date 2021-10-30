@@ -135,12 +135,14 @@ parameter_types! {
 	};
 
 	pub const SS58Prefix: u8 = 42;
+
+	pub const MaxAuthorities: u32 = 100_000;
 }
 
 // Configure FRAME pallets to include in runtime.
 impl system::Config for Runtime {
 	/// The basic call filter to use in dispatchable.
-	type BaseCallFilter = ();
+	type BaseCallFilter = frame_support::traits::Everything;
 	/// Block & extrinsics weights: base values and limits.
 	type BlockWeights = BlockWeights;
 	/// The maximum length of a block (in bytes).
@@ -211,6 +213,7 @@ impl babe::Config for Runtime {
 	type EpochDuration = EpochDuration;
 	type ExpectedBlockTime = ExpectedBlockTime;
 	type EpochChangeTrigger = babe::SameAuthoritiesForever; // TODO: Check authority change
+	type DisabledValidators = ();
 
 	type KeyOwnerProofSystem = (); // Disabled
 
@@ -225,6 +228,7 @@ impl babe::Config for Runtime {
 	type HandleEquivocation = (); // Disabled
 
 	type WeightInfo = ();
+	type MaxAuthorities = MaxAuthorities;
 }
 
 impl grandpa::Config for Runtime {
@@ -245,6 +249,7 @@ impl grandpa::Config for Runtime {
 	type HandleEquivocation = (); // Disabled
 
 	type WeightInfo = ();
+	type MaxAuthorities = MaxAuthorities;
 }
 
 parameter_types! {
@@ -338,7 +343,7 @@ impl_runtime_apis! {
 	impl sp_api::Metadata<Block> for Runtime {
 		fn metadata() -> OpaqueMetadata {
 			print("@@metadata()@@");
-			Runtime::metadata().into()
+			OpaqueMetadata::new(Runtime::metadata().into())
 		}
 	} // metadata api
 
@@ -401,7 +406,7 @@ impl_runtime_apis! {
 				slot_duration: Babe::slot_duration(),
 				epoch_length: EpochDuration::get(),
 				c: BABE_GENESIS_EPOCH_CONFIG.c,
-				genesis_authorities: Babe::authorities(),
+				genesis_authorities: Babe::authorities().to_vec(),
 				randomness: Babe::randomness(),
 				allowed_slots: BABE_GENESIS_EPOCH_CONFIG.allowed_slots,
 			}
@@ -448,6 +453,10 @@ impl_runtime_apis! {
 			_authority_id: GrandpaId,
 		) -> Option<sp_grandpa::OpaqueKeyOwnershipProof> {
 			None
+		}
+
+		fn current_set_id() -> sp_grandpa::SetId {
+			Grandpa::current_set_id()
 		}
 
 		fn submit_report_equivocation_unsigned_extrinsic(
