@@ -12,14 +12,6 @@ find_package(kagome REQUIRED CONFIG)
 
 message(STATUS "Found kagome: ${kagome_INCLUDE_DIRS}")
 
-# FIXME Kagome's package config should do all this!
-find_package(Boost REQUIRED COMPONENTS filesystem program_options random)
-find_package(schnorrkel_crust REQUIRED)
-find_package(libsecp256k1 REQUIRED)
-find_package(leveldb REQUIRED)
-find_package(OpenSSL REQUIRED)
-find_package(xxhash REQUIRED)
-find_package(soralog REQUIRED)
-find_package(fmt REQUIRED)
-find_package(libp2p REQUIRED)
-find_package(binaryen REQUIRED)
+include(
+  ${CMAKE_SOURCE_DIR}/../../hosts/kagome/cmake/dependencies.cmake
+  )
