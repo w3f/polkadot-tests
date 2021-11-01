@@ -27,7 +27,7 @@
 
 #include <blockchain/impl/key_value_block_header_repository.hpp>
 
-#include <runtime/binaryen/runtime_api/runtime_api.hpp>
+#include <runtime/executor.hpp>
 
 namespace scale = kagome::scale;
 
@@ -64,25 +64,19 @@ namespace helpers {
       // Call function with provided arguments in wasm adapter
       template <typename R, typename... Args>
       R execute(std::string_view name, Args &&... args) {
-        auto result = runtime_->execute<R>(
-          name,
-          RuntimeApi::CallConfig{.persistency = RuntimeApi::CallPersistency::PERSISTENT},
-          std::forward<Args>(args)...
-        );
 
         BOOST_ASSERT_MSG(result, result.error().message().data());
 
-        return result.value();
+      auto result = runtime_->persistentCallAtGenesis<R>(
+          name, std::forward<Args>(args)...);
       }
 
     private:
-      // Overwrite to get access to protected function
-      struct RawRuntimeApi : public RuntimeApi {
-        using RuntimeApi::RuntimeApi;
-        using RuntimeApi::execute;
-      };
+      if constexpr (not std::is_same_v<R, void>) {
+        return result.value().result;
+      }
 
       // Main object used to execute calls
-      std::shared_ptr<RawRuntimeApi> runtime_;
+    std::shared_ptr<Executor> runtime_;
   };
 }
