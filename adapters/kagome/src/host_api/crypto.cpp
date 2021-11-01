@@ -63,12 +63,12 @@ namespace crypto {
 
     auto pk1 = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
-      TEST_KEY_TYPE, boost::make_optional(seed1)
+      TEST_KEY_TYPE, std::make_optional(seed1)
     );
 
     auto pk2 = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
-      TEST_KEY_TYPE, boost::make_optional(seed2)
+      TEST_KEY_TYPE, std::make_optional(seed2)
     );
 
     auto keys = environment.execute<std::vector<typename Suite::PublicKey>>(
@@ -96,7 +96,7 @@ namespace crypto {
 
     auto key = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
-      TEST_KEY_TYPE, boost::make_optional(seed));
+      TEST_KEY_TYPE, std::make_optional(seed));
 
     std::cout << key.toHex() << std::endl;
   }
@@ -113,10 +113,10 @@ namespace crypto {
 
     auto pk = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
-      TEST_KEY_TYPE, boost::make_optional(seed)
+      TEST_KEY_TYPE, std::make_optional(seed)
     );
 
-    auto sig = environment.execute<boost::optional<typename Suite::Signature>>(
+    auto sig = environment.execute<std::optional<typename Suite::Signature>>(
       "rtm_ext_crypto_"s + Suite::Name + "_sign_version_1",
       TEST_KEY_TYPE, pk, message
     ).value();
@@ -138,9 +138,9 @@ namespace crypto {
 
     auto pk = environment.execute<typename Suite::PublicKey>(
       "rtm_ext_crypto_"s + Suite::Name + "_generate_version_1",
-      TEST_KEY_TYPE, boost::make_optional(seed)
+      TEST_KEY_TYPE, std::make_optional(seed)
     );
-    auto sig = environment.execute<boost::optional<typename Suite::Signature>>(
+    auto sig = environment.execute<std::optional<typename Suite::Signature>>(
       "rtm_ext_crypto_"s + Suite::Name + "_sign_version_1",
       TEST_KEY_TYPE, pk, message
     ).value();
