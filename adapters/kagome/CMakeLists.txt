@@ -42,13 +42,12 @@ set(HUNTER_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE})
 # Setup hunter
 include(cmake/HunterGate.cmake)
 HunterGate(
-  URL https://github.com/soramitsu/soramitsu-hunter/archive/v0.23.257-soramitsu13.tar.gz
-  SHA1 072ae2d60b56dd29eab7320da9e090e1b5469cc4
+  URL  https://github.com/soramitsu/soramitsu-hunter/archive/v0.23.257-soramitsu15.tar.gz
+  SHA1  6275b53983398688f467ae6358194ca407b65446
   FILEPATH "${CMAKE_SOURCE_DIR}/cmake/HunterConfig.cmake"
 )
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ${HUNTER_ENABLED})
-
 
 # General config
 project(kagome-adapter LANGUAGES CXX C)
@@ -78,7 +77,6 @@ target_link_libraries(kagome-adapter
   Boost::program_options
   yaml-cpp
   ${kagome_LIBRARIES}
-  kagome::binaryen_wasm_memory_factory
 )
 
 
