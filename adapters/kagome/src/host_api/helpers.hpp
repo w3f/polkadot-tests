@@ -36,7 +36,7 @@ namespace helpers {
   using kagome::common::hex_lower;
 
   using kagome::common::Buffer;
-  using MaybeBuffer = boost::optional<Buffer>;
+  using MaybeBuffer = std::optional<Buffer>;
 
   using kagome::runtime::binaryen::RuntimeApi;
 
