@@ -13,6 +13,7 @@
 , xxHash_cmake
 , libsecp256k1_cmake
 , binaryen_cmake
+, backward-cpp_cmake
 , wavm
 , cpp-libp2p
 , tsl_hat_trie
@@ -48,6 +49,7 @@ stdenv.mkDerivation rec {
     # Patched upstream dependencies
     gtest_cmake
     rapidjson_cmake
+    backward-cpp_cmake
 
     # Custom packaged dependencies
     soralog
