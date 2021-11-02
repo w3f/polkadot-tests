@@ -27,4 +27,5 @@ with final; {
   rapidjson_cmake     = callPackage ./deps/rapidjson.nix {};
   xxHash_cmake        = callPackage ./deps/xxhash.nix {};
   libsecp256k1_cmake  = callPackage ./deps/libsecp256k1.nix {};
+  backward-cpp_cmake  = callPackage ./deps/backward-cpp.nix {};
 }
