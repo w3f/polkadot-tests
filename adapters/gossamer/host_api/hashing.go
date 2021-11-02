@@ -23,13 +23,13 @@ import (
 	"fmt"
 
 	"github.com/ChainSafe/gossamer/lib/runtime"
-	"github.com/ChainSafe/gossamer/lib/scale"
+	"github.com/ChainSafe/gossamer/pkg/scale"
 )
 
 // Simple wrapper to test hash function that input and output byte arrays
 func test_hashing(r runtime.Instance, name, input string) error {
 
-	enc, err := scale.Encode([]byte(input))
+	enc, err := scale.Marshal([]byte(input))
 	if err != nil {
 		return fmt.Errorf("Encoding failed: %w", err)
 	}
@@ -39,12 +39,13 @@ func test_hashing(r runtime.Instance, name, input string) error {
 		return fmt.Errorf("Execution failed: %w", err)
 	}
 
-	dec, err := scale.Decode(output, []byte{})
+	var dec []byte
+	err = scale.Unmarshal(output, &dec)
 	if err != nil {
 		return fmt.Errorf("Decoding failed: %w", err)
 	}
 
-	fmt.Printf("%x\n", dec.([]byte)[:])
+	fmt.Printf("%x\n", dec[:])
 
 	return nil
 }

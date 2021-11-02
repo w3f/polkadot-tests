@@ -22,9 +22,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ChainSafe/gossamer/lib/common/optional"
 	"github.com/ChainSafe/gossamer/lib/runtime"
-	"github.com/ChainSafe/gossamer/lib/scale"
+	"github.com/ChainSafe/gossamer/pkg/scale"
 )
 
 // -- Helpers --
@@ -35,12 +34,13 @@ const DUMY_KEY_ID int32 = 0x796d7564
 // Helper function to call rtm_ext_crypto_<suite>_generate_version_1
 func crypto_generate(r runtime.Instance, suite, seed string) ([]byte, error) {
 	// Encode inputs
-	id_enc, err := scale.Encode(DUMY_KEY_ID)
+	id_enc, err := scale.Marshal(DUMY_KEY_ID)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding key id failed: %w", err)
 	}
 
-	seed_enc, err := optional.NewBytes(true, []byte(seed)).Encode()
+	seed_bin := []byte(seed)
+	seed_enc, err := scale.Marshal(&seed_bin) // optional
 	if err != nil {
 		return nil, fmt.Errorf("Encoding seed failed: %w", err)
 	}
@@ -57,7 +57,7 @@ func crypto_generate(r runtime.Instance, suite, seed string) ([]byte, error) {
 // Helper function to call rtm_ext_crypto_<suite>_public_keys_version_1
 func crypto_public_keys(r runtime.Instance, suite string) ([]byte, error) {
 	// Encode input
-	id_enc, err := scale.Encode(DUMY_KEY_ID)
+	id_enc, err := scale.Marshal(DUMY_KEY_ID)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding key id failed: %w", err)
 	}
@@ -72,14 +72,14 @@ func crypto_public_keys(r runtime.Instance, suite string) ([]byte, error) {
 }
 
 // Helper function to call rtm_ext_crypto_<suite>_sign_version_1
-func crypto_sign(r runtime.Instance, suite string, pubkey []byte, msg string) (*optional.Bytes, error) {
+func crypto_sign(r runtime.Instance, suite string, pubkey []byte, msg string) (*[]byte, error) {
 	// Encode inputs
-	id_enc, err := scale.Encode(DUMY_KEY_ID)
+	id_enc, err := scale.Marshal(DUMY_KEY_ID)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding key id failed: %w", err)
 	}
 
-	msg_enc, err := scale.Encode([]byte(msg))
+	msg_enc, err := scale.Marshal([]byte(msg))
 	if err != nil {
 		return nil, fmt.Errorf("Encoding message failed: %w", err)
 	}
@@ -93,13 +93,18 @@ func crypto_sign(r runtime.Instance, suite string, pubkey []byte, msg string) (*
 	}
 
 	// Decode and return result
-	return optional.NewBytes(sig_enc[0] != 0, sig_enc[1:]), nil
+	if sig_enc[0] != 0 {
+		sig_dec := sig_enc[1:]
+		return &sig_dec, nil
+	}
+
+	return nil, nil
 }
 
 // Helper function to call rtm_ext_crypto_<suite>_verify_version_1
 func crypto_verify(r runtime.Instance, suite string, sig []byte, msg string, pubkey []byte) (bool, error) {
 	// Encode inputs
-	msg_enc, err := scale.Encode([]byte(msg))
+	msg_enc, err := scale.Marshal([]byte(msg))
 	if err != nil {
 		return false, fmt.Errorf("Encoding message failed: %w", err)
 	}
@@ -113,11 +118,12 @@ func crypto_verify(r runtime.Instance, suite string, sig []byte, msg string, pub
 	}
 
 	// Decode and return result
-	res, err := scale.Decode(res_enc, false)
+	var res bool
+	err = scale.Unmarshal(res_enc, &res)
 	if err != nil {
 		return false, fmt.Errorf("Decoding result failed: %w", err)
 	}
-	return res.(bool), nil
+	return res, nil
 }
 
 // -- Tests --
@@ -195,17 +201,17 @@ func test_crypto_sign(r runtime.Instance, suite, seed, msg string) error {
 	}
 
 	// Check and print result
-	if !sig.Exists() {
+	if sig == nil {
 		return errors.New("No signature received")
 	}
 
-	if len(sig.Value()) != 64 {
-		return fmt.Errorf("Signature has incorrect size: %d", len(sig.Value()))
+	if len(*sig) != 64 {
+		return fmt.Errorf("Signature has incorrect size: %d", len(*sig))
 	}
 
 	fmt.Println("Message: ", msg)
 	fmt.Printf("Public key: %x\n", pk)
-	fmt.Printf("Signature: %x\n", sig.Value())
+	fmt.Printf("Signature: %x\n", *sig)
 
 	return nil
 }
@@ -224,12 +230,12 @@ func test_crypto_verify(r runtime.Instance, suite, seed, msg string) error {
 		return err
 	}
 
-	if !sig.Exists() {
+	if sig == nil {
 		return errors.New("No signature received")
 	}
 
 	// Verify signature
-	valid, err := crypto_verify(r, suite, sig.Value(), msg, pk)
+	valid, err := crypto_verify(r, suite, *sig, msg, pk)
 
 	if !valid {
 		return errors.New("Verifying signature failed")
@@ -238,7 +244,7 @@ func test_crypto_verify(r runtime.Instance, suite, seed, msg string) error {
 	// Print result
 	fmt.Println("Message: ", msg)
 	fmt.Printf("Public key: %x\n", pk)
-	fmt.Printf("Signature: %x\n", sig.Value())
+	fmt.Printf("Signature: %x\n", *sig)
 
 	if valid {
 		fmt.Println("GOOD SIGNATURE");

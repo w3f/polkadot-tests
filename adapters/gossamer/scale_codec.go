@@ -20,10 +20,9 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
-	"github.com/ChainSafe/gossamer/lib/scale"
+	"github.com/ChainSafe/gossamer/pkg/scale"
 	"os"
 )
 
@@ -64,14 +63,10 @@ func ProcessScaleCodecCommand(scale_codec_args []string) {
 		}
 
 		//Encode by scale codec and then base64
-		buffer := bytes.Buffer{}
-		se := scale.Encoder{&buffer}
-		_, err := se.Encode(*inputTextPtr)
+		encodedText, err := scale.Marshal(*inputTextPtr)
 		if err != nil {
 			os.Exit(1)
 		}
-
-		encodedText := buffer.Bytes()
 
 		fmt.Printf("encoded %s: [", *inputTextPtr)
 		csvHexPrinter(encodedText)

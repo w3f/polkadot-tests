@@ -23,9 +23,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ChainSafe/gossamer/lib/common/optional"
 	"github.com/ChainSafe/gossamer/lib/runtime"
-	"github.com/ChainSafe/gossamer/lib/scale"
+	"github.com/ChainSafe/gossamer/pkg/scale"
 )
 
 // -- Helpers --
@@ -33,12 +32,12 @@ import (
 // Helper function to call rtm_ext_storage_set_version_1
 func storage_set(r runtime.Instance, key, value []byte) error {
 	// Encode inputs
-	key_enc, err := scale.Encode(key)
+	key_enc, err := scale.Marshal(key)
 	if err != nil {
 		return fmt.Errorf("Encoding key failed: %w", err)
 	}
 
-	value_enc, err := scale.Encode(value)
+	value_enc, err := scale.Marshal(value)
 	if err != nil {
 		return fmt.Errorf("Encoding value failed: %w", err)
 	}
@@ -53,9 +52,9 @@ func storage_set(r runtime.Instance, key, value []byte) error {
 }
 
 // Helper function to call rtm_ext_storage_get_version_1
-func storage_get(r runtime.Instance, key []byte) (*optional.Bytes, error) {
+func storage_get(r runtime.Instance, key []byte) (*[]byte, error) {
 	// Encode inputs
-	key_enc, err := scale.Encode(key)
+	key_enc, err := scale.Marshal(key)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding key failed: %w", err)
 	}
@@ -66,27 +65,29 @@ func storage_get(r runtime.Instance, key []byte) (*optional.Bytes, error) {
 		return nil, fmt.Errorf("Execution failed: %w", err)
 	}
 
-	value_opt, err := scale.Decode(value_enc, &optional.Bytes{})
+	var value_opt *[]byte
+	err = scale.Unmarshal(value_enc, &value_opt)
 	if err != nil {
 		return nil, fmt.Errorf("Decoding value failed: %w", err)
 	}
-	return value_opt.(*optional.Bytes), nil
+
+	return value_opt, nil
 }
 
 // Helper function to call rtm_ext_storage_read_version_1
-func storage_read(r runtime.Instance, key []byte, offset uint32, length uint32) (*optional.Bytes, error) {
+func storage_read(r runtime.Instance, key []byte, offset uint32, length uint32) (*[]byte, error) {
 	// Encode inputs
-	key_enc, err := scale.Encode([]byte(key))
+	key_enc, err := scale.Marshal([]byte(key))
 	if err != nil {
 		return nil, fmt.Errorf("Encoding key failed: %w", err)
 	}
 
-	offset_enc, err := scale.Encode(offset)
+	offset_enc, err := scale.Marshal(offset)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding offset failed: %w", err)
 	}
 
-	length_enc, err := scale.Encode(length)
+	length_enc, err := scale.Marshal(length)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding length failed: %w", err)
 	}
@@ -99,17 +100,18 @@ func storage_read(r runtime.Instance, key []byte, offset uint32, length uint32) 
 		return nil, fmt.Errorf("Execution failed: %w", err)
 	}
 
-	value_opt, err := scale.Decode(value_enc, &optional.Bytes{})
+	var value_opt *[]byte
+	err = scale.Unmarshal(value_enc, &value_opt)
 	if err != nil {
 		return nil, fmt.Errorf("Decoding value failed: %w", err)
 	}
-	return value_opt.(*optional.Bytes), nil
+	return value_opt, nil
 }
 
 // Helper function to call rtm_ext_storage_clear_version_1
 func storage_clear(r runtime.Instance, key []byte) error {
 	// Encode inputs
-	key_enc, err := scale.Encode([]byte(key))
+	key_enc, err := scale.Marshal([]byte(key))
 	if err != nil {
 		return fmt.Errorf("Encoding key failed: %w", err)
 	}
@@ -126,7 +128,7 @@ func storage_clear(r runtime.Instance, key []byte) error {
 // Helper function to call rtm_ext_storage_exists_version_1
 func storage_exists(r runtime.Instance, key []byte) (uint32, error) {
 	// Encode inputs
-	key_enc, err := scale.Encode(key)
+	key_enc, err := scale.Marshal(key)
 	if err != nil {
 		return 0, fmt.Errorf("Encoding key failed: %w", err)
 	}
@@ -137,22 +139,23 @@ func storage_exists(r runtime.Instance, key []byte) (uint32, error) {
 		return 0, fmt.Errorf("Execution failed: %w", err)
 	}
 
-	exists, err := scale.Decode(exists_enc, uint32(0))
+	var exists uint32
+	err = scale.Unmarshal(exists_enc, &exists)
 	if err != nil {
 		return 0, fmt.Errorf("Decoding value failed: %w", err)
 	}
-	return exists.(uint32), nil
+	return exists, nil
 }
 
 // Helper function to call rtm_ext_storage_append_version_1
 func storage_append(r runtime.Instance, key, value []byte) error {
 	// Encode inputs
-	key_enc, err := scale.Encode(key)
+	key_enc, err := scale.Marshal(key)
 	if err != nil {
 		return fmt.Errorf("Encoding key failed: %w", err)
 	}
 
-	value_enc, err := scale.Encode(value)
+	value_enc, err := scale.Marshal(value)
 	if err != nil {
 		return fmt.Errorf("Encoding value failed: %w", err)
 	}
@@ -174,17 +177,18 @@ func storage_root(r runtime.Instance) ([]byte, error) {
 		return nil, fmt.Errorf("Execution failed: %w", err)
 	}
 
-	root, err := scale.Decode(root_enc, []byte{})
+	var root []byte
+	err = scale.Unmarshal(root_enc, &root)
 	if err != nil {
 		return nil, fmt.Errorf("Decoding root failed: %w", err)
 	}
-	return root.([]byte), nil
+	return root, nil
 }
 
 // Helper function to call rtm_ext_storage_next_key_version_1
-func storage_next_key(r runtime.Instance, key []byte) (*optional.Bytes, error) {
+func storage_next_key(r runtime.Instance, key []byte) (*[]byte, error) {
 	// Encode inputs
-	key_enc, err := scale.Encode(key)
+	key_enc, err := scale.Marshal(key)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding key failed: %w", err)
 	}
@@ -195,11 +199,13 @@ func storage_next_key(r runtime.Instance, key []byte) (*optional.Bytes, error) {
 		return nil, fmt.Errorf("Execution failed: %w", err)
 	}
 
-	value_opt, err := scale.Decode(value_enc, &optional.Bytes{})
+
+	var value_opt *[]byte
+	err = scale.Unmarshal(value_enc, &value_opt)
 	if err != nil {
 		return nil, fmt.Errorf("Decoding next key failed: %w", err)
 	}
-	return value_opt.(*optional.Bytes), nil
+	return value_opt, nil
 }
 
 // -- Tests --
@@ -225,8 +231,8 @@ func test_storage_set_get(r runtime.Instance, key, value string) error {
 		return err
 	}
 
-	if none.Exists() {
-		return fmt.Errorf("Key already exists: %s", none.Value())
+	if none != nil {
+		return fmt.Errorf("Key already exists: %s", *none)
 	}
 
 	// Set key to value
@@ -241,16 +247,16 @@ func test_storage_set_get(r runtime.Instance, key, value string) error {
 		return err
 	}
 
-	if !some.Exists() {
+	if some == nil {
 		return errors.New("Key is missing")
 	}
 
-	if !bytes.Equal(some.Value(), []byte(value)) {
-		return fmt.Errorf("Value is different: %s", some.Value())
+	if !bytes.Equal(*some, []byte(value)) {
+		return fmt.Errorf("Value is different: %s", *some)
 	}
 
 	// Print result
-	fmt.Printf("%s\n", some.Value())
+	fmt.Printf("%s\n", *some)
 
 	return nil
 }
@@ -263,8 +269,8 @@ func test_storage_read(r runtime.Instance, key, value string, offset, length uin
 		return err
 	}
 
-	if none.Exists() {
-		return fmt.Errorf("Key already exists: %s", none.Value())
+	if none != nil {
+		return fmt.Errorf("Key already exists: %s", *none)
 	}
 
 	// Add data to storage
@@ -279,7 +285,7 @@ func test_storage_read(r runtime.Instance, key, value string, offset, length uin
 		return err
 	}
 
-	if !some.Exists() {
+	if some == nil {
 		return errors.New("Key is missing")
 	}
 
@@ -288,16 +294,16 @@ func test_storage_read(r runtime.Instance, key, value string, offset, length uin
 		if expected_length > int(length) {
 			expected_length = int(length)
 		}
-		expected_value := value[offset:int(offset)+expected_length];
+		expected_value := value[offset:int(offset)+expected_length]
 
-		if !bytes.Equal(some.Value(), []byte(expected_value)) {
-			return fmt.Errorf("Value is different: %s", some.Value())
+		if !bytes.Equal(*some, []byte(expected_value)) {
+			return fmt.Errorf("Value is different: %s", *some)
 		}
-	} else if len(some.Value()) != 0 {
-		return fmt.Errorf("Value is not empty: %s", some.Value())
+	} else if len(*some) != 0 {
+		return fmt.Errorf("Value is not empty: %s", *some)
 	}
 
-	fmt.Printf("%s\n", some.Value())
+	fmt.Printf("%s\n", *some)
 
 	return nil
 }
@@ -316,12 +322,12 @@ func test_storage_clear(r runtime.Instance, key, value string) error {
 		return err
 	}
 
-	if !some.Exists() {
+	if some == nil {
 		return errors.New("Key is missing")
 	}
 
-	if !bytes.Equal(some.Value(), []byte(value)) {
-		return fmt.Errorf("Value is different: %s", some.Value())
+	if !bytes.Equal(*some, []byte(value)) {
+		return fmt.Errorf("Value is different: %s", *some)
 	}
 
 	// Clear data
@@ -336,8 +342,8 @@ func test_storage_clear(r runtime.Instance, key, value string) error {
 		return err
 	}
 
-	if none.Exists() {
-		return fmt.Errorf("Key was not cleared: %s", none.Value())
+	if none != nil {
+		return fmt.Errorf("Key was not cleared: %s", *none)
 	}
 
 	return nil
@@ -390,7 +396,7 @@ func test_storage_clear_prefix(r runtime.Instance, prefix, key1, value1, key2, v
 	}
 
 	// Clear prefix
-	prefix_enc, err := scale.Encode([]byte(prefix))
+	prefix_enc, err := scale.Marshal([]byte(prefix))
 	if err != nil {
 		return fmt.Errorf("Encoding prefix failed: : %w", err)
 	}
@@ -407,16 +413,16 @@ func test_storage_clear_prefix(r runtime.Instance, prefix, key1, value1, key2, v
 	}
 
 	if strings.HasPrefix(key1, prefix) {
-		if result1.Exists() {
+		if result1 != nil {
 			return errors.New("Key1 was not deleted")
 		}
 	} else {
-		if !result1.Exists() {
+		if result1 == nil {
 			return errors.New("Key1 was deleted")
 		}
 
-		if !bytes.Equal(result1.Value(), []byte(value1)) {
-			return fmt.Errorf("Value1 is different: %s", result1.Value())
+		if !bytes.Equal(*result1, []byte(value1)) {
+			return fmt.Errorf("Value1 is different: %s", *result1)
 		}
 	}
 
@@ -427,16 +433,16 @@ func test_storage_clear_prefix(r runtime.Instance, prefix, key1, value1, key2, v
 	}
 
 	if strings.HasPrefix(key2, prefix) {
-		if result2.Exists() {
+		if result2 != nil {
 			return errors.New("Key2 was not deleted")
 		}
 	} else {
-		if !result2.Exists() {
+		if result2 == nil {
 			return errors.New("Key2 was deleted")
 		}
 
-		if !bytes.Equal(result2.Value(), []byte(value2)) {
-			return fmt.Errorf("Value2 is different: %s", result2.Value())
+		if !bytes.Equal(*result2, []byte(value2)) {
+			return fmt.Errorf("Value2 is different: %s", *result2)
 		}
 	}
 
@@ -446,12 +452,12 @@ func test_storage_clear_prefix(r runtime.Instance, prefix, key1, value1, key2, v
 // Test for rtm_ext_storage_append_version_1
 func test_storage_append(r runtime.Instance, key1, value1, key2, value2 string) error {
 	// Encode inputs
-	value1_enc, err := scale.Encode(value1)
+	value1_enc, err := scale.Marshal(value1)
 	if err != nil {
 		return fmt.Errorf("Encoding value1 failed: %w", err)
 	}
 
-	value2_enc, err := scale.Encode(value2)
+	value2_enc, err := scale.Marshal(value2)
 	if err != nil {
 		return fmt.Errorf("Encoding value2 failed: %w", err)
 	}
@@ -462,8 +468,8 @@ func test_storage_append(r runtime.Instance, key1, value1, key2, value2 string) 
 		return err
 	}
 
-	if none1.Exists() {
-		return fmt.Errorf("Key1 already exists: %s", none1.Value())
+	if none1 != nil {
+		return fmt.Errorf("Key1 already exists: %s", *none1)
 	}
 
 	// Insert key1
@@ -482,8 +488,8 @@ func test_storage_append(r runtime.Instance, key1, value1, key2, value2 string) 
 		return err
 	}
 
-	if none2.Exists() {
-		return fmt.Errorf("Key2 already exists: %s", none2.Value())
+	if none2 != nil {
+		return fmt.Errorf("Key2 already exists: %s", *none2)
 	}
 
 	// Insert key2
@@ -510,18 +516,18 @@ func test_storage_append(r runtime.Instance, key1, value1, key2, value2 string) 
 		return err
 	}
 
-	if !some1_opt.Exists() {
+	if some1_opt == nil {
 		return errors.New("Key1 not set")
 	}
 
-	some1_dec, err := scale.Decode(some1_opt.Value(), []string{})
+	var some1 []string
+	err = scale.Unmarshal(*some1_opt, &some1)
 	if err != nil {
-		return fmt.Errorf("Decoding value failed: %w", err)
+		return fmt.Errorf("Decoding value1 failed: %w", err)
 	}
-	some1 := some1_dec.([]string)
 
-	if some1[0] != value1 || some1[1] != value2 {
-		return errors.New("Value is different")
+	if len(some1) != 2 || some1[0] != value1 || some1[1] != value2 {
+		return fmt.Errorf("Value1 is different: %v", some1)
 	}
 
 	fmt.Println(strings.Join(some1, ";"))
@@ -532,18 +538,18 @@ func test_storage_append(r runtime.Instance, key1, value1, key2, value2 string) 
 		return err
 	}
 
-	if !some2_opt.Exists() {
+	if some2_opt == nil {
 		return errors.New("Key2 not set")
 	}
 
-	some2_dec, err := scale.Decode(some2_opt.Value(), []string{})
+	var some2 []string
+	err = scale.Unmarshal(*some2_opt, &some2)
 	if err != nil {
-		return fmt.Errorf("Decoding value failed: %w", err)
+		return fmt.Errorf("Decoding value2 failed: %w", err)
 	}
-	some2 := some2_dec.([]string)
 
-	if some2[0] != value2 || some2[1] != value1 || some2[2] != value2 || some2[3] != value1 {
-		return fmt.Errorf("Key2 not set: %s", some2_opt.Value())
+	if len(some2) != 4 || some2[0] != value2 || some2[1] != value1 || some2[2] != value2 || some2[3] != value1 {
+		return fmt.Errorf("Value2 is different: %v", some2)
 	}
 
 	fmt.Println(strings.Join(some2, ";"))
@@ -583,8 +589,8 @@ func test_storage_next_key(r runtime.Instance, key1, value1, key2, value2 string
 		return err
 	}
 
-	if none1.Exists() {
-		return fmt.Errorf("Next1 is not empty: %s", none1.Value())
+	if none1 != nil {
+		return fmt.Errorf("Next1 is not empty: %s", *none1)
 	}
 
 	none2, err := storage_next_key(r, []byte(key2))
@@ -592,8 +598,8 @@ func test_storage_next_key(r runtime.Instance, key1, value1, key2, value2 string
 		return err
 	}
 
-	if none2.Exists() {
-		return fmt.Errorf("Next2 is not empty: %s", none2.Value())
+	if none2 != nil {
+		return fmt.Errorf("Next2 is not empty: %s", *none2)
 	}
 
 	// Insert test data
@@ -613,19 +619,18 @@ func test_storage_next_key(r runtime.Instance, key1, value1, key2, value2 string
 	}
 
 	if strings.Compare(key1, key2) < 0 {
-		if !some1.Exists() {
+		if some1 == nil {
 			return errors.New("Key2 is missing")
 		}
-		next := some1.Value();
 
-		if !bytes.Equal(next, []byte(key2)) {
-			return fmt.Errorf("Next is not key2: %s", next)
+		if !bytes.Equal(*some1, []byte(key2)) {
+			return fmt.Errorf("Next is not key2: %s", *some1)
 		}
 
-		fmt.Printf("%s\n", next);
+		fmt.Printf("%s\n", *some1)
 	} else {
-		if some1.Exists() {
-			return fmt.Errorf("Next is not empty: %s", some1.Value())
+		if some1 != nil {
+			return fmt.Errorf("Next is not empty: %s", *some1)
 		}
 	}
 
@@ -636,19 +641,18 @@ func test_storage_next_key(r runtime.Instance, key1, value1, key2, value2 string
 	}
 
 	if strings.Compare(key2, key1) < 0 {
-		if !some2.Exists() {
+		if some2 == nil {
 			return errors.New("Key1 is missing")
 		}
-		next := some2.Value();
 
-		if !bytes.Equal(next, []byte(key1)) {
-			return fmt.Errorf("Next is not key1: %s", next)
+		if !bytes.Equal(*some2, []byte(key1)) {
+			return fmt.Errorf("Next is not key1: %s", *some2)
 		}
 
-		fmt.Printf("%s\n", next);
+		fmt.Printf("%s\n", *some2)
 	} else {
-		if some2.Exists() {
-			return fmt.Errorf("Next is not empty: %s", some2.Value())
+		if some2 != nil {
+			return fmt.Errorf("Next is not empty: %s", *some2)
 		}
 	}
 
