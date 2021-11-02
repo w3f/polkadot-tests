@@ -13,5 +13,5 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ cmake ];
 
-  buildInputs = [ libllvm ];
+  propagatedBuildInputs = [ libllvm ];
 }
