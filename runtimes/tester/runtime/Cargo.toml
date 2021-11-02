@@ -1,6 +1,6 @@
 [package]
 name = 'tester-runtime'
-version = "0.9.9-a19b9ef"
+version = "0.9.9-bbe8b11"
 edition = '2018'
 
 [profile.release]
