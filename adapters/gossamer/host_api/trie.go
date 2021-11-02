@@ -21,7 +21,7 @@ import (
 	"fmt"
 
 	"github.com/ChainSafe/gossamer/lib/runtime"
-	"github.com/ChainSafe/gossamer/lib/scale"
+	"github.com/ChainSafe/gossamer/pkg/scale"
 )
 
 
@@ -29,7 +29,7 @@ func test_trie_root(r runtime.Instance, key1, value1, key2, value2, key3, value3
 	// Construct and encode input
 	trie := []string{key1, value1, key2, value2, key3, value3}
 
-	trie_enc, err := scale.Encode(trie)
+	trie_enc, err := scale.Marshal(trie)
 	if err != nil {
 		return fmt.Errorf("Encoding input failed: %w", err)
 	}
@@ -45,12 +45,13 @@ func test_trie_root(r runtime.Instance, key1, value1, key2, value2, key3, value3
 	}
 
 	// Decode and print result
-	hash, err := scale.Decode(hash_enc, []byte{})
+	var hash []byte
+	err = scale.Unmarshal(hash_enc, &hash)
 	if err != nil {
 		return fmt.Errorf("Decoding value failed: %w", err)
 	}
 
-	fmt.Printf("%x\n", hash.([]byte)[:])
+	fmt.Printf("%x\n", hash[:])
 
 	return nil
 }
@@ -59,7 +60,7 @@ func test_trie_ordered_root(r runtime.Instance, value1, value2, value3 string) e
 	// Construct and encode input
 	trie := []string{value1, value2, value3}
 
-	trie_enc, err := scale.Encode(trie)
+	trie_enc, err := scale.Marshal(trie)
 	if err != nil {
 		return fmt.Errorf("Encoding input failed: %w", err)
 	}
@@ -72,12 +73,13 @@ func test_trie_ordered_root(r runtime.Instance, value1, value2, value3 string) e
 	}
 
 	// Decode and print result
-	hash, err := scale.Decode(hash_enc, []byte{})
+	var hash []byte
+	err = scale.Unmarshal(hash_enc, &hash)
 	if err != nil {
 		return fmt.Errorf("Decoding value failed: %w", err)
 	}
 
-	fmt.Printf("%x\n", hash.([]byte)[:])
+	fmt.Printf("%x\n", hash[:])
 
 	return nil
 }

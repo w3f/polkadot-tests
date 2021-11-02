@@ -22,9 +22,8 @@ import (
 	"fmt"
 	"bytes"
 
-	"github.com/ChainSafe/gossamer/lib/common/optional"
 	"github.com/ChainSafe/gossamer/lib/runtime"
-	"github.com/ChainSafe/gossamer/lib/scale"
+	"github.com/ChainSafe/gossamer/pkg/scale"
 )
 
 // -- Helpers --
@@ -32,17 +31,17 @@ import (
 // Helper function to call rtm_ext_default_child_storage_set_version_1
 func child_storage_set(r runtime.Instance, child, key, value []byte) error {
 	// Encode inputs
-	child_enc, err := scale.Encode(child)
+	child_enc, err := scale.Marshal(child)
 	if err != nil {
 		return fmt.Errorf("Encoding child failed: %w", err)
 	}
 
-	key_enc, err := scale.Encode(key)
+	key_enc, err := scale.Marshal(key)
 	if err != nil {
 		return fmt.Errorf("Encoding key failed: %w", err)
 	}
 
-	value_enc, err := scale.Encode(value)
+	value_enc, err := scale.Marshal(value)
 	if err != nil {
 		return fmt.Errorf("Encoding value failed: %w", err)
 	}
@@ -59,14 +58,14 @@ func child_storage_set(r runtime.Instance, child, key, value []byte) error {
 }
 
 // Helper function to call rtm_ext_default_child_storage_get_version_1
-func child_storage_get(r runtime.Instance, child, key []byte) (*optional.Bytes, error) {
+func child_storage_get(r runtime.Instance, child, key []byte) (*[]byte, error) {
 	// Encode inputs
-	child_enc, err := scale.Encode(child)
+	child_enc, err := scale.Marshal(child)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding child failed: %w", err)
 	}
 
-	key_enc, err := scale.Encode(key)
+	key_enc, err := scale.Marshal(key)
 	if err != nil {
 		return nil, fmt.Errorf("Encoding key failed: %w", err)
 	}
@@ -77,11 +76,12 @@ func child_storage_get(r runtime.Instance, child, key []byte) (*optional.Bytes, 
 		return nil, fmt.Errorf("Execution failed: %w", err)
 	}
 
-	value_opt, err := scale.Decode(value_enc, &optional.Bytes{})
+	var value_opt *[]byte
+	err = scale.Unmarshal(value_enc, &value_opt)
 	if err != nil {
 		return nil, fmt.Errorf("Decoding value failed: %w", err)
 	}
-	return value_opt.(*optional.Bytes), nil
+	return value_opt, nil
 }
 
 // -- Tests --
@@ -94,7 +94,7 @@ func test_child_storage_set_get(r runtime.Instance, child1, child2, key, value s
 		return err
 	}
 
-	if none1.Exists() {
+	if none1 != nil {
 		return errors.New("Child1/Key is not empty")
 	}
 
@@ -110,7 +110,7 @@ func test_child_storage_set_get(r runtime.Instance, child1, child2, key, value s
 		return err
 	}
 
-	if none2.Exists() {
+	if none2 != nil {
 		return errors.New("Child2/Key is not empty")
 	}
 
@@ -120,15 +120,15 @@ func test_child_storage_set_get(r runtime.Instance, child1, child2, key, value s
 		return err
 	}
 
-	if !some.Exists() {
+	if some == nil {
 		return errors.New("Child1/Key is not set")
 	}
 
-	if !bytes.Equal(some.Value(), []byte(value)) {
-		return fmt.Errorf("Value is different: %s", some.Value())
+	if !bytes.Equal(*some, []byte(value)) {
+		return fmt.Errorf("Value is different: %s", *some)
 	}
 
-	fmt.Printf("%s\n", some.Value())
+	fmt.Printf("%s\n", *some)
 
 	return nil
 }

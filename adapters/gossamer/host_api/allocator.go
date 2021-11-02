@@ -22,14 +22,14 @@ import (
 	"bytes"
 
 	"github.com/ChainSafe/gossamer/lib/runtime"
-	"github.com/ChainSafe/gossamer/lib/scale"
+	"github.com/ChainSafe/gossamer/pkg/scale"
 )
 
 // Test for ext_allocator_malloc_version_1 and ext_allocator_free_version_1
 func test_allocator_malloc_free(r runtime.Instance, value string) error {
 
 	// Encode inputs
-	value_enc, err := scale.Encode([]byte(value))
+	value_enc, err := scale.Marshal([]byte(value))
 	if err != nil {
 		return fmt.Errorf("Encoding value failed: %w", err)
 	}
@@ -41,11 +41,11 @@ func test_allocator_malloc_free(r runtime.Instance, value string) error {
 	}
 
 	// Decode and print output
-	result_dec, err := scale.Decode(result_enc, []byte{})
+	var result []byte
+	err = scale.Unmarshal(result_enc, &result)
 	if err != nil {
 		return fmt.Errorf("Decoding result failed: %w", err)
 	}
-	result := result_dec.([]byte)
 
 	if !bytes.Equal(result, []byte(value)) {
 		return fmt.Errorf("Value is different: %s", result)
