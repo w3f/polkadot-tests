@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2019 Web3 Technologies Foundation
+ * Copyright (c) 2019-2021 Web 3.0 Technologies Foundation
  *
- * This file is part of Polkadot Host Test Suite
+ * This file is part of the Polkadot Test Suite.
  *
- * Polkadot Host Test Suite is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * The Polkadot Test Suite is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Polkadot Host Tests is distributed in the hope that it will be useful,
+ * The Polkadot Test Suite is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+ * along with the Polkadot Test Suite. If not, see
+ * <https://www.gnu.org/licenses/>.
  */
 
 #include "hashing.hpp"
@@ -33,12 +34,10 @@ namespace hashing {
   // @param name is the name of the hash (e.g. blake2, keccak, sha2 or twox)
   // @param size is the expected size of the hash output
   // @param inputs to pass to the function
-  void version_1(
-    helpers::RuntimeEnvironment& environment,
-    const std::string_view name,
-    uint32_t size,
-    const std::vector<std::string>& inputs
-  ) {
+  void version_1(helpers::RuntimeEnvironment &environment,
+                 const std::string_view name,
+                 uint32_t size,
+                 const std::vector<std::string> &inputs) {
     // Parse inputs
     BOOST_ASSERT(inputs.size() == 1);
 
@@ -56,57 +55,39 @@ namespace hashing {
     std::cout << hash.toHex() << std::endl;
   }
 
-
-  void blake2_128_version_1(
-    helpers::RuntimeEnvironment& environment,
-    const std::vector<std::string>& inputs
-  ) {
+  void blake2_128_version_1(helpers::RuntimeEnvironment &environment,
+                            const std::vector<std::string> &inputs) {
     version_1(environment, "blake2", 16, inputs);
   }
 
-  void blake2_256_version_1(
-    helpers::RuntimeEnvironment& environment,
-    const std::vector<std::string>& inputs
-  ) {
+  void blake2_256_version_1(helpers::RuntimeEnvironment &environment,
+                            const std::vector<std::string> &inputs) {
     version_1(environment, "blake2", 32, inputs);
   }
 
-
-  void keccak_256_version_1(
-    helpers::RuntimeEnvironment& environment,
-    const std::vector<std::string>& inputs
-  ) {
+  void keccak_256_version_1(helpers::RuntimeEnvironment &environment,
+                            const std::vector<std::string> &inputs) {
     version_1(environment, "keccak", 32, inputs);
   }
 
-
-  void sha2_256_version_1(
-    helpers::RuntimeEnvironment& environment,
-    const std::vector<std::string>& inputs
-  ) {
+  void sha2_256_version_1(helpers::RuntimeEnvironment &environment,
+                          const std::vector<std::string> &inputs) {
     version_1(environment, "sha2", 32, inputs);
   }
 
-
-  void twox_64_version_1(
-    helpers::RuntimeEnvironment& environment,
-    const std::vector<std::string>& inputs
-  ) {
+  void twox_64_version_1(helpers::RuntimeEnvironment &environment,
+                         const std::vector<std::string> &inputs) {
     version_1(environment, "twox", 8, inputs);
   }
 
-  void twox_128_version_1(
-    helpers::RuntimeEnvironment& environment,
-    const std::vector<std::string>& inputs
-  ) {
+  void twox_128_version_1(helpers::RuntimeEnvironment &environment,
+                          const std::vector<std::string> &inputs) {
     version_1(environment, "twox", 16, inputs);
   }
 
-  void twox_256_version_1(
-    helpers::RuntimeEnvironment& environment,
-    const std::vector<std::string>& inputs
-  ) {
+  void twox_256_version_1(helpers::RuntimeEnvironment &environment,
+                          const std::vector<std::string> &inputs) {
     version_1(environment, "twox", 32, inputs);
   }
 
-}
+}  // namespace hashing

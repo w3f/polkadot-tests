@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2019 Web3 Technologies Foundation
+ * Copyright (c) 2019-2021 Web 3.0 Technologies Foundation
  *
- * This file is part of Polkadot Host Test Suite
+ * This file is part of the Polkadot Test Suite.
  *
- * Polkadot Host Test Suite is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * The Polkadot Test Suite is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Polkadot Host Tests is distributed in the hope that it will be useful,
+ * The Polkadot Test Suite is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+ * along with the Polkadot Test Suite. If not, see
+ * <https://www.gnu.org/licenses/>.
  */
 
 #include "scale_codec.hpp"
@@ -30,7 +31,6 @@
 #include "subcommand.hpp"
 
 #include <iostream>
-
 
 namespace po = boost::program_options;
 
@@ -57,10 +57,8 @@ ScaleCommandArgs extractScaleArgs(int argc, char **argv) {
   BOOST_ASSERT_MSG(subcommand, "Subcommand is not stated");
   BOOST_ASSERT_MSG(input, "Input string is not provided");
 
-  return ScaleCommandArgs { .subcommand = *subcommand, .input = *input};
+  return ScaleCommandArgs{.subcommand = *subcommand, .input = *input};
 }
-
-
 
 void processScaleCodecCommand(ScaleCommandArgs args) {
   SubcommandRouter<std::string> router;
@@ -69,8 +67,8 @@ void processScaleCodecCommand(ScaleCommandArgs args) {
     BOOST_ASSERT_MSG(res, "Encode error");
     std::cout << "encoded " << input << ": [";
     bool first = true;
-    for(auto byte: res.value()) {
-      if(not first) {
+    for (auto byte : res.value()) {
+      if (not first) {
         std::cout << ", ";
       } else {
         first = false;
@@ -80,8 +78,6 @@ void processScaleCodecCommand(ScaleCommandArgs args) {
     std::cout << "]\n";
   });
 
-  BOOST_VERIFY_MSG(
-      router.executeSubcommand(args.subcommand,
-                               args.input),
-      "Invalid subcommand");
+  BOOST_VERIFY_MSG(router.executeSubcommand(args.subcommand, args.input),
+                   "Invalid subcommand");
 }

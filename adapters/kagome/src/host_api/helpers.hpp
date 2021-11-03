@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2019 Web3 Technologies Foundation
+ * Copyright (c) 2019-2021 Web 3.0 Technologies Foundation
  *
- * This file is part of Polkadot Host Test Suite
+ * This file is part of the Polkadot Test Suite.
  *
- * Polkadot Host Test Suite is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * The Polkadot Test Suite is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Polkadot Host Tests is distributed in the hope that it will be useful,
+ * The Polkadot Test Suite is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+ * along with the Polkadot Test Suite. If not, see
+ * <https://www.gnu.org/licenses/>.
  */
 
 #pragma once
@@ -42,56 +43,54 @@ namespace helpers {
   using kagome::runtime::PtrSize;
 
   // Default path of runtime
-  extern const char* DEFAULT_RUNTIME_PATH;
+  extern const char *DEFAULT_RUNTIME_PATH;
 
   class RuntimeEnvironment {
-    public:
+   public:
+    // Available backends
+    enum class Backend {
+      Binaryen,
+      WAVM,
+    };
 
-      // Available backends
-      enum class Backend {
-        Binaryen,
-        WAVM,
-      };
+    // Default backend to use
+    static const Backend DEFAULT_BACKEND;
 
-      // Default backend to use
-      static const Backend DEFAULT_BACKEND;
+    // Initialize a runtime environment
+    RuntimeEnvironment(const std::string path = DEFAULT_RUNTIME_PATH,
+                       Backend backend = DEFAULT_BACKEND);
 
-      // Initialize a runtime environment
-      RuntimeEnvironment(
-        const std::string path = DEFAULT_RUNTIME_PATH,
-        Backend backend = DEFAULT_BACKEND
-      );
+    // Call function with provided arguments
+    template <typename Result, typename... Args>
+    Result execute(std::string_view name, Args &&...args) {
+      auto &memory = memory_provider_->getCurrentMemory().value().get();
 
-      // Call function with provided arguments
-      template <typename Result, typename... Args>
-      Result execute(std::string_view name, Args &&...args) {
-        auto &memory = memory_provider_->getCurrentMemory().value().get();
-
-        Buffer encoded_args{};
-        if constexpr (sizeof...(args) > 0) {
-          auto res = scale::encode(std::forward<Args>(args)...);
-          BOOST_ASSERT_MSG(res.has_value(), res.error().message().data());
-          encoded_args.put(std::move(res.value()));
-        }
-
-        PtrSize args_span{memory.storeBuffer(encoded_args)};
-
-        auto result = module_instance_->callExportFunction(name, args_span);
-        BOOST_ASSERT_MSG(result.has_value(), result.error().message().data());
-
-        auto reset = module_instance_->resetEnvironment();
-        BOOST_ASSERT_MSG(reset.has_value(), reset.error().message().data());
-
-        if constexpr (not std::is_void_v<Result>) {
-          auto res = scale::decode<Result>(memory.loadN(result.value().ptr, result.value().size));
-          BOOST_ASSERT_MSG(res.has_value(), res.error().message().data());
-          return res.value();
-        }
+      Buffer encoded_args{};
+      if constexpr (sizeof...(args) > 0) {
+        auto res = scale::encode(std::forward<Args>(args)...);
+        BOOST_ASSERT_MSG(res.has_value(), res.error().message().data());
+        encoded_args.put(std::move(res.value()));
       }
 
-     private:
-      // Main objects used to execute calls
-      std::shared_ptr<ModuleInstance> module_instance_;
-      std::shared_ptr<MemoryProvider> memory_provider_;
+      PtrSize args_span{memory.storeBuffer(encoded_args)};
+
+      auto result = module_instance_->callExportFunction(name, args_span);
+      BOOST_ASSERT_MSG(result.has_value(), result.error().message().data());
+
+      auto reset = module_instance_->resetEnvironment();
+      BOOST_ASSERT_MSG(reset.has_value(), reset.error().message().data());
+
+      if constexpr (not std::is_void_v<Result>) {
+        auto res = scale::decode<Result>(
+            memory.loadN(result.value().ptr, result.value().size));
+        BOOST_ASSERT_MSG(res.has_value(), res.error().message().data());
+        return res.value();
+      }
+    }
+
+   private:
+    // Main objects used to execute calls
+    std::shared_ptr<ModuleInstance> module_instance_;
+    std::shared_ptr<MemoryProvider> memory_provider_;
   };
-}
+}  // namespace helpers
