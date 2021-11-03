@@ -21,6 +21,7 @@
 
 #include "assert.hpp"
 
+#include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
 #include <yaml-cpp/yaml.h>
@@ -153,7 +154,7 @@ void processTrieCommand(const TrieCommandArgs &args) {
   );
 
   auto trie_db = TrieStorageImpl::createEmpty(
-    trie_factory, codec, serializer, boost::none
+    trie_factory, codec, serializer, std::nullopt
   ).value();
 
   auto trie = trie_db->getPersistentBatch().value();

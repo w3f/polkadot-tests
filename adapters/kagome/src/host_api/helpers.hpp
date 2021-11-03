@@ -37,7 +37,6 @@ namespace helpers {
   using kagome::common::Buffer;
   using MaybeBuffer = std::optional<Buffer>;
 
-  using kagome::runtime::Executor;
   using kagome::runtime::MemoryProvider;
   using kagome::runtime::ModuleInstance;
   using kagome::runtime::PtrSize;
@@ -66,7 +65,7 @@ namespace helpers {
       // Call function with provided arguments
       template <typename Result, typename... Args>
       Result execute(std::string_view name, Args &&...args) {
-        auto &memory = memory_provider_->getCurrentMemory().value();
+        auto &memory = memory_provider_->getCurrentMemory().value().get();
 
         Buffer encoded_args{};
         if constexpr (sizeof...(args) > 0) {
@@ -90,25 +89,9 @@ namespace helpers {
         }
       }
 
-      // Currently broken and not used, because executor is missing headers
-      template <typename R, typename... Args>
-      R execute_sub(std::string_view name, Args &&... args) {
-        auto result = executor_->callAtGenesis<R>(
-          name,
-          std::forward<Args>(args)...
-        );
-
-        BOOST_ASSERT_MSG(result, result.error().message().data());
-
-        return result.value();
-      }
-
-    private:
+     private:
       // Main objects used to execute calls
       std::shared_ptr<ModuleInstance> module_instance_;
       std::shared_ptr<MemoryProvider> memory_provider_;
-
-      // Old main object used to execute calls, currently not initalized
-      std::shared_ptr<Executor> executor_;
   };
 }
