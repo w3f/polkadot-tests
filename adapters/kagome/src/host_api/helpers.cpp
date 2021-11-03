@@ -43,9 +43,6 @@
 #include <runtime/binaryen/instance_environment_factory.hpp>
 #include <runtime/binaryen/module/module_factory_impl.hpp>
 
-//#include <runtime/common/module_repository_impl.hpp>
-//#include <runtime/common/runtime_upgrade_tracker_impl.hpp>
-
 #include <runtime/wavm/compartment_wrapper.hpp>
 #include <runtime/wavm/instance_environment_factory.hpp>
 #include <runtime/wavm/module_factory_impl.hpp>
@@ -66,11 +63,6 @@
 namespace helpers {
 
   // Various namespace includes to improve code readability
-  using kagome::api::Session;
-  using SessionPtr = std::shared_ptr<Session>;
-
-  using kagome::primitives::BlockHash;
-
   using kagome::blockchain::KeyValueBlockHeaderRepository;
 
   using kagome::crypto::Bip39ProviderImpl;
@@ -90,10 +82,11 @@ namespace helpers {
 
   using kagome::host_api::HostApiFactoryImpl;
 
-  using namespace kagome::runtime;
+  namespace binaryen = kagome::runtime::binaryen;
+  namespace wavm = kagome::runtime::wavm;
 
-  //using binaryen = kagome::runtime::binaryen;
-  //using wasm = kagome::runtime::wasm;
+  using kagome::runtime::ModuleFactory;
+  using kagome::runtime::RuntimeCodeProvider;
 
   using kagome::storage::InMemoryStorage;
   using kagome::storage::changes_trie::StorageChangesTrackerImpl;
@@ -103,10 +96,6 @@ namespace helpers {
   using kagome::storage::trie::TrieSerializerImpl;
   using kagome::storage::trie::TrieStorageImpl;
   using kagome::storage::trie::TrieStorageBackendImpl;
-
-  using kagome::subscription::SubscriptionEngine;
-
-  using SubscriptionEngineType = SubscriptionEngine<Buffer, SessionPtr, Buffer, BlockHash>;
 
   // Default runtime location
   const char* DEFAULT_RUNTIME_PATH = "bin/hostapi-runtime.default.wasm";
@@ -131,11 +120,16 @@ namespace helpers {
       file.read(reinterpret_cast<char *>(code_.data()), size);
     }
 
+    ~FileCodeProvider() override = default;
+
+
+    using ByteSpan = gsl::span<const uint8_t>;
+
     ByteSpan getCode() const {
       return code_;
     }
 
-    ByteSpanResult getCodeAt(const RootHash &state) const override {
+    outcome::result<ByteSpan> getCodeAt(const RootHash &state) const override {
       return code_;
     }
 
@@ -150,9 +144,11 @@ namespace helpers {
     // Load wasm runtime from file
     auto code_provider = std::make_shared<FileCodeProvider>(path);
 
-    // Initialize trie factory and storage
+    // Initialize storage and trie factory
+    auto storage = std::make_shared<InMemoryStorage>();
+
     auto storage_backend = std::make_shared<TrieStorageBackendImpl>(
-      std::make_shared<InMemoryStorage>(), Buffer{}
+      storage, Buffer{}
     );
 
     auto trie_factory = std::make_shared<PolkadotTrieFactoryImpl>();
@@ -162,7 +158,7 @@ namespace helpers {
     );
 
     std::shared_ptr<TrieStorageImpl> trie_db = TrieStorageImpl::createEmpty(
-      trie_factory, codec, serializer, boost::none
+      trie_factory, codec, serializer, std::nullopt
     ).value();
 
     // Build change tracker
@@ -203,11 +199,11 @@ namespace helpers {
 
     // Initialize header repo
     auto header_repo = std::make_shared<KeyValueBlockHeaderRepository>(
-      std::make_shared<InMemoryStorage>(), hasher
+      storage, hasher
     );
 
     // Initialize module factory (backend dependent)
-    std::shared_ptr<kagome::runtime::ModuleFactory> module_factory;
+    std::shared_ptr<ModuleFactory> module_factory;
 
     switch(backend) {
       case Backend::Binaryen: {
@@ -267,24 +263,6 @@ namespace helpers {
 
     auto reset = memory_provider_->resetMemory(heap_base);
     BOOST_ASSERT_MSG(reset.has_value(), reset.error().message().data());
-
-    /*
-    auto upgrade_tracker = std::make_shared<kagome::runtime::RuntimeUpgradeTrackerImpl>(
-      header_repo,
-      std::make_shared<InMemoryStorage>(),
-      {} // no code substitutions
-    );
-
-    auto module_repo = std::make_shared<kagome::runtime::ModuleRepositoryImpl>(upgrade_tracker, module_factory);
-
-    auto runtime_env_factory =std::make_shared<kagome::runtime::RuntimeEnvironmentFactory>(
-      code_provider,
-      module_repo,
-      header_repo,
-    );
-
-    executor_ = std::make_shared<Executor>(header_repo, runtime_env_factory);
-    */
 
     // Set expected defaults in storage
     execute<void>("rtm_ext_storage_set_version_1", ":code", "");
