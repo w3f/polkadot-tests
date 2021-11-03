@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2019 Web3 Technologies Foundation
+ * Copyright (c) 2019-2021 Web 3.0 Technologies Foundation
  *
- * This file is part of Polkadot Host Test Suite
+ * This file is part of the Polkadot Test Suite.
  *
- * Polkadot Host Test Suite is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * The Polkadot Test Suite is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Polkadot Host Tests is distributed in the hope that it will be useful,
+ * The Polkadot Test Suite is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+ * along with the Polkadot Test Suite. If not, see
+ * <https://www.gnu.org/licenses/>.
  */
 
 #pragma once
@@ -29,18 +30,19 @@
  * execute them using the names
  * @tparam Args input arguments of a stored functor
  */
-template <typename... Args> class SubcommandRouter {
-public:
+template <typename... Args>
+class SubcommandRouter {
+ public:
   using HandlerMap = std::map<std::string, std::function<void(Args...)>>;
 
   /** Default constructor to add subcommands via addSubcommand.
-    */
+   */
   SubcommandRouter() = default;
 
   /** Constructor to allow static initialization.
-    * @param map intial list of handlers to start with
-    */
-  SubcommandRouter(HandlerMap&& inital) : handlers(std::move(inital)) {}
+   * @param map intial list of handlers to start with
+   */
+  SubcommandRouter(HandlerMap &&inital) : handlers(std::move(inital)) {}
 
   /**
    * @param name name of subcommand to add
@@ -69,7 +71,7 @@ public:
    * otherwise
    */
   template <typename... FArgs>
-  bool executeSubcommand(const std::string &name, FArgs &&... args) {
+  bool executeSubcommand(const std::string &name, FArgs &&...args) {
     if (handlers.find(name) != handlers.end()) {
       handlers.at(name)(std::forward<FArgs>(args)...);
       return true;
@@ -77,6 +79,6 @@ public:
     return false;
   }
 
-private:
+ private:
   HandlerMap handlers;
 };

@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2019 Web3 Technologies Foundation
+ * Copyright (c) 2019-2021 Web 3.0 Technologies Foundation
  *
- * This file is part of Polkadot Host Test Suite
+ * This file is part of the Polkadot Test Suite.
  *
- * Polkadot Host Test Suite is free software: you can redistribute it and/or
+ * The Polkadot Test Suite is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Polkadot Host Tests is distributed in the hope that it will be useful,
+ * The Polkadot Test Suite is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+ * along with the Polkadot Test Suite. If not, see
+ * <https://www.gnu.org/licenses/>.
  */
 
 #include "assert.hpp"
@@ -83,9 +84,9 @@ int main(int argc, char **argv) {
     BOOST_VERIFY_MSG(router.executeSubcommand(argv[1], argc - 1, argv + 1),
                      e2.data());
 
-  } catch (const NotImplemented& e) {
+  } catch (const NotImplemented &e) {
     return EOPNOTSUPP;
-  } catch (const std::exception& e) {
+  } catch (const std::exception &e) {
     std::cout << "Exception: " << e.what() << std::endl;
     return EXIT_FAILURE;
   }
