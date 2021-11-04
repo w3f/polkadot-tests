@@ -17,7 +17,10 @@ with final; {
 
   prometheus-cpp = callPackage ./deps/prometheus-cpp.nix {};
 
-  wavm = callPackage ./deps/wavm.nix {};
+  wavm = callPackage ./deps/wavm.nix {
+    # Needed for Zen 3 support
+    inherit (llvmPackages_12) libllvm;
+  };
 
   # Newer then stable, often forks with additional cmake support
   binaryen_cmake      = callPackage ./deps/binaryen.nix {};
