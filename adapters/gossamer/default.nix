@@ -8,7 +8,7 @@ buildGoModule rec {
 
   runVend = true;
 
-  vendorSha256 = "g2A8rjajyEdm1B2tnMYG4rNsiwfRvqQQ7E8JfZ/Jc54=";
+  vendorSha256 = "ouLyBNC+2DOWQxkwU/nHCkM/IM+DhTxwEmLp5MfRbGI=";
 
   nativeBuildInputs = [ patchelf ];
 
