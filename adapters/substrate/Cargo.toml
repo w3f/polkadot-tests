@@ -1,7 +1,6 @@
 [package]
 name = "substrate-adapter"
-version = "0.9.9-bbe8b11"
-authors = ["Skalman <skalman@riseup.net>"]
+version = "0.9.9-d985794"
 edition = "2018"
 
 [dependencies]
