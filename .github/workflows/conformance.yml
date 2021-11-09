@@ -6,7 +6,7 @@ on:
     - main
   pull_request:
     paths:
-    - '.github/workflows/testsuite.yml'
+    - '.github/workflows/conformance.yml'
     - '**'
     - '!fixtures/genesis/**'
     - '!helpers/ImplementationFixture.jl'
@@ -33,8 +33,9 @@ jobs:
       uses: actions/cache@v2.1.6
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
         key: cargo-cache-adapter-substrate-${{ hashFiles('adapters/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-adapter-substrate-
     - name: Cache cargo build ouput
@@ -91,7 +92,9 @@ jobs:
     - name: Cache go modules
       uses: actions/cache@v2.1.6
       with:
-        path: ~/go/pkg/mod
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
         key: go-mod-adapter-gossamer-${{ hashFiles('adapters/gossamer/go.sum') }}
         restore-keys: go-mod-adapter-gossamer-
     - name: Build gossamer adapter
@@ -125,8 +128,9 @@ jobs:
       uses: actions/cache@v2.1.6
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
         key: cargo-cache-runtime-hostapi-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
         restore-keys: cargo-cache-runtime-hostapi-
     - name: Cache cargo build ouput
@@ -160,8 +164,9 @@ jobs:
       uses: actions/cache@v2.1.6
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
         key: cargo-cache-runtime-hostapi-expmem-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
         restore-keys: cargo-cache-runtime-hostapi-expmem-
     - name: Cache cargo build ouput

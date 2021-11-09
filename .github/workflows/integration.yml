@@ -36,8 +36,9 @@ jobs:
       uses: actions/cache@v2.1.6
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
         key: cargo-cache-host-substrate-${{ hashFiles('hosts/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-host-substrate-
     - name: Cache cargo build output
@@ -95,7 +96,9 @@ jobs:
     - name: Cache go modules
       uses: actions/cache@v2.1.6
       with:
-        path: ~/go/pkg/mod
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
         key: go-mod-host-gossamer-${{ hashFiles('hosts/gossamer/go.sum') }}
         restore-keys: go-mod-host-gossamer-
     - name: Build gossamer
@@ -129,8 +132,9 @@ jobs:
       uses: actions/cache@v2.1.6
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
         key: cargo-cache-adapter-substrate-${{ hashFiles('adapters/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-adapter-substrate-
     - name: Cache cargo build ouput
@@ -171,8 +175,9 @@ jobs:
       uses: actions/cache@v2.1.6
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
         key: cargo-cache-runtime-tester-${{ hashFiles('runtimes/tester/Cargo.lock') }}
         restore-keys: cargo-cache-runtime-tester-
     - name: Cache cargo build output
