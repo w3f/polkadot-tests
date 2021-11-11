@@ -25,20 +25,38 @@ set(CMAKE_TOOLCHAIN_FILE
   CACHE FILEPATH "Default toolchain"
 )
 
-
-# Setup but disable binary cache by default
-set(
-  HUNTER_USE_CACHE_SERVERS "NO"
-  CACHE STRING "Binary cache server"
-)
-
-set(
-  HUNTER_CACHE_SERVERS "https://github.com/soramitsu/hunter-binary-cache;"
-  CACHE STRING "Binary cache server"
-)
-
 # Propagate CMake build type to dependencies
-set(HUNTER_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE})
+set(
+  HUNTER_CONFIGURATION_TYPES "${CMAKE_BUILD_TYPE}"
+  CACHE STRING "Hunter configuration type"
+)
+
+# Enable upload to binary cache if username and password are supplied
+if(DEFINED ENV{HUNTER_UPLOAD_USERNAME} AND DEFINED ENV{HUNTER_UPLOAD_PASSWORD})
+  set(HUNTER_RUN_UPLOAD YES CACHE BOOL "Upload to binary cache")
+else()
+  set(HUNTER_RUN_UPLOAD NO CACHE BOOL "Upload to binary cache")
+endif ()
+
+set(
+  HUNTER_PASSWORDS_PATH "${CMAKE_SOURCE_DIR}/cmake/HunterPasswords.cmake"
+  CACHE FILEPATH "Hunter passwords files"
+)
+
+message(STATUS "Upload to binary cache: ${HUNTER_RUN_UPLOAD}")
+
+# Setup binary cache and enable if upload is enabled
+set(
+  HUNTER_USE_CACHE_SERVERS ${HUNTER_RUN_UPLOAD}
+  CACHE STRING "Binary cache server"
+)
+
+set(
+  HUNTER_CACHE_SERVERS "https://github.com/w3f/hunter-binary-cache"
+  CACHE STRING "Binary cache server"
+)
+
+message(STATUS "Download from binary cache: ${HUNTER_USE_CACHE_SERVERS}")
 
 # Setup hunter
 include(cmake/HunterGate.cmake)
