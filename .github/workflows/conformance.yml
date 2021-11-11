@@ -60,17 +60,15 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: true
-    - name: Cache hunter packages
-      uses: actions/cache@v2.1.6
-      with:
-        path: ~/.hunter
-        key: hunter-adapter-kagome-${{ hashFiles('adapters/kagome/CMakeLists.txt') }}
-        restore-keys: hunter-adapter-kagome-
-    - name: Build kagome adapter
+    - name: Install gitpython
+      run: sudo apt-get install -y python3-git
+    - name: Build kagome adapter (with caching)
       env:
         CC: gcc-9
         CXX: g++-9
-      run: make kagome-adapter 
+        HUNTER_UPLOAD_USERNAME: ${{ secrets.HUNTER_UPLOAD_USER }}
+        HUNTER_UPLOAD_PASSWORD: ${{ secrets.HUNTER_UPLOAD_TOKEN }}
+      run: make kagome-adapter
     - name: Upload kagome adapter
       uses: actions/upload-artifact@v2
       with:

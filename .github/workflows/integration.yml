@@ -47,7 +47,7 @@ jobs:
         path: hosts/substrate/target
         key: cargo-build-host-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('hosts/substrate/Cargo.lock') }}
         restore-keys: cargo-build-host-substrate-${{ steps.rustup.outputs.rustc_hash }}-
-    - name: Build substrate
+    - name: Build substrate host
       run: make substrate-host
     - name: Upload substrate
       uses: actions/upload-artifact@v2
@@ -63,23 +63,22 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: true
-    - name: Cache hunter outputs
-      uses: actions/cache@v2.1.6
-      with:
-        path: ~/.hunter
-        key: hunter-host-kagome-${{ hashFiles('hosts/kagome/CMakeLists.txt') }}
-        restore-keys: hunter-host-kagome-
-    - name: Build kagome
+    - name: Install gitpython
+      run: sudo apt-get install -y python3-git
+    - name: Build kagome host (with caching)
       env:
         CC: gcc-9
         CXX: g++-9
+        HUNTER_UPLOAD_USERNAME: ${{ secrets.HUNTER_UPLOAD_USER }}
+        HUNTER_UPLOAD_PASSWORD: ${{ secrets.HUNTER_UPLOAD_TOKEN }}
+        GITHUB_HUNTER_USERNAME: DUMMY_USER
+        GITHUB_HUNTER_TOKEN: DUMMY_TOKEN
       run: make kagome-host
     - name: Upload kagome hosts
       uses: actions/upload-artifact@v2
       with:
         name: kagome-host
-        path: |
-          bin/kagome
+        path: bin/kagome
 
   build-host-gossamer:
     name: "[build] gossamer-host"
@@ -101,7 +100,7 @@ jobs:
           ~/go/pkg/mod
         key: go-mod-host-gossamer-${{ hashFiles('hosts/gossamer/go.sum') }}
         restore-keys: go-mod-host-gossamer-
-    - name: Build gossamer
+    - name: Build gossamer host
       run: make gossamer-host
     - name: Upload gossamer and libwasmer
       uses: actions/upload-artifact@v2
