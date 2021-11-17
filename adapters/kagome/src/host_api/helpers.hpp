@@ -29,8 +29,6 @@
 #include <runtime/executor.hpp>
 #include <runtime/module_instance.hpp>
 
-namespace scale = kagome::scale;
-
 namespace helpers {
 
   using kagome::common::hex_lower;

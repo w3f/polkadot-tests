@@ -61,8 +61,8 @@ message(STATUS "Download from binary cache: ${HUNTER_USE_CACHE_SERVERS}")
 # Setup hunter
 include(cmake/HunterGate.cmake)
 HunterGate(
-  URL "https://github.com/soramitsu/soramitsu-hunter/archive/tags/v0.23.257-soramitsu17.tar.gz"
-  SHA1 "c7ccd337314b27485b75d0f0f5d5b42e7e3c2629"
+  URL "https://github.com/soramitsu/soramitsu-hunter/archive/v0.23.257-soramitsu19.zip"
+  SHA1 "29a3c9287586ebf1dd92ca98f38d06b556413a1a"
   FILEPATH "${CMAKE_SOURCE_DIR}/cmake/HunterConfig.cmake"
 )
 
@@ -72,7 +72,37 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ${HUNTER_ENABLED})
 # General config
 project(kagome-adapter LANGUAGES CXX C)
 
-include(cmake/dependencies.cmake)
+hunter_add_package(yaml-cpp)
+find_package(yaml-cpp REQUIRED)
+
+# Fix inconsistency between hunterized and upstream package (+ CMake oddity fix)
+if(NOT TARGET yaml-cpp)
+  set_target_properties(yaml-cpp::yaml-cpp PROPERTIES IMPORTED_GLOBAL true)
+  add_library(yaml-cpp ALIAS yaml-cpp::yaml-cpp)
+endif()
+
+hunter_add_package(scale)
+find_package(scale REQUIRED CONFIG)
+
+hunter_add_package(kagome)
+find_package(kagome REQUIRED CONFIG)
+
+message(STATUS "Found kagome: ${kagome_INCLUDE_DIRS}")
+
+# FIXME Kagome's package config should do all this!
+find_package(Boost REQUIRED COMPONENTS filesystem program_options random)
+find_package(schnorrkel_crust REQUIRED)
+find_package(libsecp256k1 REQUIRED)
+find_package(leveldb REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(xxhash REQUIRED)
+find_package(soralog REQUIRED)
+find_package(fmt REQUIRED)
+find_package(libp2p REQUIRED)
+find_package(zstd REQUIRED)
+find_package(binaryen REQUIRED)
+find_package(LLVM REQUIRED)
+find_package(WAVM REQUIRED)
 
 # Compile and link tester
 add_executable(kagome-adapter
@@ -96,8 +126,8 @@ target_include_directories(kagome-adapter PRIVATE ${kagome_INCLUDE_DIRS})
 target_link_libraries(kagome-adapter
   Boost::program_options
   yaml-cpp
+  scale::scale
   ${kagome_LIBRARIES}
-  kagome::binaryen_wasm_memory_factory
 )
 
 
