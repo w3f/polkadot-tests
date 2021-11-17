@@ -1,6 +1,6 @@
 [package]
 name = "substrate-adapter"
-version = "0.9.9-d985794"
+version = "0.9.12-12df8e0"
 edition = "2021"
 
 [dependencies]
