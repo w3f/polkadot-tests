@@ -18,7 +18,7 @@ use sp_core::{
     Blake2Hasher,
 };
 use sp_keystore::{KeystoreExt, testing::KeyStore};
-use sp_state_machine::TestExternalities as CoreTestExternalities;
+use sp_state_machine::TestExternalities;
 
 
 pub fn str<'a>(input: &'a [u8]) -> &'a str {
@@ -59,9 +59,6 @@ impl<'a> From<Option<Values<'a>>> for ParsedInput<'a> {
         }
     }
 }
-
-// Default test externalities
-type TestExternalities<H> = CoreTestExternalities<H, u64>;
 
 // Helpers to configure and call into runtime environment
 pub struct Runtime {
