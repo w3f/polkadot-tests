@@ -34,7 +34,6 @@ fn default_genesis_config() -> GenesisConfig {
 	GenesisConfig {
 		system: SystemConfig {
 			code: WASM_BINARY.unwrap().to_vec(),
-			changes_trie_config: Default::default(),
 		},
 		balances: BalancesConfig {
 			balances: vec![
