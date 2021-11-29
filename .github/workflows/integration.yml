@@ -208,17 +208,17 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: substrate-host
         path: bin
     - run: chmod +x bin/polkadot
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: substrate-adapter
         path: bin
     - run: chmod +x bin/substrate-adapter
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: tester-runtime-genesis
         path: runtimes/tester
@@ -232,17 +232,17 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: kagome-host
         path: bin
     - run: chmod +x bin/kagome
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: substrate-adapter
         path: bin
     - run: chmod +x bin/substrate-adapter
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: tester-runtime-genesis
         path: runtimes/tester
@@ -256,7 +256,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: gossamer-host
         path: bin
@@ -264,12 +264,12 @@ jobs:
         chmod +x bin/gossamer
         mkdir -p lib
         mv bin/libwasmer.so lib/
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: substrate-adapter
         path: bin
     - run: chmod +x bin/substrate-adapter
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2.0.10
       with:
         name: tester-runtime-genesis
         path: runtimes/tester
