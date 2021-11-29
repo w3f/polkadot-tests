@@ -30,7 +30,7 @@ jobs:
         default: true
         profile: minimal
     - name: Cache cargo registry and index
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: |
           ~/.cargo/registry/index/
@@ -39,7 +39,7 @@ jobs:
         key: cargo-cache-adapter-substrate-${{ hashFiles('adapters/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-adapter-substrate-
     - name: Cache cargo build ouput
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: adapters/substrate/target
         key: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('adapters/substrate/Cargo.lock') }}
@@ -88,7 +88,7 @@ jobs:
       with:
         go-version: 1.17
     - name: Cache go modules
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: |
           ~/.cache/go-build
@@ -123,7 +123,7 @@ jobs:
         default: true
         profile: minimal
     - name: Cache cargo registry and index
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: |
           ~/.cargo/registry/index/
@@ -132,7 +132,7 @@ jobs:
         key: cargo-cache-runtime-hostapi-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
         restore-keys: cargo-cache-runtime-hostapi-
     - name: Cache cargo build ouput
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: runtimes/hostapi/target
         key: cargo-build-runtime-hostapi-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
@@ -159,7 +159,7 @@ jobs:
         default: true
         profile: minimal
     - name: Cache cargo registry and index
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: |
           ~/.cargo/registry/index/
@@ -168,7 +168,7 @@ jobs:
         key: cargo-cache-runtime-hostapi-expmem-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}
         restore-keys: cargo-cache-runtime-hostapi-expmem-
     - name: Cache cargo build ouput
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: runtimes/hostapi/target
         key: cargo-build-runtime-hostapi-expmem-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('runtimes/hostapi/Cargo.lock') }}

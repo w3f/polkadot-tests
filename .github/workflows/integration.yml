@@ -33,7 +33,7 @@ jobs:
         default: true
         profile: minimal
     - name: Cache cargo registry and index
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: |
           ~/.cargo/registry/index/
@@ -42,7 +42,7 @@ jobs:
         key: cargo-cache-host-substrate-${{ hashFiles('hosts/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-host-substrate-
     - name: Cache cargo build output
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: hosts/substrate/target
         key: cargo-build-host-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('hosts/substrate/Cargo.lock') }}
@@ -93,7 +93,7 @@ jobs:
       with:
         go-version: 1.17
     - name: Cache go modules
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: |
           ~/.cache/go-build
@@ -128,7 +128,7 @@ jobs:
         default: true
         profile: minimal
     - name: Cache cargo registry and index
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: |
           ~/.cargo/registry/index/
@@ -137,7 +137,7 @@ jobs:
         key: cargo-cache-adapter-substrate-${{ hashFiles('adapters/substrate/Cargo.lock') }}
         restore-keys: cargo-cache-adapter-substrate-
     - name: Cache cargo build ouput
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: adapters/substrate/target
         key: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('adapters/substrate/Cargo.lock') }}
@@ -171,7 +171,7 @@ jobs:
         python -m pip install wheel
         python -m pip install yq
     - name: Cache cargo registry and index
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: |
           ~/.cargo/registry/index/
@@ -180,7 +180,7 @@ jobs:
         key: cargo-cache-runtime-tester-${{ hashFiles('runtimes/tester/Cargo.lock') }}
         restore-keys: cargo-cache-runtime-tester-
     - name: Cache cargo build output
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: runtimes/tester/target
         key: cargo-build-runtime-tester-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('runtimes/tester/Cargo.lock') }}
