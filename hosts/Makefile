@@ -24,11 +24,11 @@ sync: sync-adapter-substrate sync-runtime-tester
 
 sync-adapter-substrate:
 	cp substrate/Cargo.lock ../adapters/substrate/
-	cargo metadata --manifest-path ../adapters/substrate/Cargo.toml > /dev/null
+	cargo metadata --manifest-path ../adapters/substrate/Cargo.toml --format-version 1 > /dev/null
 
 sync-runtime-tester:
 	cp substrate/Cargo.lock ../runtimes/tester
-	cargo metadata --manifest-path ../runtimes/tester/Cargo.toml > /dev/null
+	cargo metadata --manifest-path ../runtimes/tester/Cargo.toml --format-version 1 > /dev/null
 
 
 version:
