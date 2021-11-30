@@ -23,8 +23,12 @@
 #include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
-#include <log/logger.hpp>
 #include <soralog/impl/fallback_configurator.hpp>
+
+// Needs to be included first to work around kagome bug
+#include <kagome/outcome/outcome.hpp>
+
+#include <kagome/log/logger.hpp>
 
 #include "subcommand.hpp"
 

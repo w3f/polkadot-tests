@@ -25,8 +25,8 @@
 #include <memory>
 #include <vector>
 
-#include <crypto/ed25519_types.hpp>
-#include <crypto/sr25519_types.hpp>
+#include <kagome/crypto/ed25519_types.hpp>
+#include <kagome/crypto/sr25519_types.hpp>
 
 using std::string_literals::operator""s;
 

@@ -22,16 +22,17 @@
 
 #include "../assert.hpp"
 
-#include <common/buffer.hpp>
-
 #include <scale/scale.hpp>
 
-#include <runtime/executor.hpp>
-#include <runtime/module_instance.hpp>
+// Needs to be included first to work around kagome bug
+#include <kagome/outcome/outcome.hpp>
+
+#include <kagome/common/buffer.hpp>
+
+#include <kagome/runtime/memory_provider.hpp>
+#include <kagome/runtime/module_instance.hpp>
 
 namespace helpers {
-
-  using kagome::common::hex_lower;
 
   using kagome::common::Buffer;
   using MaybeBuffer = std::optional<Buffer>;

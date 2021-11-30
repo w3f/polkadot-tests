@@ -22,7 +22,7 @@
 
 #include "helpers.hpp"
 
-#include <common/buffer.hpp>
+#include <kagome/common/buffer.hpp>
 
 #include <iostream>
 

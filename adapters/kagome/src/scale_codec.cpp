@@ -25,7 +25,6 @@
 #include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
-#include <common/hexutil.hpp>
 #include <scale/scale.hpp>
 
 #include "subcommand.hpp"

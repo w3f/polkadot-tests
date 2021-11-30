@@ -22,43 +22,41 @@
 
 #include <fstream>
 
-#include <blockchain/impl/key_value_block_header_repository.hpp>
+#include <kagome/blockchain/impl/key_value_block_header_repository.hpp>
 
-#include <crypto/bip39/impl/bip39_provider_impl.hpp>
-#include <crypto/crypto_store/crypto_store_impl.hpp>
-#include <crypto/ed25519/ed25519_provider_impl.hpp>
-#include <crypto/hasher/hasher_impl.hpp>
-#include <crypto/pbkdf2/impl/pbkdf2_provider_impl.hpp>
-#include <crypto/random_generator/boost_generator.hpp>
-#include <crypto/secp256k1/secp256k1_provider_impl.hpp>
-#include <crypto/sr25519/sr25519_provider_impl.hpp>
+#include <kagome/crypto/bip39/impl/bip39_provider_impl.hpp>
+#include <kagome/crypto/crypto_store/crypto_store_impl.hpp>
+#include <kagome/crypto/ed25519/ed25519_provider_impl.hpp>
+#include <kagome/crypto/hasher/hasher_impl.hpp>
+#include <kagome/crypto/pbkdf2/impl/pbkdf2_provider_impl.hpp>
+#include <kagome/crypto/random_generator/boost_generator.hpp>
+#include <kagome/crypto/secp256k1/secp256k1_provider_impl.hpp>
+#include <kagome/crypto/sr25519/sr25519_provider_impl.hpp>
 
-#include <host_api/impl/host_api_factory_impl.hpp>
+#include <kagome/host_api/impl/host_api_factory_impl.hpp>
 
-#include <outcome/outcome.hpp>
+#include <kagome/runtime/module.hpp>
+#include <kagome/runtime/runtime_code_provider.hpp>
+#include <kagome/runtime/trie_storage_provider.hpp>
 
-#include <runtime/module.hpp>
-#include <runtime/module_instance.hpp>
-#include <runtime/runtime_code_provider.hpp>
+#include <kagome/runtime/binaryen/instance_environment_factory.hpp>
+#include <kagome/runtime/binaryen/module/module_factory_impl.hpp>
 
-#include <runtime/binaryen/instance_environment_factory.hpp>
-#include <runtime/binaryen/module/module_factory_impl.hpp>
+#include <kagome/runtime/wavm/compartment_wrapper.hpp>
+#include <kagome/runtime/wavm/instance_environment_factory.hpp>
+#include <kagome/runtime/wavm/intrinsics/intrinsic_functions.hpp>
+#include <kagome/runtime/wavm/intrinsics/intrinsic_module.hpp>
+#include <kagome/runtime/wavm/module_factory_impl.hpp>
 
-#include <runtime/wavm/compartment_wrapper.hpp>
-#include <runtime/wavm/instance_environment_factory.hpp>
-#include <runtime/wavm/intrinsics/intrinsic_functions.hpp>
-#include <runtime/wavm/intrinsics/intrinsic_module.hpp>
-#include <runtime/wavm/module_factory_impl.hpp>
+#include <kagome/storage/changes_trie/impl/storage_changes_tracker_impl.hpp>
 
-#include <storage/changes_trie/impl/storage_changes_tracker_impl.hpp>
+#include <kagome/storage/in_memory/in_memory_storage.hpp>
 
-#include <storage/in_memory/in_memory_storage.hpp>
-
-#include <storage/trie/impl/trie_storage_backend_impl.hpp>
-#include <storage/trie/impl/trie_storage_impl.hpp>
-#include <storage/trie/polkadot_trie/polkadot_trie_factory_impl.hpp>
-#include <storage/trie/serialization/polkadot_codec.hpp>
-#include <storage/trie/serialization/trie_serializer_impl.hpp>
+#include <kagome/storage/trie/impl/trie_storage_backend_impl.hpp>
+#include <kagome/storage/trie/impl/trie_storage_impl.hpp>
+#include <kagome/storage/trie/polkadot_trie/polkadot_trie_factory_impl.hpp>
+#include <kagome/storage/trie/serialization/polkadot_codec.hpp>
+#include <kagome/storage/trie/serialization/trie_serializer_impl.hpp>
 
 namespace helpers {
 

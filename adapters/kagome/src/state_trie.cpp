@@ -27,12 +27,17 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <storage/in_memory/in_memory_storage.hpp>
-#include <storage/trie/impl/trie_storage_backend_impl.hpp>
-#include <storage/trie/impl/trie_storage_impl.hpp>
-#include <storage/trie/polkadot_trie/polkadot_trie_factory_impl.hpp>
-#include <storage/trie/serialization/polkadot_codec.hpp>
-#include <storage/trie/serialization/trie_serializer_impl.hpp>
+// Needs to be included first to work around kagome bug
+#include <kagome/outcome/outcome.hpp>
+
+#include <kagome/common/hexutil.hpp>
+
+#include <kagome/storage/in_memory/in_memory_storage.hpp>
+#include <kagome/storage/trie/impl/trie_storage_backend_impl.hpp>
+#include <kagome/storage/trie/impl/trie_storage_impl.hpp>
+#include <kagome/storage/trie/polkadot_trie/polkadot_trie_factory_impl.hpp>
+#include <kagome/storage/trie/serialization/polkadot_codec.hpp>
+#include <kagome/storage/trie/serialization/trie_serializer_impl.hpp>
 
 #include "subcommand.hpp"
 

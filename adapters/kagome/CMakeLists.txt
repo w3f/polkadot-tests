@@ -81,6 +81,9 @@ if(NOT TARGET yaml-cpp)
   add_library(yaml-cpp ALIAS yaml-cpp::yaml-cpp)
 endif()
 
+hunter_add_package(Boost COMPONENTS program_options)
+find_package(Boost REQUIRED COMPONENTS program_options)
+
 hunter_add_package(scale)
 find_package(scale REQUIRED CONFIG)
 
@@ -88,21 +91,6 @@ hunter_add_package(kagome)
 find_package(kagome REQUIRED CONFIG)
 
 message(STATUS "Found kagome: ${kagome_INCLUDE_DIRS}")
-
-# FIXME Kagome's package config should do all this!
-find_package(Boost REQUIRED COMPONENTS filesystem program_options random)
-find_package(schnorrkel_crust REQUIRED)
-find_package(libsecp256k1 REQUIRED)
-find_package(leveldb REQUIRED)
-find_package(OpenSSL REQUIRED)
-find_package(xxhash REQUIRED)
-find_package(soralog REQUIRED)
-find_package(fmt REQUIRED)
-find_package(libp2p REQUIRED)
-find_package(zstd REQUIRED)
-find_package(binaryen REQUIRED)
-find_package(LLVM REQUIRED)
-find_package(WAVM REQUIRED)
 
 # Compile and link tester
 add_executable(kagome-adapter
@@ -120,14 +108,35 @@ add_executable(kagome-adapter
   src/host_api/child_storage.cpp
 )
 
-# FIXME This should not be necessary, but kagome lacks a modern package config
-target_include_directories(kagome-adapter PRIVATE ${kagome_INCLUDE_DIRS})
-
 target_link_libraries(kagome-adapter
   Boost::program_options
   yaml-cpp
   scale::scale
-  ${kagome_LIBRARIES}
+  kagome::block_header_repository
+  kagome::buffer
+  kagome::binaryen_instance_environment_factory
+  kagome::binaryen_module_factory
+  kagome::bip39_provider
+  kagome::chain_spec
+  kagome::changes_tracker
+  kagome::core_api
+  kagome::crypto_store
+  kagome::ed25519_provider
+  kagome::hasher
+  kagome::host_api_factory
+  kagome::in_memory_storage
+  kagome::key_file_storage
+  kagome::log_configurator
+  kagome::pbkdf2_provider
+  kagome::polkadot_codec
+  kagome::polkadot_trie_factory
+  kagome::sr25519_provider
+  kagome::storage_code_provider
+  kagome::trie_serializer
+  kagome::trie_storage
+  kagome::trie_storage_backend
+  kagome::trie_storage_provider
+  kagome::runtime_wavm
 )
 
 
