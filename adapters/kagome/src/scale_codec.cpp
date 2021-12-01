@@ -25,7 +25,6 @@
 #include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
-#include <common/hexutil.hpp>
 #include <scale/scale.hpp>
 
 #include "subcommand.hpp"
@@ -63,7 +62,7 @@ ScaleCommandArgs extractScaleArgs(int argc, char **argv) {
 void processScaleCodecCommand(ScaleCommandArgs args) {
   SubcommandRouter<std::string> router;
   router.addSubcommand("encode", [](std::string input) {
-    auto res = kagome::scale::encode(input);
+    auto res = scale::encode(input);
     BOOST_ASSERT_MSG(res, "Encode error");
     std::cout << "encoded " << input << ": [";
     bool first = true;
