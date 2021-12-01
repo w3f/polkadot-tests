@@ -127,6 +127,7 @@ target_link_libraries(kagome-adapter
   kagome::in_memory_storage
   kagome::key_file_storage
   kagome::log_configurator
+  kagome::offchain_persistent_storage
   kagome::pbkdf2_provider
   kagome::polkadot_codec
   kagome::polkadot_trie_factory

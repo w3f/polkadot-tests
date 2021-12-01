@@ -35,6 +35,8 @@
 
 #include <kagome/host_api/impl/host_api_factory_impl.hpp>
 
+#include <kagome/offchain/impl/offchain_persistent_storage.hpp>
+
 #include <kagome/runtime/module.hpp>
 #include <kagome/runtime/runtime_code_provider.hpp>
 #include <kagome/runtime/trie_storage_provider.hpp>
@@ -75,16 +77,19 @@ namespace helpers {
   using kagome::crypto::Sr25519ProviderImpl;
   using kagome::crypto::Sr25519Suite;
 
+  using kagome::host_api::HostApiFactoryImpl;
+  using kagome::host_api::OffchainExtensionConfig;
+
+  using kagome::offchain::OffchainPersistentStorageImpl;
+
   using kagome::primitives::events::ChainSubscriptionEngine;
   using kagome::primitives::events::StorageSubscriptionEngine;
 
-  using kagome::host_api::HostApiFactoryImpl;
+  using kagome::runtime::ModuleFactory;
+  using kagome::runtime::RuntimeCodeProvider;
 
   namespace binaryen = kagome::runtime::binaryen;
   namespace wavm = kagome::runtime::wavm;
-
-  using kagome::runtime::ModuleFactory;
-  using kagome::runtime::RuntimeCodeProvider;
 
   using kagome::storage::InMemoryStorage;
   using kagome::storage::changes_trie::StorageChangesTrackerImpl;
@@ -182,15 +187,21 @@ namespace helpers {
         bip39_provider,
         KeyFileStorage::createAt(keystore_path).value());
 
+    // Initialize offchain storage
+    auto offchain_storage =
+        std::make_shared<OffchainPersistentStorageImpl>(storage);
+
     // Initialize host api factory
     auto host_api_factory =
-        std::make_shared<HostApiFactoryImpl>(changes_tracker,
+        std::make_shared<HostApiFactoryImpl>(OffchainExtensionConfig{},
+                                             changes_tracker,
                                              sr25519_provider,
                                              ed25519_provider,
                                              secp256k1_provider,
                                              hasher,
                                              crypto_store,
-                                             bip39_provider);
+                                             bip39_provider,
+                                             offchain_storage);
 
     // Initialize header repo
     auto header_repo =
