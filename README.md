@@ -12,7 +12,7 @@ Currently the testsuite contains the following tests:
 - Polkadot Host API ([host-api](fixtures/host-api))
 - Genesis Import ([genesis](fixtures/genesis))
 
-The goal is to ensures that the different implementations behave in the same way and produce the identical output, which is the necessary basis for the interoperability of all Polkadot clients.
+The goal is to ensure that the different implementations behave in the same way and produce the identical output, which is the necessary basis for the interoperability of all Polkadot clients.
 
 The implementation under test is made available via git submodules, so it is recommended to clone this repository with `--recurse-submodules` or to intialize them after the fact with `git submodule init`.
 
@@ -37,7 +37,7 @@ There is a simple Makefile in the [main test directory](./), that will build all
 If you only want to run a certain fixture or only test a specific implementation, you might therefore not need to build all adapters, testers and hosts. The only binary needed for most tests is the `substrate-adapter` (as it is used as the reference implementation). Furthermore you only need to build any of the hosts if you want to run any `host-tester` based fixture (i.e. only `genesis` at the moment).
 It should also be noted that the testsuite will pick up any hosts (or adapters) in your `PATH` first, so if you already have any of those installed you can run the test suite against the binaries in your `PATH` instead.
 
-To build any of the hosts, please make sure to initialized the corresponding submodules in the [hosts subfolder](./hosts), e.g. with `git submodule update --init`.
+To build any of the hosts, please make sure you initialized the corresponding submodules in the [hosts subfolder](./hosts), e.g. with `git submodule update --init`.
 
 ### Substrate API Adapter
 
@@ -71,7 +71,7 @@ If you are on a debian-based system, here are some more concrete pointers to hel
 
 ### Install dependencies
 
-Install the required software in order to run build all adapter and to be able to run all tests.
+Install the required software in order to run build all adapters and to be able to run all tests.
 
 **Note:** The test suite requires CMake version 3.12 or higher and gcc/g++ or clang version 8. However it is not recommended to change your default gcc/g++ versions for your whole installation, as that can lead to issues down the road. Please use the environment variables `CC` and `CXX` to temporally change the used compiler instead.
 
