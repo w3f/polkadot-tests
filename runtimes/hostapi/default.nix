@@ -7,10 +7,10 @@ naerskWasm.buildPackage rec {
   src = "${polkadot-tests.src}/runtimes/hostapi";
 
   overrideMain = _: {
-    name = "hostapi-runtime-${version}.compact.wasm";
+    name = "hostapi-runtime-${version}.default.wasm";
 
     installPhase = ''
-      cp out/release/wbuild/hostapi-runtime/hostapi_runtime.compact.wasm $out
+      cp target/release/wbuild/hostapi-runtime/hostapi_runtime.compact.wasm $out
     '';
   };
 }
