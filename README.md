@@ -1,5 +1,6 @@
 # Polkadot Conformance Testsuite
 
+[![License](https://img.shields.io/github/license/w3f/polkadot-tests.svg)](https://github.com/w3f/polkadot-tests/blob/main/LICENSE)
 [![Conformance Testsuite](https://github.com/w3f/polkadot-tests/workflows/Conformance%20Testsuite/badge.svg)](https://github.com/w3f/polkadot-tests/actions?query=workflow%3A%22Conformance+Testsuite%22)
 [![Integration Testsuite](https://github.com/w3f/polkadot-tests/workflows/Integration%20Testsuite/badge.svg)](https://github.com/w3f/polkadot-tests/actions?query=workflow%3A%22Integration+Testsuite%22)
 
