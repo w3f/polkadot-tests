@@ -22,6 +22,8 @@ with final; {
     inherit (llvmPackages_12) libllvm;
   };
 
+  scale-codec-cpp = callPackage ./deps/scale-codec-cpp.nix {};
+
   # Newer then stable, often forks with additional cmake support
   binaryen_cmake      = callPackage ./deps/binaryen.nix {};
   gtest_cmake         = callPackage ./deps/googletest.nix {};
