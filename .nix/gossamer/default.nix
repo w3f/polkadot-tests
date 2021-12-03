@@ -1,6 +1,6 @@
-{ polkadot-tests, buildGoModule, patchelf, glibc }:
+{ polkadot-tests, buildGo117Module, patchelf, glibc }:
 
-buildGoModule rec {
+buildGo117Module rec {
   pname = "gossamer-host";
   inherit (polkadot-tests) src version;
 
@@ -17,7 +17,7 @@ buildGoModule rec {
 
   runVend = true;
 
-  vendorSha256 = "EH+tnONj749fO5Vnxbq58k6Q/D0CZkRarPUKH0cZpk0=";
+  vendorSha256 = "fIEHruO1UTyy68n661E2GrHa3U+WWcI83+SXjGbOQ30=";
 
   subPackages = [ "cmd/gossamer" ];
 
