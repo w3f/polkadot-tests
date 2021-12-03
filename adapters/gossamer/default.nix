@@ -1,6 +1,6 @@
-{ polkadot-tests, buildGoModule, patchelf, glibc }:
+{ polkadot-tests, buildGo117Module, patchelf, glibc }:
 
-buildGoModule rec {
+buildGo117Module rec {
   pname = "gossamer-adapter";
   inherit (polkadot-tests) src version;
 
