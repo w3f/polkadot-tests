@@ -4,8 +4,8 @@
 , openssl
 , protobuf
 , gtest_cmake
-, boost172
-, microsoft_gsl_cmake
+, boost17x
+, microsoft-gsl_cmake
 , soralog
 , leveldb_cmake
 , rapidjson_cmake
@@ -16,10 +16,10 @@
 , backward-cpp_cmake
 , wavm
 , cpp-libp2p
-, tsl_hat_trie
-, boost_di
+, tsl-hat-trie
+, boost-di
 , prometheus-cpp
-, schnorrkel_crust
+, schnorrkel-crust
 , libnsl
 , libllvm
 , zstd
@@ -54,23 +54,23 @@ stdenv.mkDerivation rec {
     # Custom packaged dependencies
     soralog
     jsonrpc-lean
-    tsl_hat_trie
-    boost_di
+    tsl-hat-trie
+    boost-di
     prometheus-cpp
   ];
 
   propagatedBuildInputs = [
-    boost172
+    boost17x
     openssl
     zstd
 
-    microsoft_gsl_cmake
+    microsoft-gsl_cmake
     binaryen_cmake
     leveldb_cmake
     xxHash_cmake
 
     cpp-libp2p
-    schnorrkel_crust
+    schnorrkel-crust
     libsecp256k1_cmake
     wavm
   ];

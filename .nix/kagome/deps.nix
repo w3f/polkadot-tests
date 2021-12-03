@@ -10,10 +10,10 @@ with final; {
 
   jsonrpc-lean = callPackage ./deps/jsonrpc-lean.nix {};
 
-  schnorrkel_crust = callPackage ./deps/schnorrkel_crust {};
+  schnorrkel-crust = callPackage ./deps/schnorrkel-crust {};
 
-  boost_di     = callPackage ./deps/boost_di.nix {};
-  tsl_hat_trie = callPackage ./deps/tsl_hat_trie.nix {};
+  boost-di     = callPackage ./deps/boost-di.nix {};
+  tsl-hat-trie = callPackage ./deps/tsl-hat-trie.nix {};
 
   prometheus-cpp = callPackage ./deps/prometheus-cpp.nix {};
 
@@ -26,7 +26,7 @@ with final; {
   binaryen_cmake      = callPackage ./deps/binaryen.nix {};
   gtest_cmake         = callPackage ./deps/googletest.nix {};
   leveldb_cmake       = callPackage ./deps/leveldb.nix {};
-  microsoft_gsl_cmake = callPackage ./deps/microsoft_gsl.nix {};
+  microsoft-gsl_cmake = callPackage ./deps/microsoft-gsl.nix {};
   rapidjson_cmake     = callPackage ./deps/rapidjson.nix {};
   xxHash_cmake        = callPackage ./deps/xxhash.nix {};
   libsecp256k1_cmake  = callPackage ./deps/libsecp256k1.nix {};

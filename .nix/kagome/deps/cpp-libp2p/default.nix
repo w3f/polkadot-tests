@@ -6,10 +6,10 @@
 , boost172
 , protobuf
 , openssl
-, microsoft_gsl_cmake
+, microsoft-gsl_cmake
 , soralog
-, boost_di
-, tsl_hat_trie
+, boost-di
+, tsl-hat-trie
 , sqlite-modern-cpp
 , c-ares
 , withTests ? false
@@ -39,10 +39,10 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     gtest_cmake
-    microsoft_gsl_cmake
+    microsoft-gsl_cmake
 
-    boost_di
-    tsl_hat_trie
+    boost-di
+    tsl-hat-trie
     sqlite-modern-cpp
   ];
 
