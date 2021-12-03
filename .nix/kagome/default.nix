@@ -23,6 +23,7 @@
 , libnsl
 , libllvm
 , zstd
+, scale-codec-cpp
 }:
 
 stdenv.mkDerivation rec {
@@ -57,6 +58,7 @@ stdenv.mkDerivation rec {
     tsl-hat-trie
     boost-di
     prometheus-cpp
+    scale-codec-cpp
   ];
 
   propagatedBuildInputs = [
