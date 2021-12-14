@@ -215,7 +215,11 @@ namespace helpers {
         // Initialize module factory
         auto instance_env_factory =
             std::make_shared<binaryen::InstanceEnvironmentFactory>(
-                trie_db, host_api_factory, header_repo, changes_tracker);
+                trie_db,
+                serializer,
+                host_api_factory,
+                header_repo,
+                changes_tracker);
 
         module_factory = std::make_shared<binaryen::ModuleFactoryImpl>(
             instance_env_factory, trie_db);
@@ -233,6 +237,7 @@ namespace helpers {
         // Initialize module factory
         auto instance_env_factory =
             std::make_shared<wavm::InstanceEnvironmentFactory>(trie_db,
+                                                               serializer,
                                                                compartment,
                                                                intrinsic_module,
                                                                host_api_factory,

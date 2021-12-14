@@ -28,9 +28,6 @@ namespace child_storage {
 
   void set_get_version_1(helpers::RuntimeEnvironment environment,
                          const std::vector<std::string> &inputs) {
-    // FIXME Child storage not implemented upstream
-    throw NotImplemented();
-
     // Parse inputs
     BOOST_ASSERT(inputs.size() == 4);
 
@@ -70,14 +67,99 @@ namespace child_storage {
   }
 
   void read_version_1(helpers::RuntimeEnvironment environment,
-                      const std::vector<std::string> &args) {
+                      const std::vector<std::string> &inputs) {
     throw NotImplemented();  // TODO not implemented
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 6);
+
+    const std::string_view child1 = inputs[0];
+    const std::string_view child2 = inputs[1];
+    const std::string_view key = inputs[2];
+    const std::string_view value = inputs[3];
+    const uint32_t offset = std::stoul(inputs[4]);
+    const uint32_t length = std::stoul(inputs[5]);
+
+    // Check that key has not been set
+    auto result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_read_version_1",
+        child1,
+        key,
+        offset,
+        length);
+
+    BOOST_ASSERT_MSG(!result, "Child1 data exists");
+
+    // Add data to storage
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_set_version_1", child1, key, value);
+
+    // Get invalid key (different child storage)
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_read_version_1",
+        child2,
+        key,
+        offset,
+        length);
+
+    BOOST_ASSERT_MSG(!result, "Child2 data exists");
+
+    // Get valid key
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_read_version_1",
+        child1,
+        key,
+        offset,
+        length);
+    BOOST_ASSERT_MSG(result.has_value(), "Child1 data missing");
+
+    if (offset < value.length()) {
+      auto expected_length =
+          std::min(uint32_t(value.length() - offset), length);
+      auto expected_value = value.substr(offset, expected_length);
+
+      BOOST_ASSERT_MSG(result.value().toString() == expected_value,
+                       "Values are different");
+    } else {
+      BOOST_ASSERT_MSG(result.value().empty(), "Values are different");
+    }
+
+    std::cout << result.value().toString() << std::endl;
   }
 
   // Input: child1, child2, key, value
   void clear_version_1(helpers::RuntimeEnvironment environment,
-                       const std::vector<std::string> &args) {
-    throw NotImplemented();  // TODO not implemented
+                       const std::vector<std::string> &inputs) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 4);
+
+    const std::string_view child_key1 = inputs[0];
+    const std::string_view child_key2 = inputs[1];
+
+    const std::string_view key = inputs[2];
+    const std::string_view value = inputs[3];
+
+    // Set key/value
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_set_version_1", child_key1, key, value);
+
+    // Clear value (other child key)
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_clear_version_1", child_key2, key);
+
+    // Get valid key
+    auto result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key1, key);
+    BOOST_ASSERT_MSG(result.has_value(), "Value not found");
+    BOOST_ASSERT_MSG(result.value().toString() == value, "Read value is incorrect");
+
+    // Clear value
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_clear_version_1", child_key1, key);
+
+    // Get cleared value
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key1, key);
+    BOOST_ASSERT_MSG(!result, "Value was not deleted");
   }
 
   // Input: child1, child2, key, value
@@ -99,13 +181,113 @@ namespace child_storage {
   }
 
   void root_version_1(helpers::RuntimeEnvironment environment,
-                      const std::vector<std::string> &args) {
-    throw NotImplemented();  // TODO not implemented
+                      const std::vector<std::string> &inputs) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 6);
+
+    const std::string_view child_key1 = inputs[0];
+    const std::string_view child_key2 = inputs[1];
+    const std::string_view key1 = inputs[2];
+    const std::string_view value1 = inputs[3];
+    const std::string_view key2 = inputs[4];
+    const std::string_view value2 = inputs[5];
+
+    // Set key1 to value1
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key1,
+                              key1,
+                              value1);
+
+    // Set key2 to value2
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key1,
+                              key2,
+                              value2);
+
+    // Set key1 to value2 (different child key)
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key2,
+                              key1,
+                              value2);
+
+    // Set key2 to value1 (different child key)
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key2,
+                              key2,
+                              value1);
+
+    // Compute and print storage root hash
+    auto hash = environment.execute<helpers::Buffer>(
+        "rtm_ext_default_child_storage_root_version_1", child_key1);
+    std::cout << hash.toHex() << std::endl;
   }
 
   void next_key_version_1(helpers::RuntimeEnvironment environment,
-                          const std::vector<std::string> &args) {
-    throw NotImplemented();  // TODO not implemented
+                          const std::vector<std::string> &inputs) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 6);
+
+    const std::string_view child_key1 = inputs[0];
+    const std::string_view child_key2 = inputs[1];
+
+    const std::string_view key1 = inputs[2];
+    const std::string_view value1 = inputs[3];
+
+    const std::string_view key2 = inputs[4];
+    const std::string_view value2 = inputs[5];
+
+    // No next key available
+    auto next = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_next_key_version_1", child_key1, key1);
+    BOOST_ASSERT_MSG(!next, "Next is not empty");
+
+    // Set key/value
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key1,
+                              key1,
+                              value1);
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key1,
+                              key2,
+                              value2);
+
+    // Try to read next key
+    next = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_next_key_version_1", child_key1, key1);
+    if (key1.compare(key2) < 0) {
+      BOOST_ASSERT_MSG(next, "Next is empty");
+
+      auto result = next.value().toString();
+
+      BOOST_ASSERT_MSG(result == key2, "Next is not Key2");
+
+      std::cout << result << std::endl;
+    } else {
+      BOOST_ASSERT_MSG(!next, "Next is not empty");
+    }
+
+    // Try to read next key
+    next = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_next_key_version_1", child_key1, key2);
+    if (key2.compare(key1) < 0) {
+      BOOST_ASSERT_MSG(next, "Next is empty");
+
+      auto result = next.value().toString();
+
+      BOOST_ASSERT_MSG(result == key1, "Next is not Key1");
+
+      std::cout << result << std::endl;
+    } else {
+      BOOST_ASSERT_MSG(!next, "Next is not empty");
+    }
+
+    // Get invalid next key (different child key)
+    next = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_next_key_version_1", child_key2, key1);
+    BOOST_ASSERT_MSG(!next, "Next is not empty");
+    next = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_next_key_version_1", child_key2, key2);
+    BOOST_ASSERT_MSG(!next, "Next is not empty");
   }
 
 }  // namespace child_storage
