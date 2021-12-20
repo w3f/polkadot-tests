@@ -48,12 +48,7 @@ set(
 
 message(STATUS "Upload to binary cache: ${HUNTER_RUN_UPLOAD}")
 
-# Setup binary cache and enable if upload is enabled
-set(
-  HUNTER_USE_CACHE_SERVERS ${HUNTER_RUN_UPLOAD}
-  CACHE STRING "Binary cache server"
-)
-
+# Setup binary cache
 set(
   HUNTER_CACHE_SERVERS "https://github.com/w3f/hunter-binary-cache"
   CACHE STRING "Binary cache server"
