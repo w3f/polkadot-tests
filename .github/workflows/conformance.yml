@@ -66,8 +66,8 @@ jobs:
       env:
         CC: gcc-9
         CXX: g++-9
-        HUNTER_UPLOAD_USERNAME: ${{ secrets.HUNTER_UPLOAD_USER }}
-        HUNTER_UPLOAD_PASSWORD: ${{ secrets.HUNTER_UPLOAD_TOKEN }}
+        GITHUB_HUNTER_USERNAME: ${{ secrets.HUNTER_UPLOAD_USER }}
+        GITHUB_HUNTER_TOKEN: ${{ secrets.HUNTER_UPLOAD_TOKEN }}
       run: make kagome-adapter
     - name: Upload kagome adapter
       uses: actions/upload-artifact@v2

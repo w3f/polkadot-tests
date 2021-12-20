@@ -32,10 +32,10 @@ set(
 )
 
 # Enable upload to binary cache if username and password are supplied
-if(DEFINED ENV{HUNTER_UPLOAD_USERNAME} AND DEFINED ENV{HUNTER_UPLOAD_PASSWORD})
-  set(HUNTER_RUN_UPLOAD YES CACHE BOOL "Upload to binary cache")
-else()
+if("$ENV{GITHUB_HUNTER_USERNAME}" EQUAL "" AND "$ENV{GITHUB_HUNTER_TOKEN}" EQUAL "")
   set(HUNTER_RUN_UPLOAD NO CACHE BOOL "Upload to binary cache")
+else()
+  set(HUNTER_RUN_UPLOAD YES CACHE BOOL "Upload to binary cache")
 endif ()
 
 set(
