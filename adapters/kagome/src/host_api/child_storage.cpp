@@ -182,6 +182,10 @@ namespace child_storage {
 
   void root_version_1(helpers::RuntimeEnvironment environment,
                       const std::vector<std::string> &inputs) {
+    // TODO not implemented in WAVM backend
+    if (environment.getBackend() == helpers::RuntimeEnvironment::Backend::WAVM)
+      throw NotImplemented();
+
     // Parse inputs
     BOOST_ASSERT(inputs.size() == 6);
 
