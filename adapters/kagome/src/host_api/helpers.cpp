@@ -141,7 +141,8 @@ namespace helpers {
       RuntimeEnvironment::Backend::Binaryen;
 
   RuntimeEnvironment::RuntimeEnvironment(const std::string path,
-                                         Backend backend) {
+                                         Backend backend)
+      : backend_(backend) {
     // Load wasm runtime from file
     auto code_provider = std::make_shared<FileCodeProvider>(path);
 
@@ -281,4 +282,7 @@ namespace helpers {
     execute<void>("rtm_ext_storage_set_version_1", ":code", "");
   }
 
+  RuntimeEnvironment::Backend RuntimeEnvironment::getBackend() const {
+    return backend_;
+  }
 }  // namespace helpers

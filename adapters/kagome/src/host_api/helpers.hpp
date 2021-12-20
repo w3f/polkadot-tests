@@ -52,12 +52,15 @@ namespace helpers {
       WAVM,
     };
 
-    // Default backend to use
+    // Backend used by default
     static const Backend DEFAULT_BACKEND;
 
-    // Initialize a runtime environment
+    // Initialize a new runtime environment
     RuntimeEnvironment(const std::string path = DEFAULT_RUNTIME_PATH,
                        Backend backend = DEFAULT_BACKEND);
+
+    // Get type of environment
+    Backend getBackend() const;
 
     // Call function with provided arguments
     template <typename Result, typename... Args>
@@ -88,6 +91,9 @@ namespace helpers {
     }
 
    private:
+    // Backend used by the environment
+    Backend backend_;
+
     // Main objects used to execute calls
     std::shared_ptr<ModuleInstance> module_instance_;
     std::shared_ptr<MemoryProvider> memory_provider_;
