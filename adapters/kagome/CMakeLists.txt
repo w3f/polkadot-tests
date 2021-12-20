@@ -32,11 +32,14 @@ set(
 )
 
 # Enable upload to binary cache if username and password are supplied
-if("$ENV{GITHUB_HUNTER_USERNAME}" EQUAL "" AND "$ENV{GITHUB_HUNTER_TOKEN}" EQUAL "")
+string(COMPARE EQUAL "$ENV{GITHUB_HUNTER_USERNAME}" "" UPLOAD_USER_EMPTY)
+string(COMPARE EQUAL "$ENV{GITHUB_HUNTER_TOKEN}" "" UPLOAD_TOKEN_EMPTY)
+
+if(UPLOAD_USER_EMPTY OR UPLOAD_TOKEN_EMPTY)
   set(HUNTER_RUN_UPLOAD NO CACHE BOOL "Upload to binary cache")
 else()
   set(HUNTER_RUN_UPLOAD YES CACHE BOOL "Upload to binary cache")
-endif ()
+endif()
 
 set(
   HUNTER_PASSWORDS_PATH "${CMAKE_SOURCE_DIR}/cmake/HunterPasswords.cmake"
