@@ -264,8 +264,10 @@ namespace helpers {
     memory_provider_ = module_instance_->getEnvironment().memory_provider;
 
     // Intialize storage batch
+    auto empty = serializer->getEmptyRootHash();
     auto batch =
-        module_instance_->getEnvironment().storage_provider->setToPersistent();
+        module_instance_->getEnvironment().storage_provider->setToPersistentAt(
+            empty);
     BOOST_ASSERT_MSG(batch, batch.error().message().data());
 
     // Set up heap base

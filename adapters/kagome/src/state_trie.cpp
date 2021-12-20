@@ -158,8 +158,8 @@ void processTrieCommand(const TrieCommandArgs &args) {
   auto trie_db = TrieStorageImpl::createEmpty(
                      trie_factory, codec, serializer, std::nullopt)
                      .value();
-
-  auto trie = trie_db->getPersistentBatch().value();
+  auto empty = serializer->getEmptyRootHash();
+  auto trie = trie_db->getPersistentBatchAt(empty).value();
 
   // Execute requested command
   SubcommandRouter<std::vector<Buffer>, std::vector<Buffer>> router;
