@@ -10,7 +10,7 @@ on:
     - '**'
     - '!adapters/**'
     - '!fixtures/**'
-    - 'fixtures/genesis/**'
+    - 'fixtures/genesis-json/**'
     - 'fixtures/genesis-raw/**'
     - '!helpers/AdapterFixture.jl'
     - '!runtimes/hostapi/**'
@@ -163,12 +163,17 @@ jobs:
         name: tester-runtime-genesis
         path: |
           runtimes/tester/genesis.hash
+          runtimes/tester/genesis.json
           runtimes/tester/genesis.raw.json
 
 
   test-substrate:
     needs: [ build-host-substrate, build-runtime-tester ]
-    name: "[test-genesis-raw] substrate"
+    strategy:
+      fail-fast: false
+      matrix:
+        fixture: [ genesis-json, genesis-raw ]
+    name: "[test-${{ matrix.fixture }}] substrate"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -183,11 +188,15 @@ jobs:
         name: tester-runtime-genesis
         path: runtimes/tester
     - name: Run substrate with tester genesis
-      run: ./runtests.jl substrate genesis-raw
+      run: ./runtests.jl substrate ${{ matrix.fixture }}
 
   test-kagome:
     needs: [ build-host-kagome, build-runtime-tester ]
-    name: "[test-genesis-raw] kagome"
+    strategy:
+      fail-fast: false
+      matrix:
+        fixture: [ genesis-json, genesis-raw ]
+    name: "[test-${{ matrix.fixture }}] kagome"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -202,11 +211,15 @@ jobs:
         name: tester-runtime-genesis
         path: runtimes/tester
     - name: Run kagome with tester genesis
-      run: ./runtests.jl kagome genesis-raw
+      run: ./runtests.jl kagome ${{ matrix.fixture }}
 
   test-gossamer:
     needs: [ build-host-gossamer, build-runtime-tester ]
-    name: "[test-genesis-raw] gossamer"
+    strategy:
+      fail-fast: false
+      matrix:
+        fixture: [ genesis-json, genesis-raw ]
+    name: "[test-${{ matrix.fixture }}] gossamer"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -224,4 +237,4 @@ jobs:
         name: tester-runtime-genesis
         path: runtimes/tester
     - name: Run gossamer with tester genesis
-      run: ./runtests.jl gossamer genesis-raw
+      run: ./runtests.jl gossamer ${{ matrix.fixture }}

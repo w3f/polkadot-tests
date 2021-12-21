@@ -8,6 +8,7 @@ on:
     paths:
     - '.github/workflows/conformance.yml'
     - '**'
+    - '!fixtures/genesis-json/**'
     - '!fixtures/genesis-raw/**'
     - '!helpers/HostFixture.jl'
     - '!runtimes/tester/**'
