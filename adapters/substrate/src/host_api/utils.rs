@@ -8,7 +8,6 @@ use parity_scale_codec::Decode;
 use sc_executor::{
     WasmExecutor,
     WasmExecutionMethod,
-    sp_wasm_interface::HostFunctions,
 };
 use sc_executor_common::runtime_blob::RuntimeBlob;
 use sp_io::SubstrateHostFunctions;
@@ -105,12 +104,12 @@ impl Runtime {
     pub fn call(&mut self, func: &str, args: &[u8]) -> Vec<u8> {
         let mut extext = self.ext.ext();
 
-        WasmExecutor::new(
+        WasmExecutor::<SubstrateHostFunctions>::new(
             self.method,
             Some(8), // heap_pages
-            SubstrateHostFunctions::host_functions(),
             8, // max_runtime_instances
-            None // cache_path
+            None, // cache_path
+            2, // runtime_cache_size
         ).uncached_call(
             RuntimeBlob::uncompress_if_needed(&self.blob[..]).unwrap(),
             &mut extext,
