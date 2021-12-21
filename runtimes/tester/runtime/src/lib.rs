@@ -189,6 +189,8 @@ impl system::Config for Runtime {
 	type SS58Prefix = SS58Prefix;
 	/// What to do on code update 
 	type OnSetCode = ();
+    /// Maximum number of consumers per account
+    type MaxConsumers = frame_support::traits::ConstU32<16>;
 }
 
 impl collective_flip::Config for Runtime {}
@@ -310,7 +312,7 @@ pub type SignedExtra = (
 /// Unchecked extrinsic type as expected by this runtime.
 pub type UncheckedExtrinsic = generic::UncheckedExtrinsic<Address, Call, Signature, SignedExtra>;
 /// Executive: handles dispatch to the various modules.
-pub type Executive = frame_executive::Executive<Runtime, Block, system::ChainContext<Runtime>, Runtime, AllPallets>;
+pub type Executive = frame_executive::Executive<Runtime, Block, system::ChainContext<Runtime>, Runtime, AllPalletsWithSystem>;
 
 
 /// Print current storage root
