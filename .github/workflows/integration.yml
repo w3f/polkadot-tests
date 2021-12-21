@@ -32,6 +32,10 @@ jobs:
         target: wasm32-unknown-unknown
         default: true
         profile: minimal
+    - name: Setup and cache sccache
+      uses: visvirial/sccache-action@v1.0.0
+      with:
+        cache-key: sccache-host-substrate
     - name: Cache cargo registry and index
       uses: actions/cache@v2.1.7
       with:
@@ -65,10 +69,16 @@ jobs:
         submodules: true
     - name: Install gitpython
       run: sudo apt-get install -y python3-git
+    - name: Setup and cache sccache
+      uses: visvirial/sccache-action@v1.0.0
+      with:
+        cache-key: sccache-host-kagome
     - name: Build kagome host (with caching)
       env:
         CC: gcc-9
         CXX: g++-9
+        CMAKE_C_COMPILER_LAUNCHER: /tmp/sccache/sccache
+        CMAKE_CXX_COMPILER_LAUNCHER: /tmp/sccache/sccache
         GITHUB_HUNTER_USERNAME: ${{ secrets.HUNTER_UPLOAD_USER }}
         GITHUB_HUNTER_TOKEN: ${{ secrets.HUNTER_UPLOAD_TOKEN }}
       run: make kagome-host
