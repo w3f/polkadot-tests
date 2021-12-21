@@ -9,9 +9,9 @@ on:
     - '.github/workflows/integration.yml'
     - '**'
     - '!adapters/**'
-    - 'adapters/substrate/**'
     - '!fixtures/**'
     - 'fixtures/genesis/**'
+    - 'fixtures/genesis-raw/**'
     - '!helpers/AdapterFixture.jl'
     - '!runtimes/hostapi/**'
     - '!README.md'
@@ -122,43 +122,6 @@ jobs:
         path: lib/libwasmer.so
 
 
-  build-adapter-substrate:
-    name: "[build] substrate-adapter"
-    runs-on: ubuntu-20.04
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Setup rust toolchain
-      id: rustup
-      uses: actions-rs/toolchain@v1
-      with:
-        target: wasm32-unknown-unknown
-        default: true
-        profile: minimal
-    - name: Cache cargo registry and index
-      uses: actions/cache@v2.1.7
-      with:
-        path: |
-          ~/.cargo/registry/index/
-          ~/.cargo/registry/cache/
-          ~/.cargo/git/db/
-        key: cargo-cache-adapter-substrate-${{ hashFiles('adapters/substrate/Cargo.lock') }}
-        restore-keys: cargo-cache-adapter-substrate-
-    - name: Cache cargo build ouput
-      uses: actions/cache@v2.1.7
-      with:
-        path: adapters/substrate/target
-        key: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('adapters/substrate/Cargo.lock') }}
-        restore-keys: cargo-build-adapter-substrate-${{ steps.rustup.outputs.rustc_hash }}-
-    - name: Build substrate adapters
-      run: make substrate-adapter
-    - name: Upload substrate adapter
-      uses: actions/upload-artifact@v2
-      with:
-        name: substrate-adapter
-        path: bin/substrate-adapter
-
-
   build-runtime-tester:
     name: "[build] tester-runtime"
     runs-on: ubuntu-20.04
@@ -172,12 +135,6 @@ jobs:
         target: wasm32-unknown-unknown
         default: true
         profile: minimal
-    - name: Setup python toolchain
-      uses: actions/setup-python@v2
-    - name: Install yq
-      run: |
-        python -m pip install wheel
-        python -m pip install yq
     - name: Cache cargo registry and index
       uses: actions/cache@v2.1.7
       with:
@@ -200,18 +157,18 @@ jobs:
       with:
         name: tester_runtime.compact.wasm
         path: runtimes/tester/target/release/wbuild/tester-runtime/tester_runtime.compact.wasm
-    - name: Upload host tester genesis and state file
+    - name: Upload host tester genesis and hash file
       uses: actions/upload-artifact@v2
       with:
         name: tester-runtime-genesis
         path: |
-          runtimes/tester/genesis.json
-          runtimes/tester/genesis.yaml
+          runtimes/tester/genesis.hash
+          runtimes/tester/genesis.raw.json
 
 
   test-substrate:
-    needs: [ build-host-substrate, build-adapter-substrate, build-runtime-tester ]
-    name: "[test-genesis] substrate"
+    needs: [ build-host-substrate, build-runtime-tester ]
+    name: "[test-genesis-raw] substrate"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -223,19 +180,14 @@ jobs:
     - run: chmod +x bin/polkadot
     - uses: actions/download-artifact@v2.1.0
       with:
-        name: substrate-adapter
-        path: bin
-    - run: chmod +x bin/substrate-adapter
-    - uses: actions/download-artifact@v2.1.0
-      with:
         name: tester-runtime-genesis
         path: runtimes/tester
     - name: Run substrate with tester genesis
-      run: ./runtests.jl substrate genesis
+      run: ./runtests.jl substrate genesis-raw
 
   test-kagome:
-    needs: [ build-host-kagome, build-adapter-substrate, build-runtime-tester ]
-    name: "[test-genesis] kagome"
+    needs: [ build-host-kagome, build-runtime-tester ]
+    name: "[test-genesis-raw] kagome"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -247,19 +199,14 @@ jobs:
     - run: chmod +x bin/kagome
     - uses: actions/download-artifact@v2.1.0
       with:
-        name: substrate-adapter
-        path: bin
-    - run: chmod +x bin/substrate-adapter
-    - uses: actions/download-artifact@v2.1.0
-      with:
         name: tester-runtime-genesis
         path: runtimes/tester
     - name: Run kagome with tester genesis
-      run: ./runtests.jl kagome genesis
+      run: ./runtests.jl kagome genesis-raw
 
   test-gossamer:
-    needs: [ build-host-gossamer, build-adapter-substrate, build-runtime-tester ]
-    name: "[test-genesis] gossamer"
+    needs: [ build-host-gossamer, build-runtime-tester ]
+    name: "[test-genesis-raw] gossamer"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -274,12 +221,7 @@ jobs:
         mv bin/libwasmer.so lib/
     - uses: actions/download-artifact@v2.1.0
       with:
-        name: substrate-adapter
-        path: bin
-    - run: chmod +x bin/substrate-adapter
-    - uses: actions/download-artifact@v2.1.0
-      with:
         name: tester-runtime-genesis
         path: runtimes/tester
     - name: Run gossamer with tester genesis
-      run: ./runtests.jl gossamer genesis
+      run: ./runtests.jl gossamer genesis-raw
