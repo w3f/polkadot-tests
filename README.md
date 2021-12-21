@@ -27,7 +27,6 @@ To build and run the test suite from source, it depends on the following compone
 - _rust-nightly_ (with wasm target) to build substrate host and adpater (as well as testers and wasm-adapter)
 - _cmake_ and _gcc_ or _clang_ (version 8 or 9 of either) to build kagome host and adapter
 - _go_ to build gossamer host and adapter
-- _jq_ and _yq_ to convert the host-tester genesis
 
 While the official target of our testsuite are currently only debian-based systems, there is in general no reason for it to not be able to run on any recent GNU/Linux or even UNIX-based OS, like OS X.
 
@@ -90,12 +89,8 @@ apt update && apt install -y --no-install-recommends \
   gcc-8 \
   g++-8 \
   golang \
-  julia \
-  python \
-  jq
+  julia 
 ```
-
-You will also have to install [`yq`](https://github.com/mikefarah/yq) which can be done via pip, apt, snap and even go. For more details please refer to its official documentation.
 
 ### Install recent CMake
 
