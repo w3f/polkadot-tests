@@ -12,7 +12,7 @@ babe = ""
 grandpa = ""
 
 [init]
-genesis = "./runtimes/tester/genesis.json"
+genesis = "./runtimes/tester/genesis.raw.json"
 
 [core]
 roles = 4
