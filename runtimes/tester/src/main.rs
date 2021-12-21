@@ -57,7 +57,7 @@ fn default_genesis_config() -> GenesisConfig {
 			],
 		},
 		sudo: SudoConfig {
-			key: get_account_id_from_seed::<sr25519::Public>("Alice"),
+			key: Some(get_account_id_from_seed::<sr25519::Public>("Alice")),
 		},
 	}
 }
