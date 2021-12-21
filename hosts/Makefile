@@ -5,7 +5,7 @@ all: substrate kagome gossamer
 
 
 substrate:
-	cd substrate && cargo build --release
+	cd substrate && SKIP_WASM_BUILD=1 cargo build --release
 	cp substrate/target/release/polkadot ../bin/
 
 kagome:
