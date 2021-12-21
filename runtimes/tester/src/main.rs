@@ -1,11 +1,17 @@
-use sp_core::{Pair, Public, sr25519};
+use std::env;
+
 use tester_runtime::{
 	AccountId, BabeConfig, BalancesConfig, GenesisConfig,
-	GrandpaConfig, SudoConfig, SystemConfig, Signature,
-	BABE_GENESIS_EPOCH_CONFIG, WASM_BINARY,
+	GrandpaConfig, SudoConfig, SystemConfig, BuildStorage,
+	Header, Signature, BABE_GENESIS_EPOCH_CONFIG, WASM_BINARY,
 };
+
+use sp_core::{H256, Pair, Public, sr25519};
 use sc_service::{GenericChainSpec, ChainType};
-use sp_runtime::traits::{Verify, IdentifyAccount};
+use sp_runtime::traits::{
+	Hash as HashT, Header as HeaderT,
+	Verify, IdentifyAccount
+};
 
 use sp_babe::AuthorityId as BabeId;
 use sp_grandpa::AuthorityId as GrandpaId;
@@ -28,6 +34,7 @@ fn get_account_id_from_seed<TPublic: Public>(seed: &str) -> AccountId where
 {
 	AccountPublic::from(get_from_seed::<TPublic>(seed)).into_account()
 }
+
 
 /// Create default genesis config
 fn default_genesis_config() -> GenesisConfig {
@@ -62,6 +69,12 @@ fn default_genesis_config() -> GenesisConfig {
 	}
 }
 
+/// Compute genesis hash
+fn default_genesis_hash() -> H256 {
+	<Header as HeaderT>::Hashing::trie_root(
+		default_genesis_config().build_storage().unwrap().top.into_iter().collect()
+	)
+}
 
 /// Create default chain specification
 fn default_chain_spec() -> ChainSpec {
@@ -78,11 +91,38 @@ fn default_chain_spec() -> ChainSpec {
 	)
 }
 
-fn main() {
-	let raw = true;
 
+/// Print storage root hash of genesis
+fn print_genesis_hash() {
+	print!("{:x}", default_genesis_hash());
+}
+
+/// Print chain spec of tester chain
+fn print_chain_spec(raw: bool) {
 	match default_chain_spec().as_json(raw) {
 		Ok(json) => println!("{}", json),
 		Err(err) => eprintln!("Error: {}", err),
+	}
+}
+
+
+/// Print command line help
+fn print_usage() {
+		println!("usage: host-tester {{hash|json|raw}}");
+}
+
+/// Entry point, parses command line arguments
+fn main() {
+	let args: Vec<String> = env::args().collect();
+
+	if args.len() == 2 {
+		match &args[1][..] {
+			"hash" => print_genesis_hash(),
+			"json" => print_chain_spec(false),
+			"raw" => print_chain_spec(true),
+			_ => print_usage(),
+		}
+	} else {
+		print_usage();
 	}
 }
