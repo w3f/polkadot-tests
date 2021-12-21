@@ -12,7 +12,7 @@ babe = ""
 grandpa = ""
 
 [init]
-genesis = "/config/genesis.json"
+genesis = "/config/genesis.raw.json"
 
 [core]
 roles = 4

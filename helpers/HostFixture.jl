@@ -8,34 +8,27 @@ struct Tester
     "Name of the testsuite"
     name::String
 
+    "Wether to use the raw genesis"
+    raw::Bool
+
     "Name of the runtime to use"
     runtime::String
 end
 
 
-"Compute trie root hash from yaml state file"
-function compute_root(self::Tester)
+"Load trie root hash from hash file"
+function load_hash(self::Tester)
 
-    state_file = "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.yaml"
+    hash_file = "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.hash"
 
-    # Make sure state file is available
-    if !isfile(state_file)
-        @error "Failed to locate state file: $state_file"
+    # Make sure hash file is available
+    if !isfile(hash_file)
+        @error "Failed to locate hash file: $hash_file"
     end
 
-    cmd = `substrate-adapter state-trie trie-root --keys-in-hex --values-in-hex --state-file $state_file`
-
-    if Config.verbose
-        println("┌ [COMMAND] ", cmd)
+    return open(hash_file) do f
+        read(f, String)
     end
-
-    result = read(cmd, String)
-
-    if Config.verbose
-        println("└ [OUTPUTS] ", result)
-    end
-
-    return result[13:end-1]
 end
 
 
@@ -45,7 +38,11 @@ function run_tester(self::Tester, host::String, duration::Number)
     tempdir = mktempdir() * "/"
 
     # Determine correct genesis of runtime
-    genesis = "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.json"
+    genesis = if self.raw
+        "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.raw.json"
+    else 
+        "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.json"
+    end
 
     # Make sure genesis is available
     if !isfile(genesis)
@@ -54,11 +51,12 @@ function run_tester(self::Tester, host::String, duration::Number)
 
     # Helper files needed for some hosts
     keystore = "$(@__DIR__)/../runtimes/$(self.runtime)/keystore"
-    config   = if Config.docker
-        "$(@__DIR__)/../runtimes/$(self.runtime)/gossamer.docker.config.toml"
-    else
-        "$(@__DIR__)/../runtimes/$(self.runtime)/gossamer.config.toml"
+
+    config = "$(@__DIR__)/../runtimes/$(self.runtime)/gossamer."
+    if Config.docker
+	config *= "docker."
     end
+    config *= if self.raw "raw" else "json" end * ".config.toml"
 
     # Copy prepopulated kagome keystore (TODO: Load chain id from genesis) 
     mkpath(joinpath(tempdir, "spectest"))
@@ -154,7 +152,7 @@ function execute(verify::Function, self::Tester, duration)
     @testset "$(self.name)" begin
         for host in Config.implementations
             # Compute expected storage root
-            root = compute_root(self)
+            root = load_hash(self)
 
             # Run host long enough to load genesis
             result = run_tester(self, host, duration)
