@@ -2,16 +2,18 @@
 
 stdenv.mkDerivation rec {
   pname = "WAVM";
-  version = "2021-09-13";
+  version = "1.0.3";
 
   src = fetchFromGitHub {
-    owner = "WAVM";
+    owner = "soramitsu";
     repo = "WAVM";
-    rev = "nightly/${version}";
-    sha256 = "+ZJy2adg/150T6MZmm+KL0l/C6AnD64G87ksuvqQFyI=";
+    rev = version;
+    sha256 = "Rds1wa1JwwgoEuAdi6tNz80Bi+bF7bKk+aDGRpdAZ7w=";
   };
 
   nativeBuildInputs = [ cmake ];
 
   propagatedBuildInputs = [ libllvm ];
+
+  cmakeFlags = [ "-DHUNTER_ENABLED=NO" ];
 }

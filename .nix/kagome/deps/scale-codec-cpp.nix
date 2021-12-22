@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, cmake, boost17x, microsoft-gsl_cmake }:
+{ stdenv, fetchFromGitHub, cmake, boost172, microsoft-gsl_cmake }:
 
 stdenv.mkDerivation rec {
   pname = "scale-codec-cpp";
@@ -13,7 +13,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ cmake ];
 
-  buildInputs = [ boost17x microsoft-gsl_cmake ];
+  buildInputs = [ boost172 microsoft-gsl_cmake ];
 
   cmakeFlags = [ "-DHUNTER_ENABLED=NO" ];
 }

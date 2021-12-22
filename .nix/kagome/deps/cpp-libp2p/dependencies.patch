@@ -20,3 +20,16 @@ index e9eb5b6..bf16c6d 100644
  
  # https://docs.hunter.sh/en/latest/packages/pkg/spdlog.html
  hunter_add_package(spdlog)
+diff --git a/cmake/libp2pConfig.cmake.in b/cmake/libp2pConfig.cmake.in
+index 7fd085f..1a7deaf 100644
+--- a/cmake/libp2pConfig.cmake.in
++++ b/cmake/libp2pConfig.cmake.in
+@@ -4,7 +4,7 @@ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(Boost CONFIG REQUIRED random filesystem program_options)
+ find_dependency(OpenSSL REQUIRED)
+-find_dependency(Protobuf CONFIG REQUIRED)
++find_dependency(Protobuf REQUIRED)
+ find_dependency(Threads)
+ find_dependency(c-ares CONFIG REQUIRED)
+ find_dependency(fmt CONFIG REQUIRED)
