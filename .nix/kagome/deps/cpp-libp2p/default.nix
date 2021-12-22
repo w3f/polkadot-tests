@@ -40,20 +40,19 @@ stdenv.mkDerivation rec {
   buildInputs = [
     gtest_cmake
     microsoft-gsl_cmake
-
-    boost-di
-    tsl-hat-trie
   ];
 
   propagatedBuildInputs = [
+    boost172
     openssl
     protobuf
 
-    boost172
-    soralog
-
     c-ares.cmake-config
+
+    soralog
+    boost-di
     sqlite-modern-cpp
+    tsl-hat-trie
   ];
 
   doCheck = withTests;

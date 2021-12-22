@@ -16,12 +16,10 @@
 , backward-cpp_cmake
 , wavm
 , cpp-libp2p
-, tsl-hat-trie
 , boost-di
 , prometheus-cpp
 , schnorrkel-crust
 , libnsl
-, libllvm
 , zstd
 , scale-codec-cpp
 }:
@@ -43,22 +41,18 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     # Working upstream dependencies 
-    protobuf
     libnsl
-    libllvm
+    protobuf
 
     # Patched upstream dependencies
+    backward-cpp_cmake
     gtest_cmake
     rapidjson_cmake
-    backward-cpp_cmake
 
     # Custom packaged dependencies
-    soralog
-    jsonrpc-lean
-    tsl-hat-trie
     boost-di
+    jsonrpc-lean
     prometheus-cpp
-    scale-codec-cpp
   ];
 
   propagatedBuildInputs = [
@@ -66,14 +60,16 @@ stdenv.mkDerivation rec {
     openssl
     zstd
 
-    microsoft-gsl_cmake
     binaryen_cmake
     leveldb_cmake
+    libsecp256k1_cmake
+    microsoft-gsl_cmake
     xxHash_cmake
 
     cpp-libp2p
+    scale-codec-cpp
     schnorrkel-crust
-    libsecp256k1_cmake
+    soralog
     wavm
   ];
 
