@@ -5,10 +5,10 @@ stdenv.mkDerivation rec {
   version = "1.1.0+cmake";
 
   src = fetchFromGitHub {
-    owner = "masterjedy";
-    repo = "di";
-    rev = "c5287ee710ad90f5286d0cc2b9e49b72d89267a6";
-    sha256 = "1s5zywaab5pzg84lgnw0i8qls86lwirkjnxy3pygvqkxgvji9d41";
+    owner = "soramitsu";
+    repo = "soramitsu-boost-di";
+    rev = "a20eebb6decfba55867a6920e00443a9485f50cd";
+    sha256 = "eRtB/XSGTDU1n6kw4FAUr4fB6Q9xCrNF2OQE8aHEXDs=";
   };
 
   nativeBuildInputs = [ cmake ];

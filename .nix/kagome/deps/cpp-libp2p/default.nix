@@ -18,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   name = "cpp-libp2p-${lib.substring 0 7 version}";
-  version = "c904db6c5fd4925082b9139776b3a87914393fa7";
+  version = "69299a8182a976fbe6654ed367ba1fb5d89800e0";
 
   src = fetchFromGitHub {
     owner = "soramitsu";
     repo = "cpp-libp2p";
     rev = version;
-    sha256 = "SGrYrW7JSYuPi81ohRDgRJNoJKCQCNq+ka/+GUoTmVE=";
+    sha256 = "YB3Di5QEehWY0tsLp9TJUIvwdy6QXj/V0HB+aaHtubU=";
   };
 
   patches = [
@@ -43,7 +43,6 @@ stdenv.mkDerivation rec {
 
     boost-di
     tsl-hat-trie
-    sqlite-modern-cpp
   ];
 
   propagatedBuildInputs = [
@@ -54,6 +53,7 @@ stdenv.mkDerivation rec {
     soralog
 
     c-ares.cmake-config
+    sqlite-modern-cpp
   ];
 
   doCheck = withTests;

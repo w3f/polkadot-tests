@@ -4,7 +4,7 @@
 , openssl
 , protobuf
 , gtest_cmake
-, boost17x
+, boost172
 , microsoft-gsl_cmake
 , soralog
 , leveldb_cmake
@@ -62,7 +62,7 @@ stdenv.mkDerivation rec {
   ];
 
   propagatedBuildInputs = [
-    boost17x
+    boost172
     openssl
     zstd
 

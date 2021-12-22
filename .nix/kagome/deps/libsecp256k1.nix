@@ -1,13 +1,13 @@
-{ stdenv, fetchFromGitHub, cmake }:
+{ stdenv, fetchFromGitHub, cmake }: 
 
 stdenv.mkDerivation rec {
   pname = "libsecp256k1";
-  version = "0.0.0+cmake";
+  version = "0.1";
 
   src = fetchFromGitHub {
     owner = "soramitsu";
-    repo = "soramitsu-libsecp256k1-copy";
-    rev = "c7630e1bac638c0f16ee66d4dce7b5c49eecbaa5";
+    repo = "soramitsu-libsecp256k1";
+    rev = "v${version}"; 
     sha256 = "a2ywjdgNUw1zcXjVE+Uzp19GejRYcuyYqQQFYUVyk1I=";
   };
 

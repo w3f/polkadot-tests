@@ -12,4 +12,6 @@ binaryen.overrideAttrs (super: rec {
   };
 
   patches = [];
+
+  cmakeFlags = [ "-DBUILD_LLVM_DWARF=OFF" "-DBUILD_TOOLS=OFF" ];
 })
