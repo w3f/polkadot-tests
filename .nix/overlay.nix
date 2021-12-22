@@ -49,9 +49,6 @@ let
 
     # Rust implementations
     substrate-host = callPackage ./substrate {};
-   
-    # Rust development environment
-    substrate-env = callPackage ./substrate/env.nix {};	
   };
 
   # Specification Testsuite binaries (buildable)

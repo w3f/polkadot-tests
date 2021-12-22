@@ -33,14 +33,14 @@
         # Shell including all required dependecies
         devShell = pkgs.mkShell {
           inputsFrom = builtins.attrValues self.packages."${system}";
-          buildInputs = with pkgs; [ gnumake jq yq ];
+          buildInputs = [ pkgs.gnumake ];
         };
+
+        # General shell for substrate-based development 
+        devShells.substrate = pkgs.callPackage ./.nix/substrate/env.nix {};	
 
 	# All testsuite related binaries and testsuite itself
         packages = pkgs.implementations // pkgs.testsuite;
-
-	# Complete overlay as used internally
-        legacyPackages = pkgs;
       }
     ) // {
       # We currently only check on amd64
