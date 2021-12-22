@@ -17,7 +17,7 @@ buildGo117Module rec {
 
   runVend = true;
 
-  vendorSha256 = "fIEHruO1UTyy68n661E2GrHa3U+WWcI83+SXjGbOQ30=";
+  vendorSha256 = "XSRjkPrM9A7i3ooWzA/ZWnTWuKqs8JvhdJmYa4QyZxM=";
 
   subPackages = [ "cmd/gossamer" ];
 
