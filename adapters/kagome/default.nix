@@ -1,4 +1,4 @@
-{ polkadot-tests, stdenv, cmake, kagome-host, libyamlcpp }:
+{ polkadot-tests, stdenv, cmake, kagome-host, scale-codec-cpp, libyamlcpp }:
 
 stdenv.mkDerivation {
   pname = "kagome-adapter";
@@ -8,7 +8,7 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [ cmake ];
 
-  buildInputs = [ kagome-host libyamlcpp ];
+  buildInputs = [ kagome-host scale-codec-cpp libyamlcpp ];
 
   cmakeFlags = [ "-DHUNTER_ENABLED=FALSE" ];
 }
