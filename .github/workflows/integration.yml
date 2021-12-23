@@ -195,7 +195,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fixture: [ genesis-json, genesis-raw ]
+        fixture: [ genesis-raw ]
     name: "[test-${{ matrix.fixture }}] kagome"
     runs-on: ubuntu-20.04
     steps:
