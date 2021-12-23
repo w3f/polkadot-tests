@@ -13,7 +13,7 @@
 
     # Rust build tool
     naersk = {
-      url = "github:nix-community/naersk";
+      url = "github:FlorianFranzen/naersk/git-deps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
