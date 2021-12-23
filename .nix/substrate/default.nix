@@ -1,12 +1,12 @@
 { polkadot-tests
-, stdenv
-, naersk
+, lib
+, naerskWasm
 , clang
 , llvmPackages
 , protobuf
 }:
 
-naersk.buildPackage {
+naerskWasm.buildPackage {
   name = "substrate-host";
   inherit (polkadot-tests) version;
 

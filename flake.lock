@@ -28,15 +28,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1638203339,
-        "narHash": "sha256-Sz3iCvbWrVWOD/XfYQeRJgP/7MVYL3/VKsNXvDeWBFc=",
-        "owner": "nix-community",
+        "lastModified": 1640266903,
+        "narHash": "sha256-XCasyYec3EOz+uwwBV733QbRD9eEYizIuR0MUvQ3DxE=",
+        "owner": "FlorianFranzen",
         "repo": "naersk",
-        "rev": "c3e56b8a4ffb6d906cdfcfee034581f9a8ece571",
+        "rev": "279c1f26b72a436ab4002b67a2601d1af5b0edf4",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
+        "owner": "FlorianFranzen",
+        "ref": "git-deps",
         "repo": "naersk",
         "type": "github"
       }
