@@ -2,7 +2,7 @@ use std::env;
 
 use tester_runtime::{
 	AccountId, BabeConfig, BalancesConfig, GenesisConfig,
-	GrandpaConfig, SudoConfig, SystemConfig, BuildStorage,
+	GrandpaConfig, SystemConfig, BuildStorage,
 	Header, Signature, BABE_GENESIS_EPOCH_CONFIG, WASM_BINARY,
 };
 
@@ -62,9 +62,6 @@ fn default_genesis_config() -> GenesisConfig {
 				(get_from_seed::<GrandpaId>("Alice"), 1),
 				(get_from_seed::<GrandpaId>("Bob"), 1),
 			],
-		},
-		sudo: SudoConfig {
-			key: Some(get_account_id_from_seed::<sr25519::Public>("Alice")),
 		},
 	}
 }

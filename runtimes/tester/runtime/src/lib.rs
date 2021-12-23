@@ -273,11 +273,6 @@ impl balances::Config for Runtime {
 	type WeightInfo = ();
 }
 
-impl sudo::Config for Runtime {
-	type Event = Event;
-	type Call = Call;
-}
-
 construct_runtime!(
 	pub enum Runtime where
 		Block = Block,
@@ -290,7 +285,6 @@ construct_runtime!(
 		Grandpa: grandpa::{Pallet, Call, Storage, Config, Event},
 		Timestamp: timestamp::{Pallet, Call, Storage, Inherent},
 		Balances: balances::{Pallet, Call, Storage, Config<T>, Event<T>},
-		Sudo: sudo::{Pallet, Call, Config<T>, Storage, Event<T>},
 	}
 );
 

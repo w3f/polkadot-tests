@@ -3256,20 +3256,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-sudo"
-version = "4.0.0-dev"
-source = "git+https://github.com/paritytech/substrate?branch=master#2c1eaaae147fae546c7d1e7cd7177cbaaf196f49"
-dependencies = [
- "frame-support",
- "frame-system",
- "parity-scale-codec",
- "scale-info",
- "sp-io",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
 name = "pallet-timestamp"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=master#2c1eaaae147fae546c7d1e7cd7177cbaaf196f49"
@@ -5798,7 +5784,6 @@ dependencies = [
  "pallet-balances",
  "pallet-grandpa",
  "pallet-randomness-collective-flip",
- "pallet-sudo",
  "pallet-timestamp",
  "parity-scale-codec",
  "scale-info",

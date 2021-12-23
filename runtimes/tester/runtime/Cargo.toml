@@ -83,13 +83,6 @@ git = "https://github.com/paritytech/substrate"
 branch = "master"
 default-features = false
 
-# TODO Only enabled via feature flag?
-[dependencies.sudo]
-package = 'pallet-sudo'
-git = "https://github.com/paritytech/substrate"
-branch = "master"
-default-features = false
-
 
 # List of required substrate primitives (sp)
 [dependencies.sp-api]
@@ -173,7 +166,6 @@ std = [
     'babe/std',
     'grandpa/std',
     'balances/std',
-    'sudo/std',
     'sp-api/std',
     'sp-block-builder/std',
     'sp-core/std',
