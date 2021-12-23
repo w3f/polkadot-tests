@@ -28,12 +28,7 @@ jobs:
     - name: Install protoc
       run: sudo apt-get install -y protobuf-compiler
     - name: Setup rust toolchain
-      id: rustup
-      uses: actions-rs/toolchain@v1
-      with:
-        target: wasm32-unknown-unknown
-        default: true
-        profile: minimal
+      run: rustup show
     - name: Setup and cache sccache
       uses: visvirial/sccache-action@v1.0.0
       with:
@@ -51,8 +46,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: hosts/substrate/target
-        key: cargo-build-host-substrate-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('hosts/substrate/Cargo.lock') }}
-        restore-keys: cargo-build-host-substrate-${{ steps.rustup.outputs.rustc_hash }}-
+        key: cargo-build-host-substrate-${{ hashFiles('hosts/substrate/Cargo.lock') }}
+        restore-keys: cargo-build-host-substrate-
     - name: Build substrate host
       run: make substrate-host
     - name: Upload substrate
@@ -137,12 +132,7 @@ jobs:
     - name: Install protoc
       run: sudo apt-get install -y protobuf-compiler
     - name: Setup rust toolchain
-      id: rustup
-      uses: actions-rs/toolchain@v1
-      with:
-        target: wasm32-unknown-unknown
-        default: true
-        profile: minimal
+      run: rustup show
     - name: Cache cargo registry and index
       uses: actions/cache@v3
       with:
