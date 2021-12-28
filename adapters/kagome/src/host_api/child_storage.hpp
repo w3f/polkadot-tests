@@ -34,24 +34,24 @@ namespace child_storage {
                          const std::vector<std::string> &inputs);
 
   void read_version_1(helpers::RuntimeEnvironment environment,
-                      const std::vector<std::string> &args);
+                      const std::vector<std::string> &inputs);
 
   void clear_version_1(helpers::RuntimeEnvironment environment,
-                       const std::vector<std::string> &args);
+                       const std::vector<std::string> &inputs);
 
   void storage_kill_version_1(helpers::RuntimeEnvironment environment,
-                              const std::vector<std::string> &args);
+                              const std::vector<std::string> &inputs);
 
   void exists_version_1(helpers::RuntimeEnvironment environment,
-                        const std::vector<std::string> &args);
+                        const std::vector<std::string> &inputs);
 
   void clear_prefix_version_1(helpers::RuntimeEnvironment environment,
-                              const std::vector<std::string> &args);
+                              const std::vector<std::string> &inputs);
 
   void root_version_1(helpers::RuntimeEnvironment environment,
-                      const std::vector<std::string> &args);
+                      const std::vector<std::string> &inputs);
 
   void next_key_version_1(helpers::RuntimeEnvironment environment,
-                          const std::vector<std::string> &args);
+                          const std::vector<std::string> &inputs);
 
 }  // namespace child_storage
