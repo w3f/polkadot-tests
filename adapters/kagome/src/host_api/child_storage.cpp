@@ -68,7 +68,6 @@ namespace child_storage {
 
   void read_version_1(helpers::RuntimeEnvironment environment,
                       const std::vector<std::string> &inputs) {
-    throw NotImplemented();  // TODO not implemented
     // Parse inputs
     BOOST_ASSERT(inputs.size() == 6);
 
@@ -150,7 +149,8 @@ namespace child_storage {
     auto result = environment.execute<helpers::MaybeBuffer>(
         "rtm_ext_default_child_storage_get_version_1", child_key1, key);
     BOOST_ASSERT_MSG(result.has_value(), "Value not found");
-    BOOST_ASSERT_MSG(result.value().toString() == value, "Read value is incorrect");
+    BOOST_ASSERT_MSG(result.value().toString() == value,
+                     "Read value is incorrect");
 
     // Clear value
     environment.execute<void>(
@@ -164,28 +164,178 @@ namespace child_storage {
 
   // Input: child1, child2, key, value
   void storage_kill_version_1(helpers::RuntimeEnvironment environment,
-                              const std::vector<std::string> &args) {
-    throw NotImplemented();  // TODO not implemented
+                              const std::vector<std::string> &inputs) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 6);
+
+    const std::string_view child_key1 = inputs[0];
+    const std::string_view child_key2 = inputs[1];
+
+    const std::string_view key1 = inputs[2];
+    const std::string_view value1 = inputs[3];
+
+    const std::string_view key2 = inputs[4];
+    const std::string_view value2 = inputs[5];
+
+    // Set key/value
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key1,
+                              key1,
+                              value1);
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key1,
+                              key2,
+                              value2);
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key2,
+                              key1,
+                              value1);
+
+    // Check values
+    auto result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key1, key1);
+    BOOST_ASSERT_MSG(result.has_value(), "Value not found");
+    BOOST_ASSERT_MSG(result.value().toString() == value1,
+                     "Read value is incorrect");
+
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key1, key2);
+    BOOST_ASSERT_MSG(result.has_value(), "Value not found");
+    BOOST_ASSERT_MSG(result.value().toString() == value2,
+                     "Read value is incorrect");
+
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key2, key1);
+    BOOST_ASSERT_MSG(result.has_value(), "Value not found");
+    BOOST_ASSERT_MSG(result.value().toString() == value1,
+                     "Read value is incorrect");
+
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key2, key2);
+    BOOST_ASSERT_MSG(!result.has_value(), "Value exists");
+
+    // Kill storage 1
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_storage_kill_version_1", child_key1);
+
+    // Check values
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key1, key1);
+    BOOST_ASSERT_MSG(!result.has_value(), "Value not killed");
+
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key1, key2);
+    BOOST_ASSERT_MSG(!result.has_value(), "Value not killed");
+
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key2, key1);
+    BOOST_ASSERT_MSG(result.has_value(), "Value not found");
+    BOOST_ASSERT_MSG(result.value().toString() == value1,
+                     "Read value is incorrect");
+
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key2, key2);
+    BOOST_ASSERT_MSG(!result.has_value(), "Value exists");
   }
 
   // Input: child1, child2, key, value
   void exists_version_1(helpers::RuntimeEnvironment environment,
-                        const std::vector<std::string> &args) {
-    throw NotImplemented();  // TODO not implemented
+                        const std::vector<std::string> &inputs) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 4);
+
+    const std::string_view child_key1 = inputs[0];
+    const std::string_view child_key2 = inputs[1];
+    const std::string_view key = inputs[2];
+    const std::string_view value = inputs[3];
+
+    // Check for no data
+    auto exists = environment.execute<bool>(
+        "rtm_ext_default_child_storage_exists_version_1", child_key1, key);
+
+    BOOST_ASSERT_MSG(exists == 0, "Storage exists");
+
+    // Insert data
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_set_version_1", child_key1, key, value);
+
+    // Check for data
+    exists = environment.execute<bool>(
+        "rtm_ext_default_child_storage_exists_version_1", child_key1, key);
+
+    BOOST_ASSERT_MSG(exists == 1, "Storage does not exists");
+
+    // Print result
+    std::cout << "true" << std::endl;
   }
 
   // Input: prefix, child1, child2, key1, value1, key2, value2
   void clear_prefix_version_1(helpers::RuntimeEnvironment environment,
-                              const std::vector<std::string> &args) {
-    throw NotImplemented();  // TODO not implemented
+                              const std::vector<std::string> &inputs) {
+    // Parse inputs
+    BOOST_ASSERT(inputs.size() == 7);
+
+    const std::string_view child_key1 = inputs[0];
+    const std::string_view child_key2 = inputs[1];
+    const std::string_view prefix = inputs[2];
+    const std::string_view key1 = inputs[3];
+    const std::string_view value1 = inputs[4];
+    const std::string_view key2 = inputs[5];
+    const std::string_view value2 = inputs[6];
+
+    // Insert both key value pair
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key1,
+                              key1,
+                              value1);
+    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
+                              child_key1,
+                              key2,
+                              value2);
+
+    // Clear prefix (other storage)
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_clear_prefix_version_1",
+        child_key2,
+        prefix);
+
+    // Clear prefix
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_clear_prefix_version_1",
+        child_key1,
+        prefix);
+
+    // Retrieve first key
+    auto result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key1, key1);
+
+    // Check if first key was handled correctly
+    if (prefix == key1.substr(0, prefix.size())) {
+      BOOST_ASSERT_MSG(!result, "Value1 wasn't deleted");
+    } else {
+      BOOST_ASSERT_MSG(result.has_value(), "Value1 was deleted");
+      BOOST_ASSERT_MSG(result.value().toString() == value1,
+                       "Value1 was changed");
+      std::cout << result.value().toString() << "\n";
+    }
+
+    // Retrieve second key
+    result = environment.execute<helpers::MaybeBuffer>(
+        "rtm_ext_default_child_storage_get_version_1", child_key1, key2);
+
+    // Check if first key was handled correctly
+    if (prefix == key2.substr(0, prefix.size())) {
+      BOOST_ASSERT_MSG(!result, "Value2 wasn't deleted");
+    } else {
+      BOOST_ASSERT_MSG(result.has_value(), "Value2 was deleted");
+      BOOST_ASSERT_MSG(result.value().toString() == value2,
+                       "Value2 was changed");
+      std::cout << result.value().toString() << "\n";
+    }
   }
 
   void root_version_1(helpers::RuntimeEnvironment environment,
                       const std::vector<std::string> &inputs) {
-    // TODO not implemented in WAVM backend
-    if (environment.getBackend() == helpers::RuntimeEnvironment::Backend::WAVM)
-      throw NotImplemented();
-
     // Parse inputs
     BOOST_ASSERT(inputs.size() == 6);
 
