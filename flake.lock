@@ -28,11 +28,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1640266903,
-        "narHash": "sha256-XCasyYec3EOz+uwwBV733QbRD9eEYizIuR0MUvQ3DxE=",
+        "lastModified": 1641569028,
+        "narHash": "sha256-jLSxvjyU80mUtZFOEU6M4tyvbGz2glW9cL3Wu5tOaQg=",
         "owner": "FlorianFranzen",
         "repo": "naersk",
-        "rev": "279c1f26b72a436ab4002b67a2601d1af5b0edf4",
+        "rev": "04b81187f6e6bba01cf4034cd55a99c1453348c6",
         "type": "github"
       },
       "original": {
