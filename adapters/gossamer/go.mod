@@ -23,7 +23,7 @@ require (
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
 	github.com/disiqueira/gotree v1.0.0 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/ethereum/go-ethereum v1.10.12 // indirect
+	github.com/ethereum/go-ethereum v1.10.14 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-interpreter/wagon v0.6.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
@@ -60,7 +60,6 @@ require (
 	github.com/wasmerio/go-ext-wasm v0.3.2-0.20200326095750-0a32be6068ec // indirect
 	golang.org/x/crypto v0.0.0-20210813211128-0a44fdfbc16e // indirect
 	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20210816183151-1e6c022a8912 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
