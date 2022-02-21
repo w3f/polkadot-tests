@@ -89,6 +89,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	impl_version: 1,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 1,
+	state_version: 0,
 };
 
 /// The BABE epoch configuration at genesis.
@@ -189,8 +190,8 @@ impl system::Config for Runtime {
 	type SS58Prefix = SS58Prefix;
 	/// What to do on code update 
 	type OnSetCode = ();
-    /// Maximum number of consumers per account
-    type MaxConsumers = frame_support::traits::ConstU32<16>;
+	/// Maximum number of consumers per account
+	type MaxConsumers = frame_support::traits::ConstU32<16>;
 }
 
 impl collective_flip::Config for Runtime {}
@@ -317,7 +318,8 @@ pub type Executive = frame_executive::Executive<Runtime, Block, system::ChainCon
 
 /// Print current storage root
 fn print_storage_root() {
-	let storage_root = Hash::decode(&mut &storage_root()[..])
+	let state_version = sp_runtime::StateVersion::default();
+	let storage_root = Hash::decode(&mut &storage_root(state_version)[..])
 		.expect("`storage_root` is a valid hash");
 	runtime_print!("##{:x}##", storage_root);
 }
