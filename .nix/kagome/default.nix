@@ -1,4 +1,4 @@
-{ polkadot-tests
+{ kagome-submodule
 , stdenv
 , cmake
 , openssl
@@ -26,9 +26,11 @@
 
 stdenv.mkDerivation rec {
   pname = "kagome-host";
-  inherit (polkadot-tests) src version;
 
-  sourceRoot = "source/hosts/kagome";
+  src = kagome-submodule;
+  version = kagome-submodule.shortRev;
+
+  #sourceRoot = "source/hosts/kagome";
 
   patches = [
     ./dependencies.patch

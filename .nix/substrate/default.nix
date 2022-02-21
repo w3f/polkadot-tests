@@ -1,4 +1,4 @@
-{ polkadot-tests
+{ substrate-submodule
 , lib
 , naerskWasm
 , clang
@@ -8,9 +8,9 @@
 
 naerskWasm.buildPackage {
   name = "substrate-host";
-  inherit (polkadot-tests) version;
 
-  src = "${polkadot-tests.src}/hosts/substrate";
+  src = substrate-submodule;
+  version = substrate-submodule.shortRev;
 
   nativeBuildInputs = [ clang ];
 
