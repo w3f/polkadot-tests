@@ -8,11 +8,15 @@ let
     # Add polkadot-tests source
     polkadot-tests = {
       src = self;
-
-      version = if self ? rev then (builtins.substring 0 7 self.rev)
-                else if self ? lastModifiedDate then self.lastModifiedDate
-                else "dirty";
+      version = if self ? rev 
+                then (builtins.substring 0 7 self.rev)
+                else self.lastModifiedDate;
     };
+
+    # Provide submodules seperately
+    gossamer-submodule = builtins.fetchTree self.modules."hosts/gossamer";
+    kagome-submodule = builtins.fetchTree self.modules."hosts/kagome";
+    substrate-submodule = builtins.fetchTree self.modules."hosts/substrate";
   };
 
   # Support derivations and environments used during build

@@ -1,10 +1,12 @@
-{ polkadot-tests, buildGo117Module, patchelf, glibc }:
+{ gossamer-submodule, buildGo117Module, patchelf, glibc }:
 
 buildGo117Module rec {
   pname = "gossamer-host";
-  inherit (polkadot-tests) src version;
 
-  sourceRoot = "source/hosts/gossamer";
+  src = gossamer-submodule; 
+  version = gossamer-submodule.shortRev;
+
+  #sourceRoot = "source/hosts/gossamer";
 
   patches = [ ./config_path.patch ];
 
