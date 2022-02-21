@@ -72,7 +72,8 @@ fn default_genesis_config() -> GenesisConfig {
 /// Compute genesis hash
 fn default_genesis_hash() -> H256 {
 	<Header as HeaderT>::Hashing::trie_root(
-		default_genesis_config().build_storage().unwrap().top.into_iter().collect()
+		default_genesis_config().build_storage().unwrap().top.into_iter().collect(),
+		sp_runtime::StateVersion::default()
 	)
 }
 
@@ -86,6 +87,7 @@ fn default_chain_spec() -> ChainSpec {
 		vec![], // Bootnodes
 		None,   // Telemetry
 		None,   // Protocol Id
+		None,   // Fork Id
 		None,   // Properties
 		None,   // Extensions
 	)
