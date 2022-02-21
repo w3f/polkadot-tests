@@ -1,8 +1,7 @@
 [package]
 name = 'host-tester'
-version = "0.9.12-4c3166c"
+version = "0.9.16-75dd6c7"
 edition = '2021'
-
 
 [workspace]
 members = [ "runtime" ]
