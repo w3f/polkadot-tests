@@ -22,7 +22,7 @@
 
 #include <fstream>
 
-#include <kagome/blockchain/impl/key_value_block_header_repository.hpp>
+#include <kagome/blockchain/impl/block_header_repository_impl.hpp>
 
 #include <kagome/crypto/bip39/impl/bip39_provider_impl.hpp>
 #include <kagome/crypto/crypto_store/crypto_store_impl.hpp>
@@ -63,7 +63,7 @@
 namespace helpers {
 
   // Various namespace includes to improve code readability
-  using kagome::blockchain::KeyValueBlockHeaderRepository;
+  using kagome::blockchain::BlockHeaderRepositoryImpl;
 
   using kagome::crypto::Bip39ProviderImpl;
   using kagome::crypto::BoostRandomGenerator;
@@ -206,7 +206,7 @@ namespace helpers {
 
     // Initialize header repo
     auto header_repo =
-        std::make_shared<KeyValueBlockHeaderRepository>(storage, hasher);
+        std::make_shared<BlockHeaderRepositoryImpl>(storage, hasher);
 
     // Initialize module factory (backend dependent)
     std::shared_ptr<ModuleFactory> module_factory;
