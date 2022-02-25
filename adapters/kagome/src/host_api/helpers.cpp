@@ -37,6 +37,7 @@
 #include <kagome/host_api/impl/host_api_factory_impl.hpp>
 
 #include <kagome/offchain/impl/offchain_persistent_storage.hpp>
+#include <kagome/offchain/impl/offchain_worker_pool_impl.hpp>
 
 #include <kagome/runtime/module.hpp>
 #include <kagome/runtime/runtime_code_provider.hpp>
@@ -84,6 +85,7 @@ namespace helpers {
   using kagome::host_api::OffchainExtensionConfig;
 
   using kagome::offchain::OffchainPersistentStorageImpl;
+  using kagome::offchain::OffchainWorkerPoolImpl;
 
   using kagome::primitives::events::ChainSubscriptionEngine;
   using kagome::primitives::events::StorageSubscriptionEngine;
@@ -193,9 +195,10 @@ namespace helpers {
         bip39_provider,
         KeyFileStorage::createAt(keystore_path).value());
 
-    // Initialize offchain storage
+    // Initialize offchain storage and worker pool
     auto offchain_storage =
         std::make_shared<OffchainPersistentStorageImpl>(storage);
+    auto offchain_worker_pool = std::make_shared<OffchainWorkerPoolImpl>();
 
     // Initialize host api factory
     auto host_api_factory =
@@ -208,7 +211,8 @@ namespace helpers {
                                              hasher,
                                              crypto_store,
                                              bip39_provider,
-                                             offchain_storage);
+                                             offchain_storage,
+                                             offchain_worker_pool);
 
     // Initialize header repo
     auto header_repo =
