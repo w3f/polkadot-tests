@@ -26,6 +26,7 @@
 
 #include <kagome/crypto/bip39/impl/bip39_provider_impl.hpp>
 #include <kagome/crypto/crypto_store/crypto_store_impl.hpp>
+#include <kagome/crypto/ecdsa/ecdsa_provider_impl.hpp>
 #include <kagome/crypto/ed25519/ed25519_provider_impl.hpp>
 #include <kagome/crypto/hasher/hasher_impl.hpp>
 #include <kagome/crypto/pbkdf2/impl/pbkdf2_provider_impl.hpp>
@@ -68,6 +69,8 @@ namespace helpers {
   using kagome::crypto::Bip39ProviderImpl;
   using kagome::crypto::BoostRandomGenerator;
   using kagome::crypto::CryptoStoreImpl;
+  using kagome::crypto::EcdsaProviderImpl;
+  using kagome::crypto::EcdsaSuite;
   using kagome::crypto::Ed25519ProviderImpl;
   using kagome::crypto::Ed25519Suite;
   using kagome::crypto::HasherImpl;
@@ -172,6 +175,7 @@ namespace helpers {
     // Initialize crypto providers
     auto pbkdf2_provider = std::make_shared<Pbkdf2ProviderImpl>();
     auto random_generator = std::make_shared<BoostRandomGenerator>();
+    auto ecdsa_provider = std::make_shared<EcdsaProviderImpl>();
     auto ed25519_provider =
         std::make_shared<Ed25519ProviderImpl>(random_generator);
     auto sr25519_provider =
@@ -183,6 +187,7 @@ namespace helpers {
     auto keystore_path =
         boost::filesystem::temp_directory_path() / "kagome-adapter-host-api";
     auto crypto_store = std::make_shared<CryptoStoreImpl>(
+        std::make_shared<EcdsaSuite>(ecdsa_provider),
         std::make_shared<Ed25519Suite>(ed25519_provider),
         std::make_shared<Sr25519Suite>(sr25519_provider),
         bip39_provider,
@@ -197,6 +202,7 @@ namespace helpers {
         std::make_shared<HostApiFactoryImpl>(OffchainExtensionConfig{},
                                              changes_tracker,
                                              sr25519_provider,
+                                             ecdsa_provider,
                                              ed25519_provider,
                                              secp256k1_provider,
                                              hasher,
