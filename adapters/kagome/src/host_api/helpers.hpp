@@ -63,8 +63,8 @@ namespace helpers {
     Backend getBackend() const;
 
     // Call function with provided arguments
-    template <typename Result, typename... Args>
-    Result execute(std::string_view name, Args &&...args) {
+    template <typename ReturnType, typename... Args>
+    ReturnType execute(std::string_view name, Args &&...args) {
       auto &memory = memory_provider_->getCurrentMemory().value().get();
 
       Buffer encoded_args{};
@@ -82,8 +82,8 @@ namespace helpers {
       auto reset = module_instance_->resetEnvironment();
       BOOST_ASSERT_MSG(reset.has_value(), reset.error().message().data());
 
-      if constexpr (not std::is_void_v<Result>) {
-        auto res = scale::decode<Result>(
+      if constexpr (not std::is_void_v<ReturnType>) {
+        auto res = scale::decode<ReturnType>(
             memory.loadN(result.value().ptr, result.value().size));
         BOOST_ASSERT_MSG(res.has_value(), res.error().message().data());
         return res.value();
