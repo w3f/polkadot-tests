@@ -23,7 +23,7 @@ gossamer:
 	chmod u+w ../lib/libwasmer.so
 
 
-sync: sync-adapter-substrate sync-runtime-tester
+sync: sync-adapter-substrate sync-runtime-tester sync-adapter-gossamer
 
 sync-adapter-substrate:
 	cp substrate/Cargo.lock ../adapters/substrate/
@@ -32,6 +32,9 @@ sync-adapter-substrate:
 sync-runtime-tester:
 	cp substrate/Cargo.lock ../runtimes/tester
 	cargo metadata --manifest-path ../runtimes/tester/Cargo.toml --format-version 1 > /dev/null
+
+sync-adapter-gossamer:
+	cd ../adapters/gossamer && go mod tidy
 
 
 version:
