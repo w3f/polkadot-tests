@@ -177,7 +177,7 @@ namespace child_storage {
     const std::string_view key2 = inputs[4];
     const std::string_view value2 = inputs[5];
 
-    // Set key/value
+    // Set keys to values
     environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
                               child_key1,
                               key1,
@@ -186,39 +186,29 @@ namespace child_storage {
                               child_key1,
                               key2,
                               value2);
-    environment.execute<void>("rtm_ext_default_child_storage_set_version_1",
-                              child_key2,
-                              key1,
-                              value1);
 
-    // Check values
+    // Kill other child storage
+    environment.execute<void>(
+        "rtm_ext_default_child_storage_storage_kill_version_1", child_key2);
+
+    // Check for valid values
     auto result = environment.execute<helpers::MaybeBuffer>(
         "rtm_ext_default_child_storage_get_version_1", child_key1, key1);
     BOOST_ASSERT_MSG(result.has_value(), "Value not found");
     BOOST_ASSERT_MSG(result.value().toString() == value1,
-                     "Read value is incorrect");
+                     "Value is incorrect");
 
     result = environment.execute<helpers::MaybeBuffer>(
         "rtm_ext_default_child_storage_get_version_1", child_key1, key2);
     BOOST_ASSERT_MSG(result.has_value(), "Value not found");
     BOOST_ASSERT_MSG(result.value().toString() == value2,
-                     "Read value is incorrect");
+                     "Value is incorrect");
 
-    result = environment.execute<helpers::MaybeBuffer>(
-        "rtm_ext_default_child_storage_get_version_1", child_key2, key1);
-    BOOST_ASSERT_MSG(result.has_value(), "Value not found");
-    BOOST_ASSERT_MSG(result.value().toString() == value1,
-                     "Read value is incorrect");
-
-    result = environment.execute<helpers::MaybeBuffer>(
-        "rtm_ext_default_child_storage_get_version_1", child_key2, key2);
-    BOOST_ASSERT_MSG(!result.has_value(), "Value exists");
-
-    // Kill storage 1
+    // Kill child storage
     environment.execute<void>(
         "rtm_ext_default_child_storage_storage_kill_version_1", child_key1);
 
-    // Check values
+    // Check for killed values
     result = environment.execute<helpers::MaybeBuffer>(
         "rtm_ext_default_child_storage_get_version_1", child_key1, key1);
     BOOST_ASSERT_MSG(!result.has_value(), "Value not killed");
@@ -226,17 +216,7 @@ namespace child_storage {
     result = environment.execute<helpers::MaybeBuffer>(
         "rtm_ext_default_child_storage_get_version_1", child_key1, key2);
     BOOST_ASSERT_MSG(!result.has_value(), "Value not killed");
-
-    result = environment.execute<helpers::MaybeBuffer>(
-        "rtm_ext_default_child_storage_get_version_1", child_key2, key1);
-    BOOST_ASSERT_MSG(result.has_value(), "Value not found");
-    BOOST_ASSERT_MSG(result.value().toString() == value1,
-                     "Read value is incorrect");
-
-    result = environment.execute<helpers::MaybeBuffer>(
-        "rtm_ext_default_child_storage_get_version_1", child_key2, key2);
-    BOOST_ASSERT_MSG(!result.has_value(), "Value exists");
-  }
+ }
 
   // Input: child1, child2, key, value
   void exists_version_1(helpers::RuntimeEnvironment environment,
@@ -253,7 +233,7 @@ namespace child_storage {
     auto exists = environment.execute<bool>(
         "rtm_ext_default_child_storage_exists_version_1", child_key1, key);
 
-    BOOST_ASSERT_MSG(exists == 0, "Storage exists");
+    BOOST_ASSERT_MSG(!exists, "Storage exists");
 
     // Insert data
     environment.execute<void>(
@@ -263,7 +243,7 @@ namespace child_storage {
     exists = environment.execute<bool>(
         "rtm_ext_default_child_storage_exists_version_1", child_key1, key);
 
-    BOOST_ASSERT_MSG(exists == 1, "Storage does not exists");
+    BOOST_ASSERT_MSG(exists, "Storage does not exists");
 
     // Print result
     std::cout << "true" << std::endl;
