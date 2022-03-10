@@ -193,7 +193,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: substrate-adapter
         path: bin
@@ -215,11 +215,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: substrate-adapter
         path: bin
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: ${{ env.RUNTIME_FILE }}
         path: bin
@@ -239,11 +239,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: substrate-adapter
         path: bin
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: kagome-adapter
         path: bin
@@ -265,11 +265,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: kagome-adapter
         path: bin
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: ${{ env.RUNTIME_FILE }}
         path: bin
@@ -289,11 +289,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: substrate-adapter
         path: bin
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: gossamer-adapter
         path: bin
@@ -318,11 +318,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: gossamer-adapter
         path: bin
-    - uses: actions/download-artifact@v2.1.0
+    - uses: actions/download-artifact@v3
       with:
         name: ${{ env.RUNTIME_FILE }}
         path: bin
