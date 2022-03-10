@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup rust toolchain
       id: rustup
       uses: actions-rs/toolchain@v1
@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: true
     - name: Install gitpython
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: true
     - name: Setup go toolchain
@@ -114,7 +114,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup rust toolchain
       id: rustup
       uses: actions-rs/toolchain@v1
@@ -150,7 +150,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup rust toolchain
       id: rustup
       uses: actions-rs/toolchain@v1
@@ -192,7 +192,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
       with:
         name: substrate-adapter
@@ -214,7 +214,7 @@ jobs:
       RUNTIME_FILE: hostapi-runtime.${{ matrix.runtime }}.wasm
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
       with:
         name: substrate-adapter
@@ -238,7 +238,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
       with:
         name: substrate-adapter
@@ -264,7 +264,7 @@ jobs:
       RUNTIME_FILE: hostapi-runtime.${{ matrix.runtime }}.wasm
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
       with:
         name: kagome-adapter
@@ -288,7 +288,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
       with:
         name: substrate-adapter
@@ -317,7 +317,7 @@ jobs:
       RUNTIME_FILE: hostapi-runtime.${{ matrix.runtime }}.wasm
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
       with:
         name: gossamer-adapter
