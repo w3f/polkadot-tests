@@ -528,4 +528,12 @@ sp_core::wasm_export_functions! {
             ext_offchain_is_validator_version_1() as u32
         }
     }
+    fn rtm_ext_offchain_submit_transaction_version_1(data: Vec<u8>) -> Result<(),()> {
+        unsafe {
+            let value = ext_offchain_submit_transaction_version_1(
+                data.as_re_ptr(),
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
 }
