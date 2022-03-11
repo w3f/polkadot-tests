@@ -95,7 +95,7 @@ extern "C" {
     fn ext_offchain_submit_transaction_version_1(data: u64) -> u64;
     fn ext_offchain_network_state_version_1() -> u64;
     fn ext_offchain_timestamp_version_1() -> u64;
-    fn ext_offchain_sleep_until_version_1() -> u64;
+    fn ext_offchain_sleep_until_version_1(deadline: u64) -> u64;
     fn ext_offchain_local_storage_set_version_1(kind: i32, key: u64, value: i64);
     fn ext_offchain_local_storage_clear_version_1(kind: i32, key: u64);
     fn ext_offchain_local_storage_compare_and_set_version_1(kind: i32, key: u64, old_value: u64, new_value: u64) -> u32;
@@ -534,6 +534,23 @@ sp_core::wasm_export_functions! {
                 data.as_re_ptr(),
             );
             Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    // TODO: The return value can be deconstructed further.
+    fn rtm_ext_offchain_network_state_version_1() -> Vec<u8> {
+        unsafe {
+            let value = ext_offchain_network_state_version_1();
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    fn rtm_ext_offchain_timestamp_version_1() -> u64 {
+        unsafe {
+            ext_offchain_timestamp_version_1() as u64
+        }
+    }
+    fn rtm_ext_offchain_sleep_until_version_1(deadline: u64) -> u64 {
+        unsafe {
+            ext_offchain_sleep_until_version_1(deadline) as u64
         }
     }
 }
