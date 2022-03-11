@@ -523,4 +523,9 @@ sp_core::wasm_export_functions! {
             std::slice::from_raw_parts(value as *mut u8, 32).to_vec()
         }
     }
+    fn rtm_ext_offchain_is_validator_version_1() -> u32 {
+        unsafe {
+            ext_offchain_is_validator_version_1() as u32
+        }
+    }
 }
