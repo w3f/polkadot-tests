@@ -4,6 +4,7 @@ mod crypto;
 mod hashing;
 mod storage;
 mod trie;
+mod offchain;
 mod utils;
 
 use std::path::Path;
@@ -78,6 +79,9 @@ pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
             // trie api
             "ext_trie_blake2_256_root_version_1" => trie::ext_trie_blake2_256_root_version_1(rtm, input),
             "ext_trie_blake2_256_ordered_root_version_1" => trie::ext_trie_blake2_256_ordered_root_version_1(rtm, input),
+
+            // offhcian api
+            "ext_offchain_is_validator_version_1" => offchain::ext_offchain_is_validator_version_1(rtm, input),
 
             _ => panic!("specified function not available"),
         }

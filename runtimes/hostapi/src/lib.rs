@@ -93,7 +93,7 @@ extern "C" {
     fn ext_offchain_submit_transaction_version_1(data: u64) -> u64;
     fn ext_offchain_network_state_version_1() -> u64;
     fn ext_offchain_timestamp_version_1() -> u64;
-    fn ext_offchain_sleep_until_version_1(deadline: u64) -> u64;
+    fn ext_offchain_sleep_until_version_1(deadline: u64);
     fn ext_offchain_random_seed() -> u32;
     fn ext_offchain_local_storage_set_version_1(kind: u32, key: u64, value: u64);
     fn ext_offchain_local_storage_clear_version_1(kind: u32, key: u64);
@@ -102,7 +102,7 @@ extern "C" {
     fn ext_offchain_http_request_start_version_1(method: u64, uri: u64, meta: u64) -> u64;
     fn ext_offchain_http_request_add_header_version_1(req_id: u32, name: u64, value: u64) -> u64;
     fn ext_offchain_http_request_write_body_version_1(req_id: u32, chunk: u64, deadline: u64) -> u64;
-    fn ext_offchain_http_response_wait_version_1(ids: Vec<u32>, deadline: u64) -> u64;
+    fn ext_offchain_http_response_wait_version_1(ids: u64, deadline: u64) -> u64;
     fn ext_offchain_http_response_headers_version_1(req_id: u32) -> u64;
     fn ext_offchain_http_response_read_body_version_1(req_id: u32, buffer: u64, deadline: u64) -> u64;
 }
@@ -520,9 +520,12 @@ sp_core::wasm_export_functions! {
             std::slice::from_raw_parts(value as *mut u8, 32).to_vec()
         }
     }
+
+    // Offhcain API
+
     fn rtm_ext_offchain_is_validator_version_1() -> u32 {
         unsafe {
-            ext_offchain_is_validator_version_1() as u32
+            ext_offchain_is_validator_version_1()
         }
     }
     fn rtm_ext_offchain_submit_transaction_version_1(data: Vec<u8>) -> Result<(),()> {
@@ -545,9 +548,9 @@ sp_core::wasm_export_functions! {
             ext_offchain_timestamp_version_1() as u64
         }
     }
-    fn rtm_ext_offchain_sleep_until_version_1(deadline: u64) -> u64 {
+    fn rtm_ext_offchain_sleep_until_version_1(deadline: u64) {
         unsafe {
-            ext_offchain_sleep_until_version_1(deadline) as u64
+            ext_offchain_sleep_until_version_1(deadline)
         }
     }
     fn rtm_ext_offchain_local_storage_set_version_1(kind: u32, key: Vec<u8>, value: Vec<u8>) {
@@ -616,12 +619,15 @@ sp_core::wasm_export_functions! {
             Decode::decode(&mut from_mem(value).as_slice()).unwrap()
         }
     }
-    fn rtm_ext_offchain_http_response_wait_version_1(ids: Vec<u32>, deadline: u64) {
+    fn rtm_ext_offchain_http_response_wait_version_1(ids: Vec<u32>, deadline: Option<u64>) -> Vec<Vec<u8>> {
+        let ids = ids.encode();
+        let deadline = deadline.encode();
         unsafe {
-            ext_offchain_http_response_wait_version_1(
-                ids,
-                deadline,
+            let value = ext_offchain_http_response_wait_version_1(
+                ids.as_re_ptr(),
+                deadline.as_re_ptr(),
             );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
         }
     }
     fn rtm_ext_offchain_http_response_headers_version_1(req_id: u32) -> Vec<(Vec<u8>, Vec<u8>)> {
