@@ -17,7 +17,7 @@ pub fn ext_offchain_is_validator_version_1(mut rtm: Runtime, _input: ParsedInput
 }
 
 pub fn ext_offchain_submit_transaction_version_1(_rtm: Runtime, _input: ParsedInput) {
-
+	unimplemented!()
 }
 
 pub fn ext_offchain_network_state_version_1(mut rtm: Runtime, _input: ParsedInput) {
