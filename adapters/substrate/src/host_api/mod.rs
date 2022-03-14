@@ -80,8 +80,23 @@ pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
             "ext_trie_blake2_256_root_version_1" => trie::ext_trie_blake2_256_root_version_1(rtm, input),
             "ext_trie_blake2_256_ordered_root_version_1" => trie::ext_trie_blake2_256_ordered_root_version_1(rtm, input),
 
-            // offhcian api
+            // offhchain api
             "ext_offchain_is_validator_version_1" => offchain::ext_offchain_is_validator_version_1(rtm),
+            "ext_offchain_submit_transaction_version_1" => unimplemented!(),
+            "ext_offchain_network_state_version_1" => unimplemented!(),
+            "ext_offchain_timestamp_version_1" => unimplemented!(),
+            "ext_offchain_sleep_until_version_1" => unimplemented!(),
+            "ext_offchain_random_seed" => unimplemented!(),
+            "ext_offchain_local_storage_set_version_1" => unimplemented!(),
+            "ext_offchain_local_storage_clear_version_1" => unimplemented!(),
+            "ext_offchain_local_storage_compare_and_set_version_1" => unimplemented!(),
+            "ext_offchain_local_storage_get_version_1" => unimplemented!(),
+            "ext_offchain_http_request_start_version_1" => unimplemented!(),
+            "ext_offchain_http_request_add_header_version_1" => unimplemented!(),
+            "ext_offchain_http_request_write_body_version_1" => unimplemented!(),
+            "ext_offchain_http_response_wait_version_1" => unimplemented!(),
+            "ext_offchain_http_response_headers_version_1" => unimplemented!(),
+            "ext_offchain_http_response_read_body_version_1" => unimplemented!(),
 
             _ => panic!("specified function not available"),
         }
