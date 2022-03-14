@@ -41,12 +41,12 @@ pub fn ext_offchain_timestamp_version_1(mut rtm: Runtime) {
 pub fn ext_offchain_sleep_until_version_1(mut rtm: Runtime) {
 	use std::time::{SystemTime, UNIX_EPOCH};
 
-	// Sleep 5 seconds.
+	// Sleep for 5 seconds.
     let deadline = SystemTime::now()
         .duration_since(UNIX_EPOCH)
 		.unwrap()
 		.as_millis()
-		+ 5;
+		+ 5_000;
 
 	let res = rtm.call_and_decode::<()>(
 		"rtm_ext_offchain_sleep_until_version_1", &(deadline).encode()
