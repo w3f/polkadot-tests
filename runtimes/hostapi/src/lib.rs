@@ -537,11 +537,10 @@ sp_core::wasm_export_functions! {
             Decode::decode(&mut from_mem(value).as_slice()).unwrap()
         }
     }
-    // TODO: The return value can be deconstructed further.
     fn rtm_ext_offchain_network_state_version_1() -> Vec<u8> {
         unsafe {
             let value = ext_offchain_network_state_version_1();
-            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+            from_mem(value)
         }
     }
     fn rtm_ext_offchain_timestamp_version_1() -> u64 {

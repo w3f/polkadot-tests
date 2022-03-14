@@ -83,9 +83,9 @@ pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
             // offhchain api
             "ext_offchain_is_validator_version_1" => offchain::ext_offchain_is_validator_version_1(rtm),
             "ext_offchain_submit_transaction_version_1" => unimplemented!(),
-            "ext_offchain_network_state_version_1" => unimplemented!(),
-            "ext_offchain_timestamp_version_1" => unimplemented!(),
-            "ext_offchain_sleep_until_version_1" => unimplemented!(),
+            "ext_offchain_network_state_version_1" => offchain::ext_offchain_network_state_version_1(rtm),
+            "ext_offchain_timestamp_version_1" => offchain::ext_offchain_timestamp_version_1(rtm),
+            "ext_offchain_sleep_until_version_1" => offchain::ext_offchain_sleep_until_version_1(rtm),
             "ext_offchain_random_seed_version_1" => unimplemented!(),
             "ext_offchain_local_storage_set_version_1" => unimplemented!(),
             "ext_offchain_local_storage_clear_version_1" => unimplemented!(),
