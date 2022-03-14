@@ -94,7 +94,6 @@ impl Runtime {
         self.ext.register_extension(key_store);
         self
     }
-    #[allow(dead_code)]
     pub fn with_offchain(mut self) -> Self {
         let (offchain, _) = TestOffchainExt::new();
         self.ext.register_extension(OffchainWorkerExt::new(offchain));

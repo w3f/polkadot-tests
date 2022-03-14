@@ -19,7 +19,7 @@ pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
         let input : ParsedInput = subcmd_matches.values_of("input").into();
 
         let rtm_path = subcmd_matches.value_of("runtime").unwrap_or(DEFAULT_RUNTIME_PATH);
-        let mut rtm = utils::Runtime::new(Path::new(rtm_path));
+        let mut rtm = utils::Runtime::new(Path::new(rtm_path)).with_offchain();
 
         if let Some(env) = subcmd_matches.value_of("environment") {
             match env {
