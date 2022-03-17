@@ -13,7 +13,7 @@ use sc_executor_common::runtime_blob::RuntimeBlob;
 use sp_io::SubstrateHostFunctions;
 use sp_core::{
     offchain::testing::TestOffchainExt,
-    offchain::OffchainWorkerExt,
+    offchain::{OffchainWorkerExt, OffchainDbExt},
     Blake2Hasher,
 };
 use sp_keystore::{KeystoreExt, testing::KeyStore};
@@ -96,7 +96,8 @@ impl Runtime {
     }
     pub fn with_offchain(mut self) -> Self {
         let (offchain, _) = TestOffchainExt::new();
-        self.ext.register_extension(OffchainWorkerExt::new(offchain));
+        self.ext.register_extension(OffchainWorkerExt::new(offchain.clone()));
+        self.ext.register_extension(OffchainDbExt::new(offchain));
         self
     }
 

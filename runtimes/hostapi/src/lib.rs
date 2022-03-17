@@ -585,7 +585,7 @@ sp_core::wasm_export_functions! {
             ) as u32
         }
     }
-    fn rtm_ext_offchain_local_storage_get_version_1(kind: u32, key: Vec<u8>) -> Vec<u8> {
+    fn rtm_ext_offchain_local_storage_get_version_1(kind: u32, key: Vec<u8>) -> Option<Vec<u8>> {
         unsafe {
             let value = ext_offchain_local_storage_get_version_1(
                 kind,

@@ -1,4 +1,4 @@
-use crate::host_api::utils::{ParsedInput, Runtime};
+use crate::host_api::utils::{str, ParsedInput, Runtime};
 use parity_scale_codec::{Encode, Decode};
 
 #[derive(Debug, Decode)]
@@ -81,10 +81,10 @@ pub fn ext_offchain_local_storage_set_version_1(mut rtm: Runtime, input: ParsedI
         "rtm_ext_offchain_local_storage_get_version_1",
         &(
             {
-                if kind == 1 {
-                    2
-                } else if kind == 2 {
+                if kind == 0 {
                     1
+                } else if kind == 1 {
+                    0
                 } else {
                     panic!("Invalid storage kind")
                 }
@@ -103,6 +103,8 @@ pub fn ext_offchain_local_storage_set_version_1(mut rtm: Runtime, input: ParsedI
         )
         .unwrap();
     assert_eq!(res, value);
+
+	println!("{}", str(&res));
 }
 
 pub fn ext_offchain_local_storage_clear_version_1(_rtm: Runtime, _input: ParsedInput) {
