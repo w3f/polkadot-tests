@@ -57,8 +57,52 @@ pub fn ext_offchain_random_seed_version_1(_rtm: Runtime, _input: ParsedInput) {
 	unimplemented!()
 }
 
-pub fn ext_offchain_local_storage_set_version_1(_rtm: Runtime, _input: ParsedInput) {
-	unimplemented!()
+pub fn ext_offchain_local_storage_set_version_1(mut rtm: Runtime, input: ParsedInput) {
+	// Parse input
+    let kind = input.get_u32(0);
+    let key = input.get(1);
+    let value = input.get(2);
+
+    // Get invalid key
+    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
+        "rtm_ext_offchain_local_storage_get_version_1",
+        &(kind, key).encode(),
+    );
+    assert!(res.is_none());
+
+    // Set key/value
+    let _ = rtm.call_and_decode::<()>(
+        "rtm_ext_offchain_local_storage_set_version_1",
+        &(kind, key, value).encode(),
+    );
+
+    // Get invalid key (different storage kind)
+    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
+        "rtm_ext_offchain_local_storage_get_version_1",
+        &(
+            {
+                if kind == 1 {
+                    2
+                } else if kind == 2 {
+                    1
+                } else {
+                    panic!("Invalid storage kind")
+                }
+            },
+            key,
+        )
+            .encode(),
+    );
+    assert!(res.is_none());
+
+    // Get valid key
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>(
+            "rtm_ext_offchain_local_storage_get_version_1",
+            &(kind, key).encode(),
+        )
+        .unwrap();
+    assert_eq!(res, value);
 }
 
 pub fn ext_offchain_local_storage_clear_version_1(_rtm: Runtime, _input: ParsedInput) {
@@ -69,8 +113,8 @@ pub fn ext_offchain_local_storage_compare_and_set_version_1(_rtm: Runtime, _inpu
 	unimplemented!()
 }
 
-pub fn ext_offchain_local_storage_get_version_1(_rtm: Runtime, _input: ParsedInput) {
-	unimplemented!()
+pub fn ext_offchain_local_storage_get_version_1(rtm: Runtime, input: ParsedInput) {
+	ext_offchain_local_storage_set_version_1(rtm, input)
 }
 
 pub fn ext_offchain_http_request_start_version_1(_rtm: Runtime, _input: ParsedInput) {
