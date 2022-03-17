@@ -113,8 +113,58 @@ pub fn ext_offchain_local_storage_set_version_1(mut rtm: Runtime, input: ParsedI
 	println!("{}", str(&res));
 }
 
-pub fn ext_offchain_local_storage_clear_version_1(_rtm: Runtime, _input: ParsedInput) {
-	unimplemented!()
+pub fn ext_offchain_local_storage_clear_version_1(mut rtm: Runtime, input: ParsedInput) {
+	// Parse input
+    let kind = input.get_u32(0);
+    let key = input.get(1);
+    let value = input.get(2);
+
+    // Set key/value
+    let _ = rtm.call_and_decode::<()>(
+        "rtm_ext_offchain_local_storage_set_version_1",
+        &(kind, key, value).encode(),
+    );
+
+	// Clear invalid storage
+    let _ = rtm
+        .call_and_decode::<()>(
+            "rtm_ext_offchain_local_storage_clear_version_1",
+            &(
+				{
+					if kind == 0 {
+						1
+					} else if kind == 1 {
+						0
+					} else {
+						panic!("Invalid storage kind")
+					}
+				},
+				key
+			).encode(),
+        );
+
+    // Get valid key
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>(
+            "rtm_ext_offchain_local_storage_get_version_1",
+            &(kind, key).encode(),
+        ).unwrap();
+    assert_eq!(res, value);
+
+	// Clear valid storage
+    let _ = rtm
+        .call_and_decode::<()>(
+            "rtm_ext_offchain_local_storage_clear_version_1",
+            &(kind, key).encode(),
+        );
+
+    // Get invalid (cleared) key
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>(
+            "rtm_ext_offchain_local_storage_get_version_1",
+            &(kind, key).encode(),
+        );
+    assert!(res.is_none());
 }
 
 pub fn ext_offchain_local_storage_compare_and_set_version_1(_rtm: Runtime, _input: ParsedInput) {
