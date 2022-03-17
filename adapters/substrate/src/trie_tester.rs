@@ -16,7 +16,6 @@
 // along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
 
 ///This file is an interface to run Parity implementation of state trie used in Polkadot Host.
-
 extern crate clap;
 extern crate hex;
 extern crate reference_trie;
@@ -69,18 +68,26 @@ impl TrieTester {
         let key_value_map: BTreeMap<String, Vec<String>> = serde_yaml::from_reader(f).unwrap();
 
         TrieTester {
-            keys: key_value_map["keys"].iter().map(
-                |k| if matches.is_present("keys-in-hex") {
+            keys: key_value_map["keys"]
+                .iter()
+                .map(|k| {
+                    if matches.is_present("keys-in-hex") {
                         hex::decode(k).expect("Decoding failed")
                     } else {
                         k.clone().into_bytes()
-                    }).collect(),
-            values: key_value_map["values"].iter().map(
-                |v| if matches.is_present("values-in-hex") {
+                    }
+                })
+                .collect(),
+            values: key_value_map["values"]
+                .iter()
+                .map(|v| {
+                    if matches.is_present("values-in-hex") {
                         hex::decode(v).expect("Decoding failed")
                     } else {
                         v.clone().into_bytes()
-                    }).collect(),
+                    }
+                })
+                .collect(),
         }
     }
 
@@ -94,11 +101,7 @@ impl TrieTester {
     ///
     fn compute_state_root(&self, _matches: &ArgMatches) {
         //let trie_value =  key_value_map["data"];
-        let trie_vec: Vec<_> = self
-            .keys
-            .iter()
-            .zip(self.values.iter())
-            .collect();
+        let trie_vec: Vec<_> = self.keys.iter().zip(self.values.iter()).collect();
 
         let state_trie_root =
             trie_root_no_extension::<Blake2Hasher, ReferenceTrieStream, _, _, _>(trie_vec);

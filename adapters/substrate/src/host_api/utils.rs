@@ -1,24 +1,16 @@
 use clap::Values;
 
-use std::path::Path;
+use parity_scale_codec::Decode;
+use sc_executor::{WasmExecutionMethod, WasmExecutor};
+use sc_executor_common::runtime_blob::RuntimeBlob;
+use sp_core::{offchain::testing::TestOffchainExt, offchain::OffchainWorkerExt, Blake2Hasher};
+use sp_io::SubstrateHostFunctions;
+use sp_keystore::{testing::KeyStore, KeystoreExt};
+use sp_state_machine::TestExternalities;
 use std::fs::File;
 use std::io::Read;
+use std::path::Path;
 use std::sync::Arc;
-use parity_scale_codec::Decode;
-use sc_executor::{
-    WasmExecutor,
-    WasmExecutionMethod,
-};
-use sc_executor_common::runtime_blob::RuntimeBlob;
-use sp_io::SubstrateHostFunctions;
-use sp_core::{
-    offchain::testing::TestOffchainExt,
-    offchain::OffchainWorkerExt,
-    Blake2Hasher,
-};
-use sp_keystore::{KeystoreExt, testing::KeyStore};
-use sp_state_machine::TestExternalities;
-
 
 pub fn str<'a>(input: &'a [u8]) -> &'a str {
     std::str::from_utf8(input).unwrap()
@@ -70,8 +62,10 @@ impl Runtime {
     pub fn new(path: &Path) -> Self {
         let mut wasm_binary = Vec::new();
 
-        let _ = File::open(path).unwrap()
-            .read_to_end(&mut wasm_binary).unwrap();
+        let _ = File::open(path)
+            .unwrap()
+            .read_to_end(&mut wasm_binary)
+            .unwrap();
 
         Runtime {
             blob: wasm_binary,
@@ -97,7 +91,8 @@ impl Runtime {
     #[allow(dead_code)]
     pub fn with_offchain(mut self) -> Self {
         let (offchain, _) = TestOffchainExt::new();
-        self.ext.register_extension(OffchainWorkerExt::new(offchain));
+        self.ext
+            .register_extension(OffchainWorkerExt::new(offchain));
         self
     }
 
@@ -107,16 +102,18 @@ impl Runtime {
         WasmExecutor::<SubstrateHostFunctions>::new(
             self.method,
             Some(8), // heap_pages
-            8, // max_runtime_instances
-            None, // cache_path
-            2, // runtime_cache_size
-        ).uncached_call(
+            8,       // max_runtime_instances
+            None,    // cache_path
+            2,       // runtime_cache_size
+        )
+        .uncached_call(
             RuntimeBlob::uncompress_if_needed(&self.blob[..]).unwrap(),
             &mut extext,
             false, // allow_missing_host_functions
             func,
-            args
-        ).unwrap()
+            args,
+        )
+        .unwrap()
     }
     pub fn call_and_decode<T: Decode>(&mut self, func: &str, args: &[u8]) -> T {
         Decode::decode(&mut self.call(func, args).as_slice())

@@ -1,5 +1,5 @@
 use crate::host_api::utils::{str, ParsedInput, Runtime};
-use parity_scale_codec::{Encode, Decode};
+use parity_scale_codec::{Decode, Encode};
 
 pub fn test_storage_init(mut rtm: Runtime) {
     // Compute and print storage root on init
@@ -14,18 +14,17 @@ pub fn ext_storage_set_version_1(mut rtm: Runtime, input: ParsedInput) {
     let value = input.get(1);
 
     // Get invalid key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key.encode()
-    );
+    let res =
+        rtm.call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key.encode());
     assert!(res.is_none());
 
     // Set key/value
     let _ = rtm.call("rtm_ext_storage_set_version_1", &(key, value).encode());
 
     // Get valid key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key.encode()
-    ).unwrap();
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key.encode())
+        .unwrap();
     assert_eq!(res, value);
 
     println!("{}", str(&res));
@@ -53,10 +52,12 @@ pub fn ext_storage_read_version_1(mut rtm: Runtime, input: ParsedInput) {
     let _ = rtm.call("rtm_ext_storage_set_version_1", &(key, value).encode());
 
     // Get valid key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_read_version_1",
-        &(key, offset, buffer_size).encode(),
-    ).unwrap();
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>(
+            "rtm_ext_storage_read_version_1",
+            &(key, offset, buffer_size).encode(),
+        )
+        .unwrap();
 
     let offset = offset as usize;
     let buffer_size = buffer_size as usize;
@@ -82,9 +83,8 @@ pub fn ext_storage_clear_version_1(mut rtm: Runtime, input: ParsedInput) {
     let _ = rtm.call("rtm_ext_storage_clear_version_1", &key.encode());
 
     // Get cleared value
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key.encode()
-    );
+    let res =
+        rtm.call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key.encode());
     assert!(res.is_none());
 }
 
@@ -94,18 +94,14 @@ pub fn ext_storage_exists_version_1(mut rtm: Runtime, input: ParsedInput) {
     let value = input.get(1);
 
     // Check if key exists (invalid)
-    let res = rtm.call_and_decode::<bool>(
-        "rtm_ext_storage_exists_version_1", &(key).encode()
-    );
+    let res = rtm.call_and_decode::<bool>("rtm_ext_storage_exists_version_1", &(key).encode());
     assert_eq!(res, false);
 
     // Set key/value
     let _ = rtm.call("rtm_ext_storage_set_version_1", &(key, value).encode());
 
     // Check if key exists
-    let res = rtm.call_and_decode::<bool>(
-        "rtm_ext_storage_exists_version_1", &(key).encode()
-    );
+    let res = rtm.call_and_decode::<bool>("rtm_ext_storage_exists_version_1", &(key).encode());
     assert_eq!(res, true);
     println!("true");
 }
@@ -124,9 +120,8 @@ pub fn ext_storage_clear_prefix_version_1(mut rtm: Runtime, input: ParsedInput) 
     let _ = rtm.call("rtm_ext_storage_clear_prefix_version_1", &prefix.encode());
 
     // Check first key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key1.encode()
-    );
+    let res =
+        rtm.call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key1.encode());
     if key1.starts_with(prefix) {
         assert!(res.is_none());
     } else {
@@ -134,9 +129,8 @@ pub fn ext_storage_clear_prefix_version_1(mut rtm: Runtime, input: ParsedInput) 
     }
 
     // Check second key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key2.encode()
-    );
+    let res =
+        rtm.call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key2.encode());
     if key2.starts_with(prefix) {
         assert!(res.is_none());
     } else {
@@ -155,9 +149,8 @@ pub fn ext_storage_append_version_1(mut rtm: Runtime, input: ParsedInput) {
     let value2_enc = &value2.encode();
 
     // Insert first key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key1.encode()
-    );
+    let res =
+        rtm.call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key1.encode());
     assert!(res.is_none());
 
     let _ = rtm.call(
@@ -170,9 +163,8 @@ pub fn ext_storage_append_version_1(mut rtm: Runtime, input: ParsedInput) {
     );
 
     // Insert second key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key2.encode()
-    );
+    let res =
+        rtm.call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key2.encode());
     assert!(res.is_none());
 
     let _ = rtm.call(
@@ -193,9 +185,9 @@ pub fn ext_storage_append_version_1(mut rtm: Runtime, input: ParsedInput) {
     );
 
     // Check first key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key1.encode()
-    ).unwrap();
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key1.encode())
+        .unwrap();
 
     let res = Vec::<Vec<u8>>::decode(&mut res.as_slice()).unwrap();
 
@@ -209,9 +201,9 @@ pub fn ext_storage_append_version_1(mut rtm: Runtime, input: ParsedInput) {
     );
 
     // Check second key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_get_version_1", &key2.encode()
-    ).unwrap();
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key2.encode())
+        .unwrap();
 
     let res = Vec::<Vec<u8>>::decode(&mut res.as_slice()).unwrap();
 
@@ -256,14 +248,12 @@ pub fn ext_storage_next_key_version_1(mut rtm: Runtime, input: ParsedInput) {
     track.sort();
 
     // No next key available
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_next_key_version_1", &key1.encode()
-    );
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_next_key_version_1", &key1.encode());
     assert!(res.is_none());
 
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_next_key_version_1", &key2.encode()
-    );
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_next_key_version_1", &key2.encode());
     assert!(res.is_none());
 
     // Set key/value
@@ -271,9 +261,8 @@ pub fn ext_storage_next_key_version_1(mut rtm: Runtime, input: ParsedInput) {
     let _ = rtm.call("rtm_ext_storage_set_version_1", &(key2, value2).encode());
 
     // Try to read next key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_next_key_version_1", &key1.encode()
-    );
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_next_key_version_1", &key1.encode());
 
     if key1 == track[0] {
         assert_eq!(res.unwrap(), key2);
@@ -283,9 +272,8 @@ pub fn ext_storage_next_key_version_1(mut rtm: Runtime, input: ParsedInput) {
     }
 
     // Try to read next key
-    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
-        "rtm_ext_storage_next_key_version_1", &key2.encode()
-    );
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_next_key_version_1", &key2.encode());
 
     if key2 == track[0] {
         assert_eq!(res.unwrap(), key1);
