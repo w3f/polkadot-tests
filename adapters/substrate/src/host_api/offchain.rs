@@ -53,8 +53,14 @@ pub fn ext_offchain_sleep_until_version_1(mut rtm: Runtime, _input: ParsedInput)
 	);
 }
 
-pub fn ext_offchain_random_seed_version_1(_rtm: Runtime, _input: ParsedInput) {
-	unimplemented!()
+pub fn ext_offchain_random_seed_version_1(mut rtm: Runtime, _input: ParsedInput) {
+	let res = rtm.call_and_decode::<Vec<u8>>(
+		"rtm_ext_offchain_random_seed_version_1", &[]
+	);
+
+	// Always returns a zero value.
+	assert_eq!(res, [0; 32]);
+	println!("{:?}", res);
 }
 
 pub fn ext_offchain_local_storage_set_version_1(mut rtm: Runtime, input: ParsedInput) {
