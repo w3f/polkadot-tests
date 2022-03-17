@@ -575,7 +575,8 @@ sp_core::wasm_export_functions! {
             );
         }
     }
-    fn rtm_ext_offchain_local_storage_compare_and_set_version_1(kind: u32, key: Vec<u8>, old_value: Vec<u8>, new_value: Vec<u8>) -> u32 {
+    fn rtm_ext_offchain_local_storage_compare_and_set_version_1(kind: u32, key: Vec<u8>, old_value: Option<Vec<u8>>, new_value: Vec<u8>) -> u32 {
+        let old_value = old_value.encode();
         unsafe {
             ext_offchain_local_storage_compare_and_set_version_1(
                 kind,

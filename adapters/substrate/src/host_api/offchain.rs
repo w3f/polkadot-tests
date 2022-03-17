@@ -167,8 +167,65 @@ pub fn ext_offchain_local_storage_clear_version_1(mut rtm: Runtime, input: Parse
     assert!(res.is_none());
 }
 
-pub fn ext_offchain_local_storage_compare_and_set_version_1(_rtm: Runtime, _input: ParsedInput) {
-	unimplemented!()
+pub fn ext_offchain_local_storage_compare_and_set_version_1(mut rtm: Runtime, input: ParsedInput) {
+	// Parse input
+    let kind = input.get_u32(0);
+    let key = input.get(1);
+    let old_value = input.get(2);
+    let new_value = input.get(3);
+
+    // Set key/value
+    let _ = rtm.call_and_decode::<u32>(
+        "rtm_ext_offchain_local_storage_compare_and_set_version_1",
+        &(kind, key, Option::<Vec<u8>>::None, old_value).encode(),
+    );
+
+	// Compare and set (old value does not match current value)
+    let res = rtm.call_and_decode::<u32>(
+        "rtm_ext_offchain_local_storage_compare_and_set_version_1",
+        &(kind, key, Some(new_value), old_value).encode(),
+    );
+	assert_eq!(res, 0); // value was not replaced
+
+    // Get current/old value
+    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
+        "rtm_ext_offchain_local_storage_get_version_1",
+        &(kind, key).encode(),
+    ).unwrap();
+	assert_eq!(res, old_value);
+
+	// Compare and set of invalid storage kind
+    let res = rtm.call_and_decode::<u32>(
+        "rtm_ext_offchain_local_storage_compare_and_set_version_1",
+        &(
+			{
+                if kind == 0 {
+                    1
+                } else if kind == 1 {
+                    0
+                } else {
+                    panic!("Invalid storage kind")
+                }
+			},
+			key, Some(old_value), new_value).encode(),
+    );
+	assert_eq!(res, 0); // value was not replaced;
+
+	// Compare and set (old value DOES match current value)
+    let res = rtm.call_and_decode::<u32>(
+        "rtm_ext_offchain_local_storage_compare_and_set_version_1",
+        &(kind, key, Some(old_value), new_value).encode(),
+    );
+	assert_eq!(res, 1); //value WAS replaced
+
+    // Get new value
+    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
+        "rtm_ext_offchain_local_storage_get_version_1",
+        &(kind, key).encode(),
+    ).unwrap();
+	assert_eq!(res, new_value);
+
+	println!("{}", str(&res));
 }
 
 pub fn ext_offchain_local_storage_get_version_1(rtm: Runtime, input: ParsedInput) {
