@@ -13,9 +13,8 @@ pub fn ext_trie_blake2_256_root_version_1(mut rtm: Runtime, input: ParsedInput) 
     let trie = vec![(key1, value1), (key2, value2), (key3, value3)];
 
     // Get valid key
-    let res = rtm.call_and_decode::<Vec<u8>>(
-        "rtm_ext_trie_blake2_256_root_version_1", &(trie).encode()
-    );
+    let res =
+        rtm.call_and_decode::<Vec<u8>>("rtm_ext_trie_blake2_256_root_version_1", &(trie).encode());
 
     println!("{}", hex::encode(res));
 }
@@ -30,7 +29,8 @@ pub fn ext_trie_blake2_256_ordered_root_version_1(mut rtm: Runtime, input: Parse
 
     // Get valid key
     let res = rtm.call_and_decode::<Vec<u8>>(
-        "rtm_ext_trie_blake2_256_ordered_root_version_1", &(trie).encode()
+        "rtm_ext_trie_blake2_256_ordered_root_version_1",
+        &(trie).encode(),
     );
 
     println!("{}", hex::encode(res));

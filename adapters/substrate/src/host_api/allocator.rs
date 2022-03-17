@@ -7,9 +7,7 @@ pub fn ext_allocator_malloc_version_1(mut rtm: Runtime, input: ParsedInput) {
     let value = input.get(0);
 
     // Get invalid key
-    let res = rtm.call_and_decode::<Vec<u8>>(
-        "rtm_ext_allocator_malloc_version_1", &value.encode()
-    );
+    let res = rtm.call_and_decode::<Vec<u8>>("rtm_ext_allocator_malloc_version_1", &value.encode());
     assert_eq!(res, value);
 
     println!("{}", str(&res));

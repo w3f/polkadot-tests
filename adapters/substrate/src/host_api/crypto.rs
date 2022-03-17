@@ -1,8 +1,8 @@
 use crate::host_api::utils::{str, ParsedInput, Runtime};
 use parity_scale_codec::Encode;
+use sp_core::crypto::key_types::DUMMY;
 use sp_core::ed25519;
 use sp_core::sr25519;
-use sp_core::crypto::key_types::DUMMY;
 
 pub fn ext_crypto_ed25519_public_keys_version_1(rtm: Runtime, input: ParsedInput) {
     let mut rtm = rtm.with_keystore();
@@ -72,10 +72,12 @@ pub fn ext_crypto_ed25519_sign_version_1(rtm: Runtime, input: ParsedInput) {
     );
 
     // Sign message
-    let res = rtm.call_and_decode::<Option<ed25519::Signature>>(
-        "rtm_ext_crypto_ed25519_sign_version_1",
-        &(DUMMY.0, &pubkey, msg).encode(),
-    ).unwrap();
+    let res = rtm
+        .call_and_decode::<Option<ed25519::Signature>>(
+            "rtm_ext_crypto_ed25519_sign_version_1",
+            &(DUMMY.0, &pubkey, msg).encode(),
+        )
+        .unwrap();
 
     println!("Message: {}", str(&msg));
     println!("Public key: {}", hex::encode(pubkey));
@@ -96,10 +98,12 @@ pub fn ext_crypto_ed25519_verify_version_1(rtm: Runtime, input: ParsedInput) {
     );
 
     // Sign message
-    let sig = rtm.call_and_decode::<Option<ed25519::Signature>>(
-        "rtm_ext_crypto_ed25519_sign_version_1",
-        &(DUMMY.0, &pubkey, &msg).encode(),
-    ).unwrap();
+    let sig = rtm
+        .call_and_decode::<Option<ed25519::Signature>>(
+            "rtm_ext_crypto_ed25519_sign_version_1",
+            &(DUMMY.0, &pubkey, &msg).encode(),
+        )
+        .unwrap();
 
     // Verify signature
     let verified = rtm.call_and_decode::<bool>(
@@ -189,10 +193,12 @@ pub fn ext_crypto_sr25519_sign_version_1(rtm: Runtime, input: ParsedInput) {
     );
 
     // Sign message
-    let res = rtm.call_and_decode::<Option<sr25519::Signature>>(
-        "rtm_ext_crypto_sr25519_sign_version_1",
-        &(DUMMY.0, &pubkey, msg).encode(),
-    ).unwrap();
+    let res = rtm
+        .call_and_decode::<Option<sr25519::Signature>>(
+            "rtm_ext_crypto_sr25519_sign_version_1",
+            &(DUMMY.0, &pubkey, msg).encode(),
+        )
+        .unwrap();
 
     // Print result
     println!("Message: {}", str(&msg));
@@ -214,10 +220,12 @@ pub fn ext_crypto_sr25519_verify_version_1(rtm: Runtime, input: ParsedInput) {
     );
 
     // Sign message
-    let sig = rtm.call_and_decode::<Option<sr25519::Signature>>(
-        "rtm_ext_crypto_sr25519_sign_version_1",
-        &(DUMMY.0, &pubkey, &msg).encode(),
-    ).unwrap();
+    let sig = rtm
+        .call_and_decode::<Option<sr25519::Signature>>(
+            "rtm_ext_crypto_sr25519_sign_version_1",
+            &(DUMMY.0, &pubkey, &msg).encode(),
+        )
+        .unwrap();
 
     // Verify signature
     let verified = rtm.call_and_decode::<bool>(
