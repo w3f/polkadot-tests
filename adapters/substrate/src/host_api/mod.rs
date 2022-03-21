@@ -91,12 +91,14 @@ pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
             "ext_offchain_local_storage_clear_version_1" => offchain::ext_offchain_local_storage_clear_version_1(rtm, input),
             "ext_offchain_local_storage_compare_and_set_version_1" => offchain::ext_offchain_local_storage_compare_and_set_version_1(rtm, input),
             "ext_offchain_local_storage_get_version_1" => offchain::ext_offchain_local_storage_get_version_1(rtm, input),
+            /*
             "ext_offchain_http_request_start_version_1" => offchain::ext_offchain_http_request_start_version_1(rtm, input),
             "ext_offchain_http_request_add_header_version_1" => offchain::ext_offchain_http_request_add_header_version_1(rtm, input),
             "ext_offchain_http_request_write_body_version_1" => offchain::ext_offchain_http_request_write_body_version_1(rtm, input),
             "ext_offchain_http_response_wait_version_1" => offchain::ext_offchain_http_response_wait_version_1(rtm, input),
             "ext_offchain_http_response_headers_version_1" => offchain::ext_offchain_http_response_headers_version_1(rtm, input),
             "ext_offchain_http_response_read_body_version_1" => offchain::ext_offchain_http_response_read_body_version_1(rtm, input),
+            */
 
             _ => panic!("specified function not available"),
         }

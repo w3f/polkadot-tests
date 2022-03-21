@@ -228,30 +228,37 @@ pub fn ext_offchain_local_storage_compare_and_set_version_1(mut rtm: Runtime, in
 	println!("{}", str(&res));
 }
 
+#[allow(dead_code)]
 pub fn ext_offchain_local_storage_get_version_1(rtm: Runtime, input: ParsedInput) {
 	ext_offchain_local_storage_set_version_1(rtm, input)
 }
 
+#[allow(dead_code)]
 pub fn ext_offchain_http_request_start_version_1(_rtm: Runtime, _input: ParsedInput) {
 	unimplemented!()
 }
 
+#[allow(dead_code)]
 pub fn ext_offchain_http_request_add_header_version_1(_rtm: Runtime, _input: ParsedInput) {
 	unimplemented!()
 }
 
+#[allow(dead_code)]
 pub fn ext_offchain_http_request_write_body_version_1(_rtm: Runtime, _input: ParsedInput) {
 	unimplemented!()
 }
 
+#[allow(dead_code)]
 pub fn ext_offchain_http_response_wait_version_1(_rtm: Runtime, _input: ParsedInput) {
 	unimplemented!()
 }
 
+#[allow(dead_code)]
 pub fn ext_offchain_http_response_headers_version_1(_rtm: Runtime, _input: ParsedInput) {
 	unimplemented!()
 }
 
+#[allow(dead_code)]
 pub fn ext_offchain_http_response_read_body_version_1(_rtm: Runtime, _input: ParsedInput) {
 	unimplemented!()
 }
