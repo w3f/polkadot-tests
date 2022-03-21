@@ -11,7 +11,7 @@ parity-scale-codec = { version = "3.1", default-features = false, optional = tru
 substrate-wasm-builder = "3.0"
 
 [features]
-std = [ "sp-core/std", "parity-scale-codec" ]
+std = [ "sp-core/std", "parity-scale-codec/std" ]
 runtime-wasm = [ "sp-core", "parity-scale-codec" ]
 vendor-fix = [ "sp-core", "parity-scale-codec" ]
 export-memory = []
