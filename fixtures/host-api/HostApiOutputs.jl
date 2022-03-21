@@ -338,4 +338,54 @@ module HostApiOutputs
         "aebac639ed629d66bdaae654454518b85274cf613e6100d1aa5c86996763ca11",
         "fd61ef3767be4899488dc3331726f3b9abaae1fc08532327631ece6198686e25"
     ]
+
+    const kind_key_value = [
+        # ext_offchain_local_storage_set_version_1
+        "Inverse",
+        "Horizontal",
+        "portal",
+        "Monitored",
+        "secondary",
+        "next generation",
+        "Grass-roots",
+        "value-added",
+        "Reactive",
+        "secondary",
+        # ext_offchain_local_storage_get_version_1
+        "Inverse",
+        "Horizontal",
+        "portal",
+        "Monitored",
+        "secondary",
+        "next generation",
+        "Grass-roots",
+        "value-added",
+        "Reactive",
+        "secondary",
+        # ext_offchain_local_storage_clear_version_1
+        "Inverse",
+        "Horizontal",
+        "portal",
+        "Monitored",
+        "secondary",
+        "next generation",
+        "Grass-roots",
+        "value-added",
+        "Reactive",
+        "secondary",
+    ]
+
+    const kind_key_value_value = [
+        # ext_offchain_local_storage_compare_and_set_version_1
+        "static",
+        "Inverse",
+        "even-keeled",
+        "Future-proofed",
+        "function",
+        "Horizontal",
+        "Face to face",
+        "Expanded",
+        "Integrated",
+        "portal",
+    ]
 end

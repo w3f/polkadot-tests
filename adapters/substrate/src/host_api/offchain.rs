@@ -113,6 +113,10 @@ pub fn ext_offchain_local_storage_set_version_1(mut rtm: Runtime, input: ParsedI
 	println!("{}", str(&res));
 }
 
+pub fn ext_offchain_local_storage_get_version_1(rtm: Runtime, input: ParsedInput) {
+	ext_offchain_local_storage_set_version_1(rtm, input)
+}
+
 pub fn ext_offchain_local_storage_clear_version_1(mut rtm: Runtime, input: ParsedInput) {
 	// Parse input
     let kind = input.get_u32(0);
@@ -226,11 +230,6 @@ pub fn ext_offchain_local_storage_compare_and_set_version_1(mut rtm: Runtime, in
 	assert_eq!(res, new_value);
 
 	println!("{}", str(&res));
-}
-
-#[allow(dead_code)]
-pub fn ext_offchain_local_storage_get_version_1(rtm: Runtime, input: ParsedInput) {
-	ext_offchain_local_storage_set_version_1(rtm, input)
 }
 
 #[allow(dead_code)]
