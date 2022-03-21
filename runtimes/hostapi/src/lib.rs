@@ -99,12 +99,14 @@ extern "C" {
     fn ext_offchain_local_storage_clear_version_1(kind: u32, key: u64);
     fn ext_offchain_local_storage_compare_and_set_version_1(kind: u32, key: u64, old_value: u64, new_value: u64) -> u32;
     fn ext_offchain_local_storage_get_version_1(kind: u32, key: u64) -> u64;
+    /*
     fn ext_offchain_http_request_start_version_1(method: u64, uri: u64, meta: u64) -> u64;
     fn ext_offchain_http_request_add_header_version_1(req_id: u32, name: u64, value: u64) -> u64;
     fn ext_offchain_http_request_write_body_version_1(req_id: u32, chunk: u64, deadline: u64) -> u64;
     fn ext_offchain_http_response_wait_version_1(ids: u64, deadline: u64) -> u64;
     fn ext_offchain_http_response_headers_version_1(req_id: u32) -> u64;
     fn ext_offchain_http_response_read_body_version_1(req_id: u32, buffer: u64, deadline: u64) -> u64;
+    */
 }
 
 #[cfg(feature = "runtime-wasm")]
@@ -595,6 +597,7 @@ sp_core::wasm_export_functions! {
             Decode::decode(&mut from_mem(value).as_slice()).unwrap()
         }
     }
+    /*
     fn rtm_ext_offchain_http_request_start_version_1(method: Vec<u8>, uri: Vec<u8>, meta: Vec<u8>) -> Result<Vec<u16>, ()> {
         unsafe {
             let value = ext_offchain_http_request_start_version_1(
@@ -654,4 +657,5 @@ sp_core::wasm_export_functions! {
             Decode::decode(&mut from_mem(value).as_slice()).unwrap()
         }
     }
+    */
 }

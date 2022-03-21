@@ -9,8 +9,8 @@ module SpecificationTestsuite
     "List of all known implementations"
     const ALL_IMPLEMENTATIONS = [
       "substrate"
-      #"kagome"
-      #"gossamer"
+      "kagome"
+      "gossamer"
     ]
 
     module Config
