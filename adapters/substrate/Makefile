@@ -3,7 +3,7 @@
 all: install
 
 build:
-	cargo fmt && cargo build --release
+	cargo build --release
 
 install: build
 	cp target/release/substrate-adapter ../../bin/
@@ -18,6 +18,9 @@ install-expmem: build-expmem
 
 version:
 	@cargo metadata --format-version 1 | jq '.packages[] | select(.name=="sp-core").id' | cut -d' ' -f2
+
+format:
+	cargo fmt
 
 clean:
 	rm -rf target
