@@ -3,7 +3,7 @@
 all: install
 
 build:
-	cargo build --release
+	cargo fmt && cargo build --release
 
 install: build
 	cp target/release/substrate-adapter ../../bin/
