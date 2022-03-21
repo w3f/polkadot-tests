@@ -24,7 +24,7 @@ $(ALIASES_ADAPTER): %-adapter: init
 	$(MAKE) -C adapters/$*
 
 
-runtimes: $(ALIASES_RUNTIMES)
+runtimes: $(ALIASES_RUNTIME)
 
 $(ALIASES_RUNTIME): %-runtime: init
 	$(MAKE) -C runtimes/$*

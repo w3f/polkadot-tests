@@ -125,8 +125,8 @@ HOSTAPI_FIXTURE_DATASETS = [
             HostApiInputs.kind,
             HostApiInputs.key_value_1,
             HostApiInputs.value_1,
-        ]
-        HostApiOutputs.kind_key_value_value,
+        ],
+        HostApiOutputs.kind_key_value_value .* "\n",
     ]
 ]
 
