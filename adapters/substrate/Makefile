@@ -19,5 +19,8 @@ install-expmem: build-expmem
 version:
 	@cargo metadata --format-version 1 | jq '.packages[] | select(.name=="sp-core").id' | cut -d' ' -f2
 
+format:
+	cargo fmt
+
 clean:
 	rm -rf target
