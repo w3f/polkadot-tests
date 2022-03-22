@@ -1,9 +1,9 @@
 use clap::Values;
 
 use parity_scale_codec::Decode;
+use sp_core::{offchain::testing::TestOffchainExt, offchain::OffchainDbExt, Blake2Hasher};
 use sc_executor::{WasmExecutionMethod, WasmExecutor};
 use sc_executor_common::runtime_blob::RuntimeBlob;
-use sp_core::{offchain::testing::TestOffchainExt, offchain::OffchainWorkerExt, Blake2Hasher};
 use sp_io::SubstrateHostFunctions;
 use sp_keystore::{testing::KeyStore, KeystoreExt};
 use sp_state_machine::TestExternalities;
@@ -88,11 +88,9 @@ impl Runtime {
         self.ext.register_extension(key_store);
         self
     }
-    #[allow(dead_code)]
     pub fn with_offchain(mut self) -> Self {
         let (offchain, _) = TestOffchainExt::new();
-        self.ext
-            .register_extension(OffchainWorkerExt::new(offchain));
+        self.ext.register_extension(OffchainDbExt::new(offchain));
         self
     }
 

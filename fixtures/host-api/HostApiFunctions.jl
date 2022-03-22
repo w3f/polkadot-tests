@@ -86,4 +86,14 @@ module HostApiFunctions
 	const value_value_value = [
 		"ext_trie_blake2_256_ordered_root_version_1"
 	]	
+
+	const kind_key_value = [
+		"ext_offchain_local_storage_set_version_1",
+		"ext_offchain_local_storage_get_version_1",
+		"ext_offchain_local_storage_clear_version_1"
+	]
+
+	const kind_key_value_value = [
+		"ext_offchain_local_storage_compare_and_set_version_1"
+	]
 end

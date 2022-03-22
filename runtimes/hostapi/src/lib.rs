@@ -1,7 +1,6 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 use std::slice;
-
 use std::convert::TryInto;
 
 #[cfg(feature = "runtime-wasm")]
@@ -32,7 +31,6 @@ unsafe impl GlobalAlloc for WasmAllocator {
         ext_allocator_free_version_1(ptr as u32)
     }
 }
-
 
 #[cfg(feature = "runtime-wasm")]
 extern "C" {
@@ -89,8 +87,27 @@ extern "C" {
     // Trie API
     fn ext_trie_blake2_256_root_version_1(data: u64) -> u32;
     fn ext_trie_blake2_256_ordered_root_version_1(data: u64) -> u32;
-}
 
+    // Offchain API
+    fn ext_offchain_is_validator_version_1() -> u32;
+    fn ext_offchain_submit_transaction_version_1(data: u64) -> u64;
+    fn ext_offchain_network_state_version_1() -> u64;
+    fn ext_offchain_timestamp_version_1() -> u64;
+    fn ext_offchain_sleep_until_version_1(deadline: u64);
+    fn ext_offchain_random_seed_version_1() -> u32;
+    fn ext_offchain_local_storage_set_version_1(kind: u32, key: u64, value: u64);
+    fn ext_offchain_local_storage_clear_version_1(kind: u32, key: u64);
+    fn ext_offchain_local_storage_compare_and_set_version_1(kind: u32, key: u64, old_value: u64, new_value: u64) -> u32;
+    fn ext_offchain_local_storage_get_version_1(kind: u32, key: u64) -> u64;
+    /*
+    fn ext_offchain_http_request_start_version_1(method: u64, uri: u64, meta: u64) -> u64;
+    fn ext_offchain_http_request_add_header_version_1(req_id: u32, name: u64, value: u64) -> u64;
+    fn ext_offchain_http_request_write_body_version_1(req_id: u32, chunk: u64, deadline: u64) -> u64;
+    fn ext_offchain_http_response_wait_version_1(ids: u64, deadline: u64) -> u64;
+    fn ext_offchain_http_response_headers_version_1(req_id: u32) -> u64;
+    fn ext_offchain_http_response_read_body_version_1(req_id: u32, buffer: u64, deadline: u64) -> u64;
+    */
+}
 
 #[cfg(feature = "runtime-wasm")]
 fn from_mem(value: u64) -> Vec<u8> {
@@ -110,7 +127,6 @@ impl AsRePtr for Vec<u8> {
         (self.len() as u64) << 32 | self.as_ptr() as u64
     }
 }
-
 
 #[cfg(feature = "runtime-wasm")]
 sp_core::wasm_export_functions! {
@@ -506,4 +522,140 @@ sp_core::wasm_export_functions! {
             std::slice::from_raw_parts(value as *mut u8, 32).to_vec()
         }
     }
+
+    // Offhcain API
+
+    fn rtm_ext_offchain_is_validator_version_1() -> u32 {
+        unsafe {
+            ext_offchain_is_validator_version_1()
+        }
+    }
+    fn rtm_ext_offchain_submit_transaction_version_1(data: Vec<u8>) -> Result<(),()> {
+        unsafe {
+            let value = ext_offchain_submit_transaction_version_1(
+                data.as_re_ptr(),
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    fn rtm_ext_offchain_network_state_version_1() -> Vec<u8> {
+        unsafe {
+            let value = ext_offchain_network_state_version_1();
+            from_mem(value)
+        }
+    }
+    fn rtm_ext_offchain_timestamp_version_1() -> u64 {
+        unsafe {
+            ext_offchain_timestamp_version_1() as u64
+        }
+    }
+    fn rtm_ext_offchain_sleep_until_version_1(deadline: u64) {
+        unsafe {
+            ext_offchain_sleep_until_version_1(deadline)
+        }
+    }
+    fn rtm_ext_offchain_random_seed_version_1() -> Vec<u8> {
+        unsafe {
+            let value = ext_offchain_random_seed_version_1();
+            std::slice::from_raw_parts(value as *mut u8, 32).to_vec()
+        }
+    }
+    fn rtm_ext_offchain_local_storage_set_version_1(kind: u32, key: Vec<u8>, value: Vec<u8>) {
+        unsafe {
+            ext_offchain_local_storage_set_version_1(
+                kind,
+                key.as_re_ptr(),
+                value.as_re_ptr(),
+            );
+        }
+    }
+    fn rtm_ext_offchain_local_storage_clear_version_1(kind: u32, key: Vec<u8>) {
+        unsafe {
+            ext_offchain_local_storage_clear_version_1(
+                kind,
+                key.as_re_ptr(),
+            );
+        }
+    }
+    fn rtm_ext_offchain_local_storage_compare_and_set_version_1(kind: u32, key: Vec<u8>, old_value: Option<Vec<u8>>, new_value: Vec<u8>) -> u32 {
+        let old_value = old_value.encode();
+        unsafe {
+            ext_offchain_local_storage_compare_and_set_version_1(
+                kind,
+                key.as_re_ptr(),
+                old_value.as_re_ptr(),
+                new_value.as_re_ptr()
+            ) as u32
+        }
+    }
+    fn rtm_ext_offchain_local_storage_get_version_1(kind: u32, key: Vec<u8>) -> Option<Vec<u8>> {
+        unsafe {
+            let value = ext_offchain_local_storage_get_version_1(
+                kind,
+                key.as_re_ptr(),
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    /*
+    fn rtm_ext_offchain_http_request_start_version_1(method: Vec<u8>, uri: Vec<u8>, meta: Vec<u8>) -> Result<Vec<u16>, ()> {
+        unsafe {
+            let value = ext_offchain_http_request_start_version_1(
+                method.as_re_ptr(),
+                uri.as_re_ptr(),
+                meta.as_re_ptr(),
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    fn rtm_ext_offchain_http_request_add_header_version_1(req_id: u32, name: Vec<u8>, value: Vec<u8>) -> Result<(), ()> {
+        unsafe {
+            let value = ext_offchain_http_request_add_header_version_1(
+                req_id,
+                name.as_re_ptr(),
+                value.as_re_ptr(),
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    fn rtm_ext_offchain_http_request_write_body_version_1(req_id: u32, chunk: Vec<u8>, deadline: u64) -> Result<(), Vec<u8>> {
+        unsafe {
+            let value = ext_offchain_http_request_write_body_version_1(
+                req_id,
+                chunk.as_re_ptr(),
+                deadline,
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    fn rtm_ext_offchain_http_response_wait_version_1(ids: Vec<u32>, deadline: Option<u64>) -> Vec<Vec<u8>> {
+        let ids = ids.encode();
+        let deadline = deadline.encode();
+        unsafe {
+            let value = ext_offchain_http_response_wait_version_1(
+                ids.as_re_ptr(),
+                deadline.as_re_ptr(),
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    fn rtm_ext_offchain_http_response_headers_version_1(req_id: u32) -> Vec<(Vec<u8>, Vec<u8>)> {
+        unsafe {
+            let value = ext_offchain_http_response_headers_version_1(
+                req_id,
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    fn rtm_ext_offchain_http_response_read_body_version_1(req_id: u32, buffer: Vec<u8>, deadline: u64) -> Vec<u8> {
+        unsafe {
+            let value = ext_offchain_http_response_read_body_version_1(
+                req_id,
+                buffer.as_re_ptr(),
+                deadline,
+            );
+            Decode::decode(&mut from_mem(value).as_slice()).unwrap()
+        }
+    }
+    */
 }

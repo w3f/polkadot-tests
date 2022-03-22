@@ -452,4 +452,37 @@ module HostApiInputs
 			"scorpion six useless front start crawl axis win auto bird genuine sort fee convince entire minute cost village miracle hotel country"
 		],
 	]
+
+	const kind = [
+		[
+			"0"
+		],
+		[
+			"0"
+		],
+		[
+			"1"
+		],
+		[
+			"0"
+		],
+		[
+			"1"
+		],
+		[
+			"1"
+		],
+		[
+			"1"
+		],
+		[
+			"0"
+		],
+		[
+			"0"
+		],
+		[
+			"1"
+		]
+	]
 end

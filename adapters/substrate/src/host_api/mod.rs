@@ -4,6 +4,7 @@ mod crypto;
 mod hashing;
 mod storage;
 mod trie;
+mod offchain;
 mod utils;
 
 use std::path::Path;
@@ -20,7 +21,7 @@ pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
         let rtm_path = subcmd_matches
             .value_of("runtime")
             .unwrap_or(DEFAULT_RUNTIME_PATH);
-        let mut rtm = utils::Runtime::new(Path::new(rtm_path));
+        let mut rtm = utils::Runtime::new(Path::new(rtm_path)).with_offchain();
 
         if let Some(env) = subcmd_matches.value_of("environment") {
             match env {
@@ -136,6 +137,26 @@ pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
             "ext_trie_blake2_256_ordered_root_version_1" => {
                 trie::ext_trie_blake2_256_ordered_root_version_1(rtm, input)
             }
+
+            // offhchain api
+            "ext_offchain_is_validator_version_1" => offchain::ext_offchain_is_validator_version_1(rtm, input),
+            "ext_offchain_submit_transaction_version_1" => offchain::ext_offchain_submit_transaction_version_1(rtm, input),
+            "ext_offchain_network_state_version_1" => offchain::ext_offchain_network_state_version_1(rtm, input),
+            "ext_offchain_timestamp_version_1" => offchain::ext_offchain_timestamp_version_1(rtm, input),
+            "ext_offchain_sleep_until_version_1" => offchain::ext_offchain_sleep_until_version_1(rtm, input),
+            "ext_offchain_random_seed_version_1" => offchain::ext_offchain_random_seed_version_1(rtm, input),
+            "ext_offchain_local_storage_set_version_1" => offchain::ext_offchain_local_storage_set_version_1(rtm, input),
+            "ext_offchain_local_storage_clear_version_1" => offchain::ext_offchain_local_storage_clear_version_1(rtm, input),
+            "ext_offchain_local_storage_compare_and_set_version_1" => offchain::ext_offchain_local_storage_compare_and_set_version_1(rtm, input),
+            "ext_offchain_local_storage_get_version_1" => offchain::ext_offchain_local_storage_get_version_1(rtm, input),
+            /*
+            "ext_offchain_http_request_start_version_1" => offchain::ext_offchain_http_request_start_version_1(rtm, input),
+            "ext_offchain_http_request_add_header_version_1" => offchain::ext_offchain_http_request_add_header_version_1(rtm, input),
+            "ext_offchain_http_request_write_body_version_1" => offchain::ext_offchain_http_request_write_body_version_1(rtm, input),
+            "ext_offchain_http_response_wait_version_1" => offchain::ext_offchain_http_response_wait_version_1(rtm, input),
+            "ext_offchain_http_response_headers_version_1" => offchain::ext_offchain_http_response_headers_version_1(rtm, input),
+            "ext_offchain_http_response_read_body_version_1" => offchain::ext_offchain_http_response_read_body_version_1(rtm, input),
+            */
 
             _ => panic!("specified function not available"),
         }
