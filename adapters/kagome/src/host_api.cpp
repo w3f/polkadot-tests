@@ -85,7 +85,7 @@ namespace host_api {
       } else if (*environment == "wavm") {
         args.environment = helpers::RuntimeEnvironment::Backend::WAVM;
       } else {
-        std::cout << "Unknown environment: " << *environment << std::endl;
+        std::cerr << "Unknown environment: " << *environment << std::endl;
         exit(1);
       }
     } else {
@@ -169,15 +169,15 @@ namespace host_api {
 
     helpers::RuntimeEnvironment environment(args.runtime, args.environment);
 
-    std::string commands_list = "Valid function are: ";
-    for (auto &&name : router.collectSubcommandNames()) {
-      commands_list += name;
-      commands_list += " ";
+    if (!router.executeSubcommand(args.function, environment, args.inputs)) {
+      std::cerr << "Unknown or unsupported function: " << args.function << std::endl;
+
+      std::cerr << "Known functions are:" << std::endl;
+      for (auto &&name : router.collectSubcommandNames()) {
+        std::cerr << " - " << name << std::endl;    
+      }
+
+      throw NotImplemented();
     }
-    auto e1 = "function is not provided\n" + commands_list;
-    auto e2 = "Invalid function\n" + commands_list;
-    BOOST_VERIFY_MSG(
-        router.executeSubcommand(args.function, environment, args.inputs),
-        "Invalid function");
   }
 }  // namespace host_api
