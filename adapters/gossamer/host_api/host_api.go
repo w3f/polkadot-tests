@@ -163,9 +163,9 @@ func executeHostApiTest(function string, inputs []string, environment, runtimePa
 		return test_allocator_malloc_free(rtm, inputs[0])
 
 	// test child storage api
-	//case "ext_default_child_storage_set_version_1":
-	//case "ext_default_child_storage_get_version_1":
-	//	test_child_storage_set_get(rtm, inputs[0], inputs[1], inputs[2], inputs[3])
+	case "ext_default_child_storage_set_version_1",
+	     "ext_default_child_storage_get_version_1":
+		return test_child_storage_set_get(rtm, inputs[0], inputs[1], inputs[2], inputs[3])
 	//case "ext_default_child_storage_read_version_1":
 	//case "ext_default_child_storage_clear_version_1":
 	//case "ext_default_child_storage_storage_kill_version_1":
