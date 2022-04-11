@@ -47,7 +47,7 @@ jobs:
     - name: Build substrate adapters
       run: make substrate-adapter
     - name: Upload substrate adapter
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: substrate-adapter
         path: bin/substrate-adapter
@@ -70,7 +70,7 @@ jobs:
         GITHUB_HUNTER_TOKEN: ${{ secrets.HUNTER_UPLOAD_TOKEN }}
       run: make kagome-adapter
     - name: Upload kagome adapter
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: kagome-adapter
         path: bin/kagome-adapter
@@ -98,12 +98,12 @@ jobs:
     - name: Build gossamer adapter
       run: make gossamer-adapter 
     - name: Upload gossamer adapter
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: gossamer-adapter
         path: bin/gossamer-adapter
     - name: Upload libwasmer.so
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: gossamer-adapter
         path: lib/libwasmer.so
@@ -140,7 +140,7 @@ jobs:
     - name: Build hostapi runtime
       run: make hostapi-runtime
     - name: Upload hostapi runtime
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: hostapi-runtime.default.wasm
         path: bin/hostapi-runtime.default.wasm
@@ -176,7 +176,7 @@ jobs:
     - name: Build hostapi runtime with exported memory
       run: make hostapi-runtime-expmem
     - name: Upload hostapi runtime with exported memory
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: hostapi-runtime.expmem.wasm
         path: bin/hostapi-runtime.expmem.wasm
