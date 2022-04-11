@@ -54,7 +54,7 @@ jobs:
     - name: Build substrate host
       run: make substrate-host
     - name: Upload substrate
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: substrate-host
         path: bin/polkadot
@@ -83,7 +83,7 @@ jobs:
         GITHUB_HUNTER_TOKEN: ${{ secrets.HUNTER_UPLOAD_TOKEN }}
       run: make kagome-host
     - name: Upload kagome hosts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: kagome-host
         path: bin/kagome
@@ -111,12 +111,12 @@ jobs:
     - name: Build gossamer host
       run: make gossamer-host
     - name: Upload gossamer and libwasmer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: gossamer-host
         path: bin/gossamer
     - name: Upload libwasmer.so
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: gossamer-host
         path: lib/libwasmer.so
@@ -153,12 +153,12 @@ jobs:
     - name: Build and generate host tester genesis
       run: make tester-runtime
     - name: Upload host tester runtime
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: tester_runtime.compact.wasm
         path: runtimes/tester/target/release/wbuild/tester-runtime/tester_runtime.compact.wasm
     - name: Upload host tester genesis and hash file
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: tester-runtime-genesis
         path: |
