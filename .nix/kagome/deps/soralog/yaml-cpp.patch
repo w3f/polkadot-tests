@@ -1,0 +1,12 @@
++++ a/src/CMakeLists.txt
+--- b/src/CMakeLists.txt
+@@ -70,7 +70,7 @@ add_library(configurator_yaml
+     impl/configurator_from_yaml.cpp
+     )
+ target_link_libraries(configurator_yaml
+-    yaml-cpp::yaml-cpp
++    yaml-cpp
+     configurator
+     )
+
+
