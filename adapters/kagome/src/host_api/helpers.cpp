@@ -92,6 +92,7 @@ namespace helpers {
 
   using kagome::runtime::ModuleFactory;
   using kagome::runtime::RuntimeCodeProvider;
+  using kagome::runtime::SingleModuleCache;
 
   namespace binaryen = kagome::runtime::binaryen;
   namespace wavm = kagome::runtime::wavm;
@@ -245,6 +246,8 @@ namespace helpers {
             std::make_shared<wavm::IntrinsicModule>(compartment);
         wavm::registerHostApiMethods(*intrinsic_module);
 
+        auto module_cache = std::make_shared<SingleModuleCache>();
+
         // Initialize module factory
         auto instance_env_factory =
             std::make_shared<wavm::InstanceEnvironmentFactory>(trie_db,
@@ -253,7 +256,8 @@ namespace helpers {
                                                                intrinsic_module,
                                                                host_api_factory,
                                                                header_repo,
-                                                               changes_tracker);
+                                                               changes_tracker,
+                                                               module_cache);
 
         module_factory = std::make_shared<wavm::ModuleFactoryImpl>(
             compartment, instance_env_factory, intrinsic_module);
