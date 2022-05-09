@@ -1,8 +1,8 @@
 module w3f/gossamer-adapter
 
 require (
-	github.com/ChainSafe/gossamer v0.2.1-0.20210115002259-7c0a61a29bc6
-	github.com/go-yaml/yaml v2.1.0+incompatible
+	github.com/ChainSafe/gossamer v0.0.0-submodule
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
 require (
@@ -35,7 +35,7 @@ require (
 	github.com/gtank/merlin v0.1.1 // indirect
 	github.com/gtank/ristretto255 v0.1.2 // indirect
 	github.com/ipfs/go-cid v0.0.7 // indirect
-	github.com/klauspost/compress v1.15.1 // indirect
+	github.com/klauspost/compress v1.15.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
@@ -71,9 +71,8 @@ require (
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-replace github.com/ChainSafe/gossamer => ../../hosts/gossamer
+replace github.com/ChainSafe/gossamer v0.0.0-submodule => ../../hosts/gossamer
 
 go 1.18

@@ -29,7 +29,8 @@ import (
 
 	"github.com/ChainSafe/gossamer/lib/common"
 	"github.com/ChainSafe/gossamer/lib/trie"
-	"github.com/go-yaml/yaml"
+
+	"gopkg.in/yaml.v3"
 )
 
 func ProcessStateTrieCommand(command_args []string) {
