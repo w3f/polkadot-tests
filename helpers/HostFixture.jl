@@ -8,18 +8,20 @@ struct Tester
     "Name of the testsuite"
     name::String
 
-    "Wether to use the raw genesis"
-    raw::Bool
-
     "Name of the runtime to use"
     runtime::String
+
+    "Name of the runtime variant"
+    variant::String
+
+    "Format of the genesis"
+    format::String
 end
 
 
 "Load trie root hash from hash file"
 function load_hash(self::Tester)
-
-    hash_file = "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.hash"
+    hash_file = "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.$(self.variant).hash"
 
     # Make sure hash file is available
     if !isfile(hash_file)
@@ -38,11 +40,7 @@ function run_tester(self::Tester, host::String, duration::Number)
     tempdir = mktempdir() * "/"
 
     # Determine correct genesis of runtime
-    genesis = if self.raw
-        "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.raw.json"
-    else 
-        "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.json"
-    end
+    genesis = "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.$(self.variant).$(self.format)"
 
     # Make sure genesis is available
     if !isfile(genesis)
