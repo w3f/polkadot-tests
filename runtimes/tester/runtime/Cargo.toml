@@ -1,7 +1,8 @@
 [package]
 name = 'tester-runtime'
-version = "0.9.16-75dd6c7"
+version = "0.9.22-3b7f057"
 edition = '2021'
+resolver = "2"
 
 [profile.release]
 panic = 'unwind'
@@ -20,12 +21,12 @@ optional = true
 
 [dependencies.codec]
 package = 'parity-scale-codec'
-version = '2.0.0'
+version = '3.0.0'
 default-features = false
 features = ['derive']
 
 [dependencies.scale-info]
-version = '1.0'
+version = '2.1.1'
 default-features = false
 features = ['derive']
 
