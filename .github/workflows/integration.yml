@@ -123,7 +123,11 @@ jobs:
 
 
   build-runtime-tester:
-    name: "[build] tester-runtime"
+    strategy:
+      fail-fast: false
+      matrix:
+        feature: [ default, legacy ]
+    name: "[build] tester-runtime ${{ matrix.feature }}"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -142,33 +146,37 @@ jobs:
           ~/.cargo/registry/index/
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
-        key: cargo-cache-runtime-tester-${{ hashFiles('runtimes/tester/Cargo.lock') }}
-        restore-keys: cargo-cache-runtime-tester-
+        key: cargo-cache-runtime-tester-${{ matrix.feature }}-${{ hashFiles('runtimes/tester/Cargo.lock') }}
+        restore-keys: cargo-cache-runtime-tester-${{ matrix.feature }}-
     - name: Cache cargo build output
       uses: actions/cache@v3
       with:
         path: runtimes/tester/target
-        key: cargo-build-runtime-tester-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('runtimes/tester/Cargo.lock') }}
-        restore-keys: cargo-build-runtime-tester-${{ steps.rustup.outputs.rustc_hash }}-
+        key: cargo-build-runtime-tester-${{ matrix.feature }}-${{ steps.rustup.outputs.rustc_hash }}-${{ hashFiles('runtimes/tester/Cargo.lock') }}
+        restore-keys: cargo-build-runtime-tester-${{ matrix.feature }}-${{ steps.rustup.outputs.rustc_hash }}-
     - name: Build and generate host tester genesis
-      run: make tester-runtime
+      run: make -C runtimes/tester ${{ matrix.feature }}
     - name: Upload host tester runtime
       uses: actions/upload-artifact@v3
       with:
-        name: tester_runtime.compact.wasm
+        name: tester_runtime.${{ matrix.feature }}.wasm
         path: runtimes/tester/target/release/wbuild/tester-runtime/tester_runtime.compact.wasm
     - name: Upload host tester genesis and hash file
       uses: actions/upload-artifact@v3
       with:
-        name: tester-runtime-genesis
+        name: tester-runtime-genesis-${{ matrix.feature }}
         path: |
-          runtimes/tester/genesis.hash
-          runtimes/tester/genesis.raw.json
+          runtimes/tester/genesis.${{ matrix.feature }}.hash
+          runtimes/tester/genesis.${{ matrix.feature }}.json
 
 
   test-substrate:
     needs: [ build-host-substrate, build-runtime-tester ]
-    name: "[test-genesis-raw] substrate"
+    strategy:
+      fail-fast: false
+      matrix:
+        fixture: [ genesis-default, genesis-legacy ]
+    name: "[test-${{ matrix.fixture }}] substrate"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -180,14 +188,18 @@ jobs:
     - run: chmod +x bin/polkadot
     - uses: actions/download-artifact@v3
       with:
-        name: tester-runtime-genesis
+        name: tester-runtime-${{ matrix.fixture }}
         path: runtimes/tester
     - name: Run substrate with tester genesis
-      run: ./runtests.jl substrate genesis-raw
+      run: ./runtests.jl substrate ${{ matrix.fixture }}
 
   test-kagome:
     needs: [ build-host-kagome, build-runtime-tester ]
-    name: "[test-genesis-raw] kagome"
+    strategy:
+      fail-fast: false
+      matrix:
+        fixture: [ genesis-default, genesis-legacy ]
+    name: "[test-${{ matrix.fixture }}] kagome"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -199,14 +211,18 @@ jobs:
     - run: chmod +x bin/kagome
     - uses: actions/download-artifact@v3
       with:
-        name: tester-runtime-genesis
+        name: tester-runtime-${{ matrix.fixture }}
         path: runtimes/tester
     - name: Run kagome with tester genesis
-      run: ./runtests.jl kagome genesis-raw
+      run: ./runtests.jl kagome ${{ matrix.fixture }}
 
   test-gossamer:
     needs: [ build-host-gossamer, build-runtime-tester ]
-    name: "[test-genesis-raw] gossamer"
+    strategy:
+      fail-fast: false
+      matrix:
+        fixture: [ genesis-default, genesis-legacy ]
+    name: "[test-${{ matrix.fixture }}] gossamer"
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository
@@ -221,7 +237,7 @@ jobs:
         mv bin/libwasmer.so lib/
     - uses: actions/download-artifact@v3
       with:
-        name: tester-runtime-genesis
+        name: tester-runtime-${{ matrix.fixture }}
         path: runtimes/tester
     - name: Run gossamer with tester genesis
-      run: ./runtests.jl gossamer genesis-raw
+      run: ./runtests.jl gossamer ${{ matrix.fixture }}
