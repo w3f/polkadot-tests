@@ -2,7 +2,7 @@ using .HostFixture
 using Test
 
 
-tester = HostFixture.Tester("Raw Genesis", true, "tester")
+tester = HostFixture.Tester("Raw Genesis", "tester", "default", "raw")
 
 HostFixture.execute(tester, 10) do (root, result)
     # Extract all hashes returned from log
