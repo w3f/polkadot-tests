@@ -2,14 +2,10 @@
 name = 'host-tester'
 version = "0.9.22-3b7f057"
 edition = '2021'
-
-[workspace]
-members = [ "runtime" ]
-
+resolver = "2"
 
 [dependencies.tester-runtime]
 path = "runtime"
-
 
 [dependencies.sc-service]
 git = "https://github.com/paritytech/substrate"
@@ -37,3 +33,9 @@ package = 'sp-finality-grandpa'
 git = "https://github.com/paritytech/substrate"
 branch = "master"
 default-features = false
+
+[features]
+legacy = [ "tester-runtime/legacy" ]
+
+[workspace]
+members = [ "runtime" ]

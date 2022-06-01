@@ -188,3 +188,5 @@ std = [
     'sp-babe/std',
     'sp-grandpa/std',
 ]
+# Use legacy state version
+legacy = []

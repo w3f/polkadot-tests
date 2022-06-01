@@ -1,5 +1,5 @@
 /runtime/Cargo.lock
 /target/
-genesis.hash
-genesis.json
-genesis.raw.json
+genesis.*.hash
+genesis.*.json
+genesis.*.raw
