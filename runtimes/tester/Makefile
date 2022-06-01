@@ -1,21 +1,33 @@
-.PHONY: all build version clean
+# Default targets
+TARGETS_DEFAULT := hash json raw
+TARGETS_LEGACY  := $(patsubst %,%-legacy,$(TARGETS_DEFAULT))
 
-all: genesis.hash genesis.json genesis.raw.json
+.PHONY: .FORCE all legacy $(TARGETS_DEFAULT) $(TARGETS_LEGACY) version clean
+.FORCE: # Always run cargo to check for changes
 
-build:
-	cargo build --release
+default: $(TARGETS_DEFAULT)
 
-genesis.hash: build
-	cargo run --release hash > $@
+legacy: $(TARGETS_LEGACY)
 
-genesis.json: build
-	cargo run --release json > $@
+# Plain version, no features
+OUTPUTS_DEFAULT := $(patsubst %,genesis.default.%,$(TARGETS_DEFAULT))
 
-genesis.raw.json: build
-	cargo run --release raw > $@
+$(TARGETS_DEFAULT): %: genesis.default.%
 
+$(OUTPUTS_DEFAULT): genesis.default.%: .FORCE
+	cargo run --release $* > $@
+
+# Legacy state storage version
+OUTPUTS_LEGACY := $(patsubst %,genesis.legacy.%,$(TARGETS_DEFAULT))
+
+$(TARGETS_LEGACY): %-legacy: genesis.legacy.%
+
+$(OUTPUTS_LEGACY): genesis.legacy.%: .FORCE
+	cargo run --release --features legacy $* > $@
+
+# Targets for developers
 version:
 	@cargo metadata --format-version 1 | jq '.packages[] | select(.name=="sp-core").id' | cut -d' ' -f2
 
 clean:
-	rm -rf target genesis.hash genesis.json genesis.raw.json
+	$(RM) -r target genesis.{default,legacy}.{hash,json,raw}

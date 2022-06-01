@@ -2,8 +2,8 @@ use std::env;
 
 use tester_runtime::{
 	AccountId, BabeConfig, BalancesConfig, GenesisConfig,
-	GrandpaConfig, SudoConfig, SystemConfig, BuildStorage,
-	Header, Signature, BABE_GENESIS_EPOCH_CONFIG, WASM_BINARY,
+	GrandpaConfig, SudoConfig, SystemConfig, BuildStorage, Header,
+	Signature, BABE_GENESIS_EPOCH_CONFIG, STATE_VERSION, WASM_BINARY,
 };
 
 use sp_core::{H256, Pair, Public, sr25519};
@@ -73,7 +73,7 @@ fn default_genesis_config() -> GenesisConfig {
 fn default_genesis_hash() -> H256 {
 	<Header as HeaderT>::Hashing::trie_root(
 		default_genesis_config().build_storage().unwrap().top.into_iter().collect(),
-		sp_runtime::StateVersion::default()
+		STATE_VERSION
 	)
 }
 

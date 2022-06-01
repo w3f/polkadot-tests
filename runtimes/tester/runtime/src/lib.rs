@@ -11,7 +11,7 @@ use sp_std::prelude::*;
 use sp_core::{Decode, OpaqueMetadata};
 use sp_runtime::{
 	generic, create_runtime_str, print, impl_opaque_keys,
-	ApplyExtrinsicResult, MultiSignature, KeyTypeId,
+	ApplyExtrinsicResult, MultiSignature, KeyTypeId, StateVersion,
 	transaction_validity::{TransactionValidity, TransactionSource},
 };
 use sp_runtime::traits::{
@@ -80,6 +80,14 @@ pub mod opaque {
 	}
 }
 
+/// This storage state version, legacy is v0
+#[cfg(feature = "legacy")]
+pub const STATE_VERSION : StateVersion = StateVersion::V0;
+
+/// This storage state version, default is v1
+#[cfg(not(feature = "legacy"))]
+pub const STATE_VERSION : StateVersion = StateVersion::V1;
+
 /// This runtime version.
 pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("polkadot"),
@@ -89,7 +97,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	impl_version: 1,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 1,
-	state_version: 0,
+	state_version: STATE_VERSION as u8,
 };
 
 /// The BABE epoch configuration at genesis.
@@ -313,13 +321,18 @@ pub type SignedExtra = (
 /// Unchecked extrinsic type as expected by this runtime.
 pub type UncheckedExtrinsic = generic::UncheckedExtrinsic<Address, Call, Signature, SignedExtra>;
 /// Executive: handles dispatch to the various modules.
-pub type Executive = frame_executive::Executive<Runtime, Block, system::ChainContext<Runtime>, Runtime, AllPalletsWithSystem>;
+pub type Executive = frame_executive::Executive<
+	Runtime,
+	Block,
+	system::ChainContext<Runtime>,
+	Runtime,
+	AllPalletsWithSystem,
+>;
 
 
 /// Print current storage root
 fn print_storage_root() {
-	let state_version = sp_runtime::StateVersion::default();
-	let storage_root = Hash::decode(&mut &storage_root(state_version)[..])
+	let storage_root = Hash::decode(&mut &storage_root(STATE_VERSION)[..])
 		.expect("`storage_root` is a valid hash");
 	runtime_print!("##{:x}##", storage_root);
 }
