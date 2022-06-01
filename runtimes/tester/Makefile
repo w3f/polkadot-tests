@@ -1,9 +1,9 @@
 # Default targets
-TARGETS_DEFAULT := hash json raw
+TARGETS_DEFAULT := hash json
 TARGETS_LEGACY  := $(patsubst %,%-legacy,$(TARGETS_DEFAULT))
 
-.PHONY: .FORCE all legacy $(TARGETS_DEFAULT) $(TARGETS_LEGACY) version clean
-.FORCE: # Always run cargo to check for changes
+.PHONY: default legacy $(TARGETS_DEFAULT) $(TARGETS_LEGACY) version clean
+.FORCE: .PHONY # Always run cargo to check for changes
 
 default: $(TARGETS_DEFAULT)
 
@@ -30,4 +30,4 @@ version:
 	@cargo metadata --format-version 1 | jq '.packages[] | select(.name=="sp-core").id' | cut -d' ' -f2
 
 clean:
-	$(RM) -r target genesis.{default,legacy}.{hash,json,raw}
+	$(RM) -r target genesis.{default,legacy}.{hash,json}

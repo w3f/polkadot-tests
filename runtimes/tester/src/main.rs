@@ -100,8 +100,8 @@ fn print_genesis_hash() {
 }
 
 /// Print chain spec of tester chain
-fn print_chain_spec(raw: bool) {
-	match default_chain_spec().as_json(raw) {
+fn print_chain_spec() {
+	match default_chain_spec().as_json(true) {
 		Ok(json) => println!("{}", json),
 		Err(err) => eprintln!("Error: {}", err),
 	}
@@ -110,7 +110,7 @@ fn print_chain_spec(raw: bool) {
 
 /// Print command line help
 fn print_usage() {
-		println!("usage: host-tester {{hash|json|raw}}");
+		println!("usage: host-tester {{hash|json}}");
 }
 
 /// Entry point, parses command line arguments
@@ -120,8 +120,7 @@ fn main() {
 	if args.len() == 2 {
 		match &args[1][..] {
 			"hash" => print_genesis_hash(),
-			"json" => print_chain_spec(false),
-			"raw" => print_chain_spec(true),
+			"json" => print_chain_spec(),
 			_ => print_usage(),
 		}
 	} else {

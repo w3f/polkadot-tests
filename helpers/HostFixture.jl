@@ -13,9 +13,6 @@ struct Tester
 
     "Name of the runtime variant"
     variant::String
-
-    "Format of the genesis"
-    format::String
 end
 
 
@@ -40,7 +37,7 @@ function run_tester(self::Tester, host::String, duration::Number)
     tempdir = mktempdir() * "/"
 
     # Determine correct genesis of runtime
-    genesis = "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.$(self.variant).$(self.format)"
+    genesis = "$(@__DIR__)/../runtimes/$(self.runtime)/genesis.$(self.variant).json"
 
     # Make sure genesis is available
     if !isfile(genesis)
