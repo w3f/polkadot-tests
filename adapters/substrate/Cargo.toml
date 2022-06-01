@@ -1,6 +1,6 @@
 [package]
 name = "substrate-adapter"
-version = "0.9.16-75dd6c7"
+version = "0.9.22-3b7f057"
 edition = "2021"
 
 [dependencies]
@@ -11,7 +11,7 @@ hex           = "*"
 serde_yaml    = "*"
 
 # scale-codec
-parity-scale-codec = "2.0"
+parity-scale-codec = "3.0"
 
 # state-trie 
 reference-trie = "0.20"

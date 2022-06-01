@@ -2,7 +2,7 @@ use clap::Values;
 
 use parity_scale_codec::Decode;
 use sp_core::{offchain::testing::TestOffchainExt, offchain::OffchainDbExt, Blake2Hasher};
-use sc_executor::{WasmExecutionMethod, WasmExecutor};
+use sc_executor::{WasmExecutionMethod, WasmExecutor, WasmtimeInstantiationStrategy};
 use sc_executor_common::runtime_blob::RuntimeBlob;
 use sp_io::SubstrateHostFunctions;
 use sp_keystore::{testing::KeyStore, KeystoreExt};
@@ -79,7 +79,9 @@ impl Runtime {
         self
     }
     pub fn using_wasmtime(mut self) -> Self {
-        self.method = WasmExecutionMethod::Compiled;
+        self.method = WasmExecutionMethod::Compiled {
+            instantiation_strategy: WasmtimeInstantiationStrategy::RecreateInstance,
+        };
         self
     }
 
