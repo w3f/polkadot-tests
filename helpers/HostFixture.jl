@@ -49,9 +49,9 @@ function run_tester(self::Tester, host::String, duration::Number)
 
     config = "$(@__DIR__)/../runtimes/$(self.runtime)/gossamer."
     if Config.docker
-	config *= "docker."
+        config *= "docker."
     end
-    config *= if self.raw "raw" else "json" end * ".config.toml"
+    config *= "$(self.variant).config.toml"
 
     # Copy prepopulated kagome keystore (TODO: Load chain id from genesis) 
     mkpath(joinpath(tempdir, "spectest"))
@@ -73,7 +73,7 @@ function run_tester(self::Tester, host::String, duration::Number)
     end
 
     # Prepare command and environment based on command
-    cmd  = ``
+    exec = ``
     args = ``
     if host == "substrate"
         exec = `polkadot`

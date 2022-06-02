@@ -2,12 +2,12 @@
 TARGETS_DEFAULT := hash json
 TARGETS_LEGACY  := $(patsubst %,%-legacy,$(TARGETS_DEFAULT))
 
-.PHONY: default legacy $(TARGETS_DEFAULT) $(TARGETS_LEGACY) version clean
-.FORCE: .PHONY # Always run cargo to check for changes
-
 default: $(TARGETS_DEFAULT)
 
 legacy: $(TARGETS_LEGACY)
+
+.PHONY: .FORCE default legacy $(TARGETS_DEFAULT) $(TARGETS_LEGACY) version clean
+.FORCE: # Always run cargo to check for changes
 
 # Plain version, no features
 OUTPUTS_DEFAULT := $(patsubst %,genesis.default.%,$(TARGETS_DEFAULT))
