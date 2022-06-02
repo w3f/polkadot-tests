@@ -1,0 +1,34 @@
+[global]
+name = "Specification Conformance Test Runtime"
+id = "spectest"
+
+[log]
+core = ""
+network = ""
+rpc = ""
+state = ""
+runtime = ""
+babe = ""
+grandpa = ""
+
+[init]
+genesis = "./runtimes/tester/genesis.default.json"
+
+[core]
+roles = 4
+babe-authority = true
+grandpa-authority = true
+
+[network]
+port = 7001
+bootnodes = []
+protocol = ""
+nobootstrap = true
+nomdns = true
+
+[rpc]
+enabled = false
+port = 8545
+host = "localhost"
+modules = ["system", "author", "chain"]
+ws-port = 8546

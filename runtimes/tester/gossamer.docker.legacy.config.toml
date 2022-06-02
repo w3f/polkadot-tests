@@ -1,5 +1,5 @@
 [global]
-name = "Specification Conformance Test Runtime"
+name = "Specification Conformance Test"
 id = "spectest"
 
 [log]
@@ -12,7 +12,7 @@ babe = ""
 grandpa = ""
 
 [init]
-genesis = "./runtimes/tester/genesis.raw.json"
+genesis = "/config/genesis.legacy.json"
 
 [core]
 roles = 4
