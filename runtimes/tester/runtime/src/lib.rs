@@ -342,7 +342,6 @@ impl_runtime_apis! {
 	impl sp_api::Core<Block> for Runtime {
 		fn version() -> RuntimeVersion {
 			print("@@version()@@");
-			print_storage_root();
 			VERSION
 		}
 
@@ -448,6 +447,7 @@ impl_runtime_apis! {
 			_slot_number: sp_babe::Slot,
 			_authority_id: sp_babe::AuthorityId,
 		) -> Option<sp_babe::OpaqueKeyOwnershipProof> {
+			print("@@generate_key_ownership_proof()@@");
 			None
 		}
 
@@ -455,6 +455,7 @@ impl_runtime_apis! {
 			_equivocation_proof: sp_babe::EquivocationProof<<Block as BlockT>::Header>,
 			_key_owner_proof: sp_babe::OpaqueKeyOwnershipProof,
 		) -> Option<()> {
+			print("@@submit_report_equivocation_unsigned_extrinsic()@@");
 			None
 		}
 	} // babe
@@ -469,10 +470,12 @@ impl_runtime_apis! {
 			_set_id: sp_grandpa::SetId,
 			_authority_id: GrandpaId,
 		) -> Option<sp_grandpa::OpaqueKeyOwnershipProof> {
+			print("@@generate_key_ownership_proof()@@");
 			None
 		}
 
 		fn current_set_id() -> sp_grandpa::SetId {
+			print("@@current_set_id()@@");
 			Grandpa::current_set_id()
 		}
 
@@ -483,6 +486,7 @@ impl_runtime_apis! {
 			>,
 			_key_owner_proof: sp_grandpa::OpaqueKeyOwnershipProof,
 		) -> Option<()> {
+			print("@@submit_report_equivocation_unsigned_extrinsic()@@");
 			None
 		}
 	} // grandpa
