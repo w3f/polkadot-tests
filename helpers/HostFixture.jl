@@ -44,16 +44,11 @@ function run_tester(self::Tester, host::String, duration::Number)
         @error "Failed to locate genesis: $genesis"
     end
 
-    # Helper files needed for some hosts
+    # gossamer: Provide basic config file
+    config = "$(@__DIR__)/../runtimes/$(self.runtime)/gossamer.config.toml"
+
+    # kagome: Provide populated keystore (TODO: Load chain id from genesis)
     keystore = "$(@__DIR__)/../runtimes/$(self.runtime)/keystore"
-
-    config = "$(@__DIR__)/../runtimes/$(self.runtime)/gossamer."
-    if Config.docker
-        config *= "docker."
-    end
-    config *= "$(self.variant).config.toml"
-
-    # Copy prepopulated kagome keystore (TODO: Load chain id from genesis) 
     mkpath(joinpath(tempdir, "spectest"))
     cp(keystore, joinpath(tempdir, "spectest", "keystore"))
 
@@ -84,7 +79,7 @@ function run_tester(self::Tester, host::String, duration::Number)
         args = `--chain $genesis -d $datadir --bootnodes /dns/localhost/tcp/30363/p2p/12D3KooWEgUjBV5FJAuBSoNMRYFRHjV7PjZwRQ7b43EKX9g7D6xV`
     elseif host == "gossamer"
         exec = `gossamer`
-        args = `--key=alice --config $config --basepath $datadir --log debug`
+        args = `--key alice --genesis $genesis --config $config --basepath $datadir --log debug`
     else
         error("Unknown host: ", host)
     end
@@ -111,7 +106,7 @@ function run_tester(self::Tester, host::String, duration::Number)
 
     # Run for specified time
     stream = Pipe()
-    proc = run(pipeline(cmd, stdout=stream, stderr=stream), wait=false)
+    proc = run(pipeline(cmd, stdout = stream, stderr = stream), wait = false)
     sleep(duration)
 
     # Stop process if necessary
@@ -119,7 +114,7 @@ function run_tester(self::Tester, host::String, duration::Number)
     if !crashed
         kill(proc)
 
-        while(process_running(proc))
+        while (process_running(proc))
             sleep(0.1)
         end
     end

@@ -1,0 +1,17 @@
+[global]
+id = "spectest"
+
+[core]
+roles = 4
+babe-authority = true
+grandpa-authority = true
+
+[network]
+nobootstrap = true
+nomdns = true
+
+[rpc]
+enabled = false
+
+[pprof]
+enabled = false
