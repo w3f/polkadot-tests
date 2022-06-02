@@ -74,9 +74,7 @@ namespace helpers {
         encoded_args.put(std::move(res.value()));
       }
 
-      PtrSize args_span{memory.storeBuffer(encoded_args)};
-
-      auto result = module_instance_->callExportFunction(name, args_span);
+      auto result = module_instance_->callExportFunction(name, encoded_args);
       BOOST_ASSERT_MSG(result.has_value(), result.error().message().data());
 
       auto reset = module_instance_->resetEnvironment();
