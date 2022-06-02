@@ -198,7 +198,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fixture: [ genesis-default, genesis-legacy ]
+        fixture: [ genesis-legacy ]
     name: "[test-${{ matrix.fixture }}] kagome"
     runs-on: ubuntu-20.04
     steps:
@@ -221,7 +221,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fixture: [ genesis-default, genesis-legacy ]
+        fixture: [ genesis-legacy ]
     name: "[test-${{ matrix.fixture }}] gossamer"
     runs-on: ubuntu-20.04
     steps:
