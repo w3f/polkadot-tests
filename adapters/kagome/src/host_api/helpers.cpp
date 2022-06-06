@@ -273,6 +273,7 @@ namespace helpers {
                      module_instance.error().message().data());
 
     module_instance_ = module_instance.value();
+    module_instance_->borrow([]() {});
 
     // Get memory provider
     memory_provider_ = module_instance_->getEnvironment().memory_provider;
