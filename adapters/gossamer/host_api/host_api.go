@@ -21,7 +21,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
+//	"io/ioutil"
 	"os"
 	"strings"
 	"strconv"
@@ -31,7 +31,7 @@ import (
 	"github.com/ChainSafe/gossamer/lib/runtime/storage"
 	"github.com/ChainSafe/gossamer/lib/runtime/wasmer"
 //	"github.com/ChainSafe/gossamer/lib/runtime/wasmtime"
-	"github.com/ChainSafe/gossamer/lib/runtime/life"
+//	"github.com/ChainSafe/gossamer/lib/runtime/life"
 )
 
 // #include <errno.h>
@@ -131,7 +131,6 @@ func executeHostApiTest(function string, inputs []string, environment, runtimePa
 		if err != nil {
 			return fmt.Errorf("Failed to intialize wasmtime environment: %w", err)
 		}
-	*/
 	case "life":
 		// ... using life
 		cfg := &life.Config{
@@ -151,6 +150,7 @@ func executeHostApiTest(function string, inputs []string, environment, runtimePa
 		if err != nil {
 			return fmt.Errorf("Failed to intialize life environment: %w", err)
 		}
+	*/
 	default:
 		return errors.New("Unknown runtime environment: " + environment)
 	}
