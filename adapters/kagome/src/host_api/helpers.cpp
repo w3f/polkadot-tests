@@ -241,9 +241,10 @@ namespace helpers {
         // Prepare wavm environment
         auto compartment =
             std::make_shared<wavm::CompartmentWrapper>("host-api");
+        auto parameters = std::make_shared<wavm::ModuleParams>();
 
-        auto intrinsic_module =
-            std::make_shared<wavm::IntrinsicModule>(compartment);
+        auto intrinsic_module = std::make_shared<wavm::IntrinsicModule>(
+            compartment, parameters->intrinsicMemoryType);
         wavm::registerHostApiMethods(*intrinsic_module);
 
         auto module_cache = std::make_shared<SingleModuleCache>();
@@ -253,14 +254,19 @@ namespace helpers {
             std::make_shared<wavm::InstanceEnvironmentFactory>(trie_db,
                                                                serializer,
                                                                compartment,
+                                                               parameters,
                                                                intrinsic_module,
                                                                host_api_factory,
                                                                header_repo,
                                                                changes_tracker,
                                                                module_cache);
 
-        module_factory = std::make_shared<wavm::ModuleFactoryImpl>(
-            compartment, instance_env_factory, intrinsic_module);
+        module_factory =
+            std::make_shared<wavm::ModuleFactoryImpl>(compartment,
+                                                      parameters,
+                                                      instance_env_factory,
+                                                      intrinsic_module,
+                                                      std::nullopt);
       } break;
     };
 

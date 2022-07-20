@@ -170,11 +170,12 @@ namespace host_api {
     helpers::RuntimeEnvironment environment(args.runtime, args.environment);
 
     if (!router.executeSubcommand(args.function, environment, args.inputs)) {
-      std::cerr << "Unknown or unsupported function: " << args.function << std::endl;
+      std::cerr << "Unknown or unsupported function: " << args.function
+                << std::endl;
 
       std::cerr << "Known functions are:" << std::endl;
       for (auto &&name : router.collectSubcommandNames()) {
-        std::cerr << " - " << name << std::endl;    
+        std::cerr << " - " << name << std::endl;
       }
 
       throw NotImplemented();

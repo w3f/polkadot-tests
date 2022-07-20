@@ -195,14 +195,12 @@ namespace child_storage {
     auto result = environment.execute<helpers::MaybeBuffer>(
         "rtm_ext_default_child_storage_get_version_1", child_key1, key1);
     BOOST_ASSERT_MSG(result.has_value(), "Value not found");
-    BOOST_ASSERT_MSG(result.value().toString() == value1,
-                     "Value is incorrect");
+    BOOST_ASSERT_MSG(result.value().toString() == value1, "Value is incorrect");
 
     result = environment.execute<helpers::MaybeBuffer>(
         "rtm_ext_default_child_storage_get_version_1", child_key1, key2);
     BOOST_ASSERT_MSG(result.has_value(), "Value not found");
-    BOOST_ASSERT_MSG(result.value().toString() == value2,
-                     "Value is incorrect");
+    BOOST_ASSERT_MSG(result.value().toString() == value2, "Value is incorrect");
 
     // Kill child storage
     environment.execute<void>(
@@ -216,7 +214,7 @@ namespace child_storage {
     result = environment.execute<helpers::MaybeBuffer>(
         "rtm_ext_default_child_storage_get_version_1", child_key1, key2);
     BOOST_ASSERT_MSG(!result.has_value(), "Value not killed");
- }
+  }
 
   // Input: child1, child2, key, value
   void exists_version_1(helpers::RuntimeEnvironment environment,
