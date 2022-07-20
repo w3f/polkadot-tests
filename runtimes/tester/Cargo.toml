@@ -1,6 +1,6 @@
 [package]
 name = 'host-tester'
-version = "0.9.22-3b7f057"
+version = "0.9.26-bf54653"
 edition = '2021'
 resolver = "2"
 
