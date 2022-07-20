@@ -17,37 +17,37 @@
 
 ///This file is an interface to run various Polkadot Host functions
 
-#[macro_use]
-extern crate clap;
-extern crate base64;
-extern crate data_encoding;
+//extern crate clap;
+//extern crate base64;
+//extern crate data_encoding;
 
 // For Polkadot Host API
-extern crate hex;
-extern crate sc_executor;
-extern crate sp_core;
-extern crate sp_state_machine;
+//extern crate hex;
+//extern crate sc_executor;
+//extern crate sp_core;
+//extern crate sp_state_machine;
 
-use clap::App;
+use clap::command;
 
-pub mod hash;
-pub mod hasher;
+// Fixture sub-adapters
 mod host_api;
-pub mod scale_codec;
-pub mod trie_tester;
-
-use trie_tester::TrieTester;
+mod scale_codec;
+mod state_trie;
 
 fn main() {
-    let yaml_data = load_yaml!("cli.yaml");
-    let matches = App::from_yaml(yaml_data).get_matches();
+    let matches = command!()
+        .subcommand_required(true)
+        .subcommands( vec![
+            host_api::get_subcommand(),
+            scale_codec::get_subcommand(),
+            state_trie::get_subcommand(),
+        ])
+        .get_matches();
 
-    if let Some(matches) = matches.subcommand_matches("scale-codec") {
-        scale_codec::process_scale_codec_command(matches);
-    } else if let Some(matches) = matches.subcommand_matches("state-trie") {
-        let mut trie_tryer: TrieTester = TrieTester::new(matches);
-        trie_tryer.process_state_trie_command(matches);
-    } else if let Some(matches) = matches.subcommand_matches("host-api") {
-        host_api::process_host_api_tests(matches);
+    match matches.subcommand() {
+        Some(("host-api",  m)) => host_api::process_subcommand(m),
+        Some(("scale-codec", m)) => scale_codec::process_subcommand(m),
+        Some(("state-trie", m)) => state_trie::process_subcommand(m),
+        _ => unimplemented!("Unknown command"),
     }
 }

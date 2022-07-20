@@ -7,23 +7,57 @@ mod trie;
 mod offchain;
 mod utils;
 
-use std::path::Path;
+use std::path::PathBuf;
 
-use clap::ArgMatches;
+use clap::{
+    Arg,
+    ArgMatches,
+    Command,
+    builder::PossibleValuesParser,
+    value_parser,
+};
 use utils::ParsedInput;
 
 const DEFAULT_RUNTIME_PATH: &str = "bin/hostapi-runtime.default.wasm";
 
-pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
-    if let Some(func) = subcmd_matches.value_of("function") {
-        let input: ParsedInput = subcmd_matches.values_of("input").into();
+pub fn get_subcommand() -> Command<'static> {
+    return Command::new("host-api")
+        .about("Host API related tests")
+        .arg(Arg::new("function")
+             .long("function")
+             .required(true)
+             .short('f')
+             .takes_value(true)
+             .value_name("FUNCTION_NAME"))
+        .arg(Arg::new("input")
+             .long("input")
+             .short('i')
+             .takes_value(true)
+             .use_delimiter(true)
+             .value_name("INPUT_VALUES"))
+        .arg(Arg::new("environment")
+             .long("environment")
+             .short('e')
+             .takes_value(true)
+             .value_name("ENVIRONMENT_NAME")
+             .value_parser(PossibleValuesParser::new(["wasmi", "wasmtime"])))
+        .arg(Arg::new("runtime")
+             .default_value(DEFAULT_RUNTIME_PATH)
+             .long("runtime")
+             .short('r')
+             .takes_value(true)
+             .value_name("RUNTIME_PATH")
+             .value_parser(value_parser!(PathBuf)));
+}
 
-        let rtm_path = subcmd_matches
-            .value_of("runtime")
-            .unwrap_or(DEFAULT_RUNTIME_PATH);
-        let mut rtm = utils::Runtime::new(Path::new(rtm_path)).with_offchain();
+pub fn process_subcommand(matches: &ArgMatches) {
+    if let Some(func) = matches.get_one::<String>("function") {
+        let input: ParsedInput = matches.values_of("input").into();
 
-        if let Some(env) = subcmd_matches.value_of("environment") {
+        let rtm_path = matches.get_one::<PathBuf>("runtime").unwrap();
+        let mut rtm = utils::Runtime::new(rtm_path).with_offchain();
+
+        if let Some(env) = matches.value_of("environment") {
             match env {
                 "wasmi" => rtm = rtm.using_wasmi(),
                 "wasmtime" => rtm = rtm.using_wasmtime(),
@@ -31,7 +65,7 @@ pub fn process_host_api_tests(subcmd_matches: &ArgMatches) {
             }
         }
 
-        match func {
+        match func.as_str() {
             // storage api
             "test_storage_init" => storage::test_storage_init(rtm),
             "ext_storage_set_version_1" => storage::ext_storage_set_version_1(rtm, input),

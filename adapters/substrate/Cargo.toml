@@ -1,25 +1,25 @@
 [package]
 name = "substrate-adapter"
-version = "0.9.22-3b7f057"
+version = "0.9.26-bf54653"
 edition = "2021"
 
 [dependencies]
-base64        = "*"
-clap          = {version = "~2.27.0", features = ["yaml"]}
-data-encoding = "*"
-hex           = "*"
-serde_yaml    = "*"
+base64        = "0.13"
+clap          = { version="3", features = ["cargo"] }
+data-encoding = "2.3"
+hex           = "0.4"
+serde_yaml    = "0.8"
 
 # scale-codec
 parity-scale-codec = "3.0"
 
 # state-trie 
-reference-trie = "0.20"
+reference-trie = "0.25"
 keccak-hasher  = "0.15"
-memory-db      = "0.20"
+memory-db      = "0.29"
 hash-db        = "0.15"
-trie-db        = "0.20"
-trie-root      = "0.16"
+trie-db        = "0.23"
+trie-root      = "0.17"
 
 # state-trie blake2 hashing (TODO: Use substrate implementation?)
 sp-serializer      = { git = "https://github.com/paritytech/substrate", branch = "master" }
