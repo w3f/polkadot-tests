@@ -16,39 +16,69 @@
 // along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
 
 ///This file is an interface to run Parity implementation of state trie used in Polkadot Host.
-extern crate clap;
-extern crate hex;
-extern crate reference_trie;
-extern crate serde_yaml;
-extern crate trie_db;
-extern crate trie_root;
 
+use std::path::PathBuf;
+
+use std::collections::BTreeMap;
+
+
+use clap::{Arg, ArgMatches, Command, value_parser};
+use clap::builder::PossibleValuesParser;
+
+use memory_db::{HashKey, MemoryDB};
+
+use reference_trie::GenericNoExtensionLayout;
 use reference_trie::ReferenceTrieStreamNoExt as ReferenceTrieStream;
+
+use sp_core::Blake2Hasher;
+
 use trie_db::TrieMut;
 use trie_root::trie_root_no_extension;
 
-use memory_db::{HashKey, MemoryDB};
-use std::collections::BTreeMap;
 
-use reference_trie::GenericNoExtensionLayout; //H;
-                                              //use trie_db::{TrieRootPrint, trie_visit};
+pub fn get_subcommand() -> Command<'static> {
+    return Command::new("state-trie")
+        .about("State Trie related tests")
+        .arg(Arg::new("function")
+             .index(1)
+             .required(true)
+             .value_parser(PossibleValuesParser::new(["trie-root", "insert-and-delete"])))
+        .arg(Arg::new("state-file")
+             .long("state-file")
+             .required(true)
+             .short('i')
+             .takes_value(true)
+             .value_name("INPUT_FILE")
+             .value_parser(value_parser!(PathBuf)))
+        .arg(Arg::new("keys-in-hex")
+             .action(clap::ArgAction::SetTrue)
+             .help("interpret all keys in the state file as hex encoded")
+             .long("keys-in-hex"))
+        .arg(Arg::new("values-in-hex")
+             .action(clap::ArgAction::SetTrue)
+             .help("interpret all values in the state file as hex encoded")
+             .long("values-in-hex"));
+}
 
-// pub struct PolkadotTrieLayout;
+/// Create TrieTester and read its data according to the command line arg
+pub fn process_subcommand(matches: &ArgMatches) {
 
-// impl TrieLayOut for PolkadotTrieLayout {
-// 	const USE_EXTENSION: bool = false;
-// 	type H = Blake2Hasher;
-// 	type C = ReferenceNodeCodecNoExt<BitMap16>;
-// 	type N = NibbleHalf;
-// 	type CB = Cache16;
-// }
+    let state_file = matches.get_one::<PathBuf>("state-file").unwrap();
 
-pub use primitive_types::{H160, H256, H512};
+    let keys_in_hex = matches.get_one::<bool>("keys-in-hex").unwrap();
+    let values_in_hex = matches.get_one::<bool>("values-in-hex").unwrap();
 
-//use trie::{Encode, Decode, HasCompact, Compact, EncodeAsRef, CompactAs};
-use clap::ArgMatches;
+    let mut tester = TrieTester::new(state_file, keys_in_hex, values_in_hex);
 
-use crate::hasher::blake2::Blake2Hasher;
+
+    let function = matches.get_one::<String>("function").unwrap();
+
+    match function.as_str() {
+        "trie-root" => tester.compute_state_root(),
+        "insert-and-delete" => tester.insert_and_delete_test(),
+        _ => unimplemented!("Unknown function"),
+    }
+}
 
 ///An object to perform various tests on a trie
 pub struct TrieTester {
@@ -57,21 +87,20 @@ pub struct TrieTester {
 }
 
 impl TrieTester {
-    ////Create TrieTester and read its data according to the command line arg
 
-    pub fn new(matches: &ArgMatches) -> Self {
-        let trie_key_value_file = matches.value_of("state-file").unwrap();
-
-        let f = std::fs::File::open(trie_key_value_file).unwrap();
+    /// Read a yaml state file containig key value pairs and return a list of entries
+    pub fn new(state_file_path: &PathBuf, hex_keys: &bool, hex_values: &bool) -> Self {
+        // Attempt to open state file
+        let state_file = std::fs::File::open(state_file_path).unwrap();
 
         // We are deserializing the state data in a BTree
-        let key_value_map: BTreeMap<String, Vec<String>> = serde_yaml::from_reader(f).unwrap();
+        let key_value_map: BTreeMap<String, Vec<String>> = serde_yaml::from_reader(state_file).unwrap();
 
         TrieTester {
             keys: key_value_map["keys"]
                 .iter()
                 .map(|k| {
-                    if matches.is_present("keys-in-hex") {
+                    if *hex_keys {
                         hex::decode(k).expect("Decoding failed")
                     } else {
                         k.clone().into_bytes()
@@ -81,7 +110,7 @@ impl TrieTester {
             values: key_value_map["values"]
                 .iter()
                 .map(|v| {
-                    if matches.is_present("values-in-hex") {
+                    if *hex_values {
                         hex::decode(v).expect("Decoding failed")
                     } else {
                         v.clone().into_bytes()
@@ -91,20 +120,16 @@ impl TrieTester {
         }
     }
 
-    ///read a yaml file containig key value pairs and return a list of key
-
     /// Create a trie from the key value yaml file and compute its hash and print it out.
     ///
     /// # Arguments
     ///
     /// * `Argmatches` - the resulting command line argument matches from clap processor related to state-trie command
     ///
-    fn compute_state_root(&self, _matches: &ArgMatches) {
-        //let trie_value =  key_value_map["data"];
+    fn compute_state_root(&self) {
         let trie_vec: Vec<_> = self.keys.iter().zip(self.values.iter()).collect();
-
         let state_trie_root =
-            trie_root_no_extension::<Blake2Hasher, ReferenceTrieStream, _, _, _>(trie_vec);
+            trie_root_no_extension::<Blake2Hasher, ReferenceTrieStream, _, _, _>(trie_vec, None);
         println!("state root: {:x}", &state_trie_root);
     }
 
@@ -113,7 +138,7 @@ impl TrieTester {
     /// random steps in the key list equal to the first byte of the last hash it has computed and delete
     /// the key it lands on and print the hash of the the new trie. It continue this process till all
     /// keys are deleted.
-    fn insert_and_delete_test(&mut self, _matches: &ArgMatches) {
+    fn insert_and_delete_test(&mut self) {
         let mut memdb = MemoryDB::<_, HashKey<_>, _>::default();
         let mut root = Default::default();
 
@@ -138,18 +163,6 @@ impl TrieTester {
             memtrie.commit();
             println!("state root: {:x}", memtrie.root());
             self.keys.remove(key_index_to_drop);
-        }
-    }
-
-    pub fn process_state_trie_command(&mut self, subcmd_matches: &ArgMatches) {
-        if let Some(trie_subcommand) = subcmd_matches.value_of("trie-subcommand") {
-            if trie_subcommand == "trie-root" {
-                self.compute_state_root(subcmd_matches);
-            } else if trie_subcommand == "insert-and-delete" {
-                self.insert_and_delete_test(subcmd_matches);
-            }
-        } else {
-            panic!("trie-root subcommand is required");
         }
     }
 }
