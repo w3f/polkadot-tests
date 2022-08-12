@@ -74,6 +74,9 @@ function run_tester(self::Tester, host::String, duration::Number)
         exec = `polkadot`
         args = `--alice --chain $genesis -d $datadir`
         ENV["RUST_LOG"] = "runtime=debug"
+    elseif host == "smoldot"
+        exec = `smoldot` 
+        args = `--chain $genesis --tmp`
     elseif host == "kagome"
         exec = `kagome`
         args = `--chain $genesis -d $datadir --bootnodes /dns/localhost/tcp/30363/p2p/12D3KooWEgUjBV5FJAuBSoNMRYFRHjV7PjZwRQ7b43EKX9g7D6xV`
