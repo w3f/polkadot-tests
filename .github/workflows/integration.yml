@@ -234,6 +234,29 @@ jobs:
     - name: Run substrate with tester genesis
       run: ./runtests.jl substrate ${{ matrix.fixture }}
 
+  test-smoldot:
+    needs: [ build-host-smoldot, build-runtime-tester ]
+    strategy:
+      fail-fast: false
+      matrix:
+        fixture: [ genesis-default, genesis-legacy ]
+    name: "[test-${{ matrix.fixture }}] smoldot"
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
+      with:
+        name: smoldot-host
+        path: bin
+    - run: chmod +x bin/smoldot
+    - uses: actions/download-artifact@v3
+      with:
+        name: tester-runtime-${{ matrix.fixture }}
+        path: runtimes/tester
+    - name: Run smoldot with tester genesis
+      run: ./runtests.jl smoldot ${{ matrix.fixture }}
+
   test-kagome:
     needs: [ build-host-kagome, build-runtime-tester ]
     strategy:
