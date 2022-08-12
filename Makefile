@@ -1,4 +1,4 @@
-HOSTS    = substrate kagome gossamer
+HOSTS    = substrate smoldot kagome gossamer
 RUNTIMES = hostapi tester
 
 ALIASES_ADAPTER := $(patsubst %,%-adapter,$(HOSTS))
