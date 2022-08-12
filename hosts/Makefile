@@ -1,7 +1,7 @@
-.PHONY: all substrate kagome gossamer sync sync-adapter-substrate sync-runtime-tester version clean
+.PHONY: all substrate smoldot kagome gossamer sync sync-adapter-substrate sync-runtime-tester version clean
 
 
-all: substrate kagome gossamer
+all: substrate smoldot kagome gossamer
 
 
 substrate:
@@ -10,7 +10,7 @@ substrate:
 
 smoldot:
 	cd smoldot && cargo build --release
-	cp smoldot/target/release/smoldot ../bin/	
+	cp smoldot/target/release/full-node ../bin/smoldot	
 
 kagome:
 	cmake -DCMAKE_BUILD_TYPE=Release -DHUNTER_CONFIGURATION_TYPES=Release \
