@@ -94,25 +94,21 @@ func ProcessHostApiCommand(args []string) {
 // Main hostapi test executor
 func executeHostApiTest(function string, inputs []string, environment, runtimePath string) error {
 	// Initialize storage
-	store, err := storage.NewTrieState(nil)
-	if err != nil {
-		return fmt.Errorf("Failed to initialize storage: %w", err)
-	}
-
+	store := storage.NewTrieState(nil)
 	store.Set([]byte(":code"), []byte{})
 
 	// Initialize runtime environment..
 	var rtm runtime.Instance
+	var err error
 	switch environment {
 	case "wasmer":
 		// ... using wasmer
-		cfg := &wasmer.Config{
-			Imports: wasmer.ImportsNodeRuntime,
+		cfg := wasmer.Config{
+			Storage: store,
+			Keystore: keystore.NewGlobalKeystore(),
+			LogLvl: 2, // = Warn
+			//testVersion = &runtime.Version{}
 		}
-		cfg.Storage = store
-		cfg.Keystore = keystore.NewGlobalKeystore()
-		cfg.LogLvl = 2 // = Warn
-
 		rtm, err = wasmer.NewInstanceFromFile(runtimePath, cfg)
 		if err != nil {
 			return fmt.Errorf("Failed to intialize wasmer environment: %w", err)
