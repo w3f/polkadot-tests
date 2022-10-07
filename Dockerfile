@@ -18,7 +18,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         julia 
 
 # Setup environment
-#RUN git submodule update --init
+COPY . .
+RUN git submodule update --init
 
 ## Install Rust
 ENV PATH="/root/.cargo/bin:${PATH}"
@@ -29,8 +30,6 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
 ## For C++/Kagome
 ENV CC=gcc-8
 ENV CXX=g++-8
-
-COPY . .
 
 RUN make runtimes
 RUN make adapters
