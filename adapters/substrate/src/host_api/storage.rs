@@ -282,3 +282,30 @@ pub fn ext_storage_next_key_version_1(mut rtm: Runtime, input: ParsedInput) {
         assert!(res.is_none());
     }
 }
+
+pub fn ext_storage_set_version_1_with_child_key(mut rtm: Runtime, input: ParsedInput) {
+    // Parse inputs
+    let child_key = input.get(0);
+    // Skipping index `1`
+    let key = input.get(2);
+    let value = input.get(3);
+
+    // Set key/value
+    let _ = rtm.call(
+        "rtm_ext_default_child_storage_set_version_1",
+        &(child_key, key, value).encode(),
+    );
+
+    // Get child storage root
+    let child_root = rtm.call_and_decode::<Vec<u8>>(
+        "rtm_ext_default_child_storage_root_version_1",
+        &child_key.encode(),
+    );
+
+    // Get value of child storage key itself
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &child_key.encode())
+        .unwrap();
+
+    assert_eq!(res, child_root);
+}

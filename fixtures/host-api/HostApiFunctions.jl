@@ -29,7 +29,8 @@ module HostApiFunctions
 		"ext_default_child_storage_set_version_1",
 		"ext_default_child_storage_get_version_1",
 		"ext_default_child_storage_clear_version_1",
-		"ext_default_child_storage_exists_version_1"
+		"ext_default_child_storage_exists_version_1",
+		"ext_storage_set_version_1_with_child_key"
 	]
 
 	const child_prefix_key_value_key_value = [

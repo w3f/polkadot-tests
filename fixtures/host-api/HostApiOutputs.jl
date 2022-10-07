@@ -211,6 +211,17 @@ module HostApiOutputs
         "true\n",
         "true\n",
         "true\n",
+        # ext_storage_set_version_1_with_child_key
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
     ]
 
     const child_prefix_key_value_key_value = [
