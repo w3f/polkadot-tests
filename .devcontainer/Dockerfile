@@ -27,8 +27,8 @@ USER vscode
 ## Install Rust
 ENV PATH="/home/vscode/.cargo/bin:${PATH}"
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
-    --default-toolchain nightly
-RUN rustup target add wasm32-unknown-unknown
+    --default-toolchain nightly \
+    --target wasm32-unknown-unknown
 
 ## For C++/Kagome
 ENV CC=gcc-8
