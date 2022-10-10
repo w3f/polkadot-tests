@@ -332,7 +332,12 @@ pub fn ext_storage_set_version_1_try_set_child_key(mut rtm: Runtime, input: Pars
     );
 
     // Set NON-child key/value with identitcal key
-    let _ = rtm.call("rtm_ext_storage_set_version_1", &(child_key, &[0]).encode());
+    let _ = rtm.call("rtm_ext_storage_set_version_1", &(child_key, vec![1]).encode());
+
+    // Get valid key (TODO: looks like this is not possible?)
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &child_key.encode());
+    assert!(res.is_none());
 
     // Get child value (must not be destroyed)
     let res = rtm
