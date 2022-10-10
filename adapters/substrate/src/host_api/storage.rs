@@ -296,16 +296,19 @@ pub fn ext_storage_set_version_1_with_child_key(mut rtm: Runtime, input: ParsedI
         &(child_key, key, value).encode(),
     );
 
-    // Get child storage root
-    let child_root = rtm.call_and_decode::<Vec<u8>>(
-        "rtm_ext_default_child_storage_root_version_1",
-        &child_key.encode(),
-    );
-
-    // Get value of child storage key itself
+    // Get value
     let res = rtm
-        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &child_key.encode())
+        .call_and_decode::<Option<Vec<u8>>>(
+            "rtm_ext_default_child_storage_get_version_1",
+            &(child_key, key).encode(),
+        )
         .unwrap();
 
-    assert_eq!(res, child_root);
+    assert_eq!(res, value);
+
+    // Try to get value of child storage key itself
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &child_key.encode());
+
+    assert!(res.is_none());
 }
