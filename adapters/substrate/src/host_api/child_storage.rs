@@ -49,7 +49,7 @@ pub fn ext_default_child_storage_set_version_1_invalid_child_key(mut rtm: Runtim
     let child_key = input.get(0);
     // Skipping index `1`
     let key = input.get(2);
-    let value = input.get(3);
+    // Skipping index `3`
 
     // Try to get child value from child storage (note that `child_key` does not exist)
     let res = rtm.call_and_decode::<Option<Vec<u8>>>(
