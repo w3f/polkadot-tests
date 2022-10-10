@@ -211,7 +211,18 @@ module HostApiOutputs
         "true\n",
         "true\n",
         "true\n",
-        # ext_storage_set_version_1_with_child_key
+        # ext_storage_set_version_1_try_fetch_child_key
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        # ext_storage_set_version_1_try_set_child_key
         nothing,
         nothing,
         nothing,

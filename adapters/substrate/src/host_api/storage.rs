@@ -283,20 +283,58 @@ pub fn ext_storage_next_key_version_1(mut rtm: Runtime, input: ParsedInput) {
     }
 }
 
-pub fn ext_storage_set_version_1_with_child_key(mut rtm: Runtime, input: ParsedInput) {
+pub fn ext_storage_set_version_1_try_fetch_child_key(mut rtm: Runtime, input: ParsedInput) {
     // Parse inputs
     let child_key = input.get(0);
     // Skipping index `1`
     let key = input.get(2);
     let value = input.get(3);
 
-    // Set key/value
+    // Set child key/value
     let _ = rtm.call(
         "rtm_ext_default_child_storage_set_version_1",
         &(child_key, key, value).encode(),
     );
 
-    // Get value
+    // Get child value
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>(
+            "rtm_ext_default_child_storage_get_version_1",
+            &(child_key, key).encode(),
+        )
+        .unwrap();
+    assert_eq!(res, value);
+
+    // Try to get value of child storage key itself (must fail).
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &child_key.encode());
+    assert!(res.is_none());
+
+    // Try to read value of child storage key itself (must fail).
+    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
+        "rtm_ext_storage_read_version_1",
+        &(child_key, 0, value.len() as u32).encode(),
+    );
+    assert!(res.is_none());
+}
+
+pub fn ext_storage_set_version_1_try_set_child_key(mut rtm: Runtime, input: ParsedInput) {
+    // Parse inputs
+    let child_key = input.get(0);
+    // Skipping index `1`
+    let key = input.get(2);
+    let value = input.get(3);
+
+    // Set child key/value
+    let _ = rtm.call(
+        "rtm_ext_default_child_storage_set_version_1",
+        &(child_key, key, value).encode(),
+    );
+
+    // Set NON-child key/value with identitcal key
+    let _ = rtm.call("rtm_ext_storage_set_version_1", &(child_key, &[0]).encode());
+
+    // Get child value (must not be destroyed)
     let res = rtm
         .call_and_decode::<Option<Vec<u8>>>(
             "rtm_ext_default_child_storage_get_version_1",
@@ -305,10 +343,4 @@ pub fn ext_storage_set_version_1_with_child_key(mut rtm: Runtime, input: ParsedI
         .unwrap();
 
     assert_eq!(res, value);
-
-    // Try to get value of child storage key itself
-    let res = rtm
-        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &child_key.encode());
-
-    assert!(res.is_none());
 }
