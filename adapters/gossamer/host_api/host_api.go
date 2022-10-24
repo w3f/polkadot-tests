@@ -25,6 +25,7 @@ import (
 	"os"
 	"strings"
 	"strconv"
+	"testing"
 
 	"github.com/ChainSafe/gossamer/lib/keystore"
 	"github.com/ChainSafe/gossamer/lib/runtime"
@@ -107,8 +108,11 @@ func executeHostApiTest(function string, inputs []string, environment, runtimePa
 			Storage: store,
 			Keystore: keystore.NewGlobalKeystore(),
 			LogLvl: 2, // = Warn
-			//testVersion = &runtime.Version{}
 		}
+
+		// Work	around missing Core_version
+		cfg.SetTestVersion(&testing.T{}, runtime.Version{})
+
 		rtm, err = wasmer.NewInstanceFromFile(runtimePath, cfg)
 		if err != nil {
 			return fmt.Errorf("Failed to intialize wasmer environment: %w", err)
