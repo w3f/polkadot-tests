@@ -7,3 +7,6 @@
 [submodule "hosts/substrate"]
 	path = hosts/substrate
 	url = https://github.com/paritytech/polkadot.git
+[submodule "hosts/smoldot"]
+	path = hosts/smoldot
+	url = https://github.com/paritytech/smoldot.git

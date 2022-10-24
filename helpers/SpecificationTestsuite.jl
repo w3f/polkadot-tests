@@ -9,6 +9,7 @@ module SpecificationTestsuite
     "List of all known implementations"
     const ALL_IMPLEMENTATIONS = [
       "substrate"
+      "smoldot"
       "kagome"
       "gossamer"
     ]

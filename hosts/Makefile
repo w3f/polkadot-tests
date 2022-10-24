@@ -1,12 +1,16 @@
-.PHONY: all substrate kagome gossamer sync sync-adapter-substrate sync-runtime-tester version clean
+.PHONY: all substrate smoldot kagome gossamer sync sync-adapter-substrate sync-runtime-tester version clean
 
 
-all: substrate kagome gossamer
+all: substrate smoldot kagome gossamer
 
 
 substrate:
 	cd substrate && SKIP_WASM_BUILD=1 cargo build --release
 	cp substrate/target/release/polkadot ../bin/
+
+smoldot:
+	cd smoldot && cargo build --release
+	cp smoldot/target/release/full-node ../bin/smoldot	
 
 kagome:
 	cmake -DCMAKE_BUILD_TYPE=Release -DHUNTER_CONFIGURATION_TYPES=Release \
@@ -39,10 +43,11 @@ sync-adapter-gossamer:
 
 version:
 	@echo "substrate-host: $$(cd substrate && git describe)"
+	@echo "smoldot-host: $$(cd smoldot && git describe)"
 	@echo "kagome-host: $$(cd kagome && git describe)"
 	@echo "gossamer-host: $$(cd gossamer && git describe --tags)"
 
 clean:
-	rm -rf substrate/target
+	rm -rf {substrate,smoldot}/target
 	rm -rf kagome/build
 	rm  -f gossamer/gossamer
