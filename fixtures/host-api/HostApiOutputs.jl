@@ -189,6 +189,17 @@ module HostApiOutputs
         "value-added\n",
         "Reactive\n",
         "secondary\n",
+        # ext_default_child_storage_set_version_1_invalid_child_key
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
         # ext_default_child_storage_clear_version_1
         nothing,
         nothing,
@@ -211,6 +222,28 @@ module HostApiOutputs
         "true\n",
         "true\n",
         "true\n",
+        # ext_storage_set_version_1_try_fetch_child_key
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        # ext_storage_set_version_1_try_set_child_key
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
+        nothing,
     ]
 
     const child_prefix_key_value_key_value = [

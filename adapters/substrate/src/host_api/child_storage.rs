@@ -44,6 +44,37 @@ pub fn ext_default_child_storage_get_version_1(rtm: Runtime, input: ParsedInput)
     ext_default_child_storage_set_version_1(rtm, input)
 }
 
+pub fn ext_default_child_storage_set_version_1_invalid_child_key(mut rtm: Runtime, input: ParsedInput) {
+    // Parse inputs
+    let child_key = input.get(0);
+    // Skipping index `1`
+    let key = input.get(2);
+    let value = input.get(3);
+
+    // Set NON-child key/value
+    let _ = rtm.call("rtm_ext_storage_set_version_1", &(key, value).encode());
+
+    // Get NON-child value
+    let res = rtm
+        .call_and_decode::<Option<Vec<u8>>>("rtm_ext_storage_get_version_1", &key.encode())
+        .unwrap();
+    assert_eq!(res, value);
+
+    // Try to get child value from NON-child key
+    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
+        "rtm_ext_default_child_storage_get_version_1",
+        &(key, key).encode(),
+    );
+    assert!(res.is_none());
+
+    // Try to get child value from NON-child key (note that `child_key` does not exist)
+    let res = rtm.call_and_decode::<Option<Vec<u8>>>(
+        "rtm_ext_default_child_storage_get_version_1",
+        &(child_key, key).encode(),
+    );
+    assert!(res.is_none());
+}
+
 pub fn ext_default_child_storage_read_version_1(mut rtm: Runtime, input: ParsedInput) {
     // Parse inputs
     let child_key1 = input.get(0);

@@ -79,6 +79,8 @@ pub fn process_subcommand(matches: &ArgMatches) {
             "ext_storage_append_version_1" => storage::ext_storage_append_version_1(rtm, input),
             "ext_storage_root_version_1" => storage::ext_storage_root_version_1(rtm, input),
             "ext_storage_next_key_version_1" => storage::ext_storage_next_key_version_1(rtm, input),
+            "ext_storage_set_version_1_try_fetch_child_key" => storage::ext_storage_set_version_1_try_fetch_child_key(rtm, input),
+            "ext_storage_set_version_1_try_set_child_key" => storage::ext_storage_set_version_1_try_set_child_key(rtm, input),
 
             // child storage api
             "ext_default_child_storage_set_version_1" => {
@@ -86,6 +88,9 @@ pub fn process_subcommand(matches: &ArgMatches) {
             }
             "ext_default_child_storage_get_version_1" => {
                 child_storage::ext_default_child_storage_get_version_1(rtm, input)
+            }
+            "ext_default_child_storage_set_version_1_invalid_child_key" => {
+                child_storage::ext_default_child_storage_set_version_1_invalid_child_key(rtm, input)
             }
             "ext_default_child_storage_read_version_1" => {
                 child_storage::ext_default_child_storage_read_version_1(rtm, input)
