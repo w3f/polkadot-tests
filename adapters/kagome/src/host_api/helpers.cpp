@@ -173,7 +173,7 @@ namespace helpers {
     auto chain_sub_engine = std::make_shared<ChainSubscriptionEngine>();
 
     auto changes_tracker = std::make_shared<StorageChangesTrackerImpl>(
-        trie_factory, codec, storage_sub_engine, chain_sub_engine);
+        storage_sub_engine, chain_sub_engine);
 
     // Initialize crypto providers
     auto pbkdf2_provider = std::make_shared<Pbkdf2ProviderImpl>();
@@ -204,7 +204,6 @@ namespace helpers {
     // Initialize host api factory
     auto host_api_factory =
         std::make_shared<HostApiFactoryImpl>(OffchainExtensionConfig{},
-                                             changes_tracker,
                                              sr25519_provider,
                                              ecdsa_provider,
                                              ed25519_provider,
@@ -277,9 +276,7 @@ namespace helpers {
     auto module_instance = module.value()->instantiate();
     BOOST_ASSERT_MSG(module_instance.has_value(),
                      module_instance.error().message().data());
-
     module_instance_ = module_instance.value();
-    module_instance_->borrow([]() {});
 
     // Get memory provider
     memory_provider_ = module_instance_->getEnvironment().memory_provider;
