@@ -1,6 +1,6 @@
 [package]
 name = "substrate-adapter"
-version = "0.9.26-bf54653"
+version = "0.9.30-a060975"
 edition = "2021"
 
 [dependencies]
@@ -16,7 +16,7 @@ parity-scale-codec = "3.0"
 # state-trie 
 reference-trie = "0.25"
 keccak-hasher  = "0.15"
-memory-db      = "0.29"
+memory-db      = "0.30"
 hash-db        = "0.15"
 trie-db        = "0.23"
 trie-root      = "0.17"
