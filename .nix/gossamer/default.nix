@@ -1,14 +1,12 @@
-{ gossamer-submodule, buildGo117Module, patchelf, glibc }:
+{ lib, gossamer-submodule, buildGo118Module, patchelf, glibc }:
 
-buildGo117Module rec {
+buildGo118Module rec {
   pname = "gossamer-host";
 
   src = gossamer-submodule; 
   version = gossamer-submodule.shortRev;
 
-  #sourceRoot = "source/hosts/gossamer";
-
-  patches = [ ./config_path.patch ];
+  #patches = [ ./config_path.patch ];
 
   postPatch = ''
     substituteAllInPlace chain/dev/defaults.go
@@ -17,9 +15,9 @@ buildGo117Module rec {
     substituteAllInPlace chain/polkadot/defaults.go
   '';
 
-  runVend = true;
+  proxyVendor = true;
 
-  vendorSha256 = "XSRjkPrM9A7i3ooWzA/ZWnTWuKqs8JvhdJmYa4QyZxM=";
+  vendorSha256 = "8eeRiC0ISqEboV7QkwJyVnxJwomfSidGmo3J2OkPMfE=";
 
   subPackages = [ "cmd/gossamer" ];
 
@@ -30,7 +28,7 @@ buildGo117Module rec {
   postInstall = ''
     mkdir $out/lib
 
-    cp vendor/github.com/wasmerio/go-ext-wasm/wasmer/libwasmer.so $out/lib
+    cp /build/go/pkg/mod/github.com/wasmerio/go-ext-wasm@*/wasmer/libwasmer.so $out/lib
     patchelf --set-rpath "$out/lib:${glibc}/lib" $out/bin/gossamer
 
     mkdir $out/share

@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "scale-codec-cpp";
-  version = "1.0.2";
+  version = "1.0.6";
 
   src = fetchFromGitHub {
     owner = "soramitsu";
     repo = pname;
     rev = "v${version}";
-    sha256 = "nBYBUZD7rFLsNC7h6crkfx5g9NbbTgTNXoMjTAAS1UM=";
+    sha256 = "UotIC2m78Ma5Ep3kLgeUWbPVLNREmX/TncCFfkkDlJ8=";
   };
 
   nativeBuildInputs = [ cmake ];

@@ -121,7 +121,11 @@ export CXX=g++-8
 
 ## Using Nix
 
-While we have experimental nix flake support, you will need to either patch nix (e.g. with reverted [#4922](https://github.com/NixOS/nix/pull/4922)) or tell it to also fetch submodules (see [#5434](https://github.com/NixOS/nix/pull/5434)). As flake are itself not official released, we will leave it at that for now. Once flakes and submodules within them stabelize, this will change.
+We provide full nix flake integration, but for most packages it is necessary to include git submodules for a successful build, i.e. using the `?submodules=1` suffix in the flake url:
+
+```sh
+nix build github:w3f/polkadot-tests?submodules=1
+```
 
 # Running tests
 

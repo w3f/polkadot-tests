@@ -1,13 +1,13 @@
-{ mkShell, rustWasmPlatform, cmake, openssl, pkgconfig, protobuf, llvmPackages, rocksdb }:
+{ lib, mkShell, rustToolchain, cmake, openssl, pkgconfig, protobuf, llvmPackages, rocksdb }:
 
 let
-  version = rustWasmPlatform.rust.rustc.name;
+  version = lib.getVersion rustToolchain;
 in
   mkShell {
     name = "substrate-env-${version}";
 
     nativeBuildInputs = [
-      rustWasmPlatform.rust.cargo
+      rustToolchain
       cmake # for wabt-sys
     ];
 

@@ -8,13 +8,13 @@
 
 stdenv.mkDerivation rec {
   pname = "soralog";
-  version = "0.0.9";
+  version = "0.1.4";
 
   src = fetchFromGitHub {
     owner  = "soramitsu";
     repo   = "soralog";
     rev    = "v${version}";
-    sha256 = "d2wufgRbEHF1Kzu8QH6RncTkRfCMZTjP9qqtbtJoNrI=";
+    sha256 = "6HU1Zz401e6eD0JRr3nLxDG4MGrqHb9+qWV8T6aIPAI=";
   };
 
   patches = [ ./yaml-cpp.patch ];
@@ -25,5 +25,5 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = [ libyamlcpp fmt_6 ];
 
-  cmakeFlags = [ "-DHUNTER_ENABLED=OFF" "-DEXAMPLES=OFF" ];
+  cmakeFlags = [ "-DHUNTER_ENABLED=OFF" "-DTESTING=OFF" "-DEXAMPLES=OFF" ];
 }

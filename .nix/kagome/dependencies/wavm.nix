@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "WAVM";
-  version = "1.0.3";
+  version = "1.0.6";
 
   src = fetchFromGitHub {
     owner = "soramitsu";
     repo = "WAVM";
     rev = version;
-    sha256 = "Rds1wa1JwwgoEuAdi6tNz80Bi+bF7bKk+aDGRpdAZ7w=";
+    sha256 = "RL8iam69DO2TkcSAqJG2CW/pgidFPFKJ2jHyY1HjHnc=";
   };
 
   nativeBuildInputs = [ cmake ];
