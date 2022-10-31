@@ -6,7 +6,7 @@
 , protobuf
 }:
 
-naersk.buildPackage {
+naersk.buildPackage rec {
   name = "substrate-host";
 
   src = substrate-submodule;
@@ -22,4 +22,8 @@ naersk.buildPackage {
 
   # Needs WASM runtimes.
   doCheck = false;
+
+  postInstall = ''
+    mv $out/bin/polkadot $out/bin/${name}
+  '';
 }

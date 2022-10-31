@@ -6,7 +6,7 @@ buildGo118Module rec {
   src = gossamer-submodule; 
   version = gossamer-submodule.shortRev;
 
-  #patches = [ ./config_path.patch ];
+  patches = [ ./config_path.patch ];
 
   postPatch = ''
     substituteAllInPlace chain/dev/defaults.go
@@ -30,6 +30,8 @@ buildGo118Module rec {
 
     cp /build/go/pkg/mod/github.com/wasmerio/go-ext-wasm@*/wasmer/libwasmer.so $out/lib
     patchelf --set-rpath "$out/lib:${glibc}/lib" $out/bin/gossamer
+
+    mv $out/bin/gossamer $out/bin/${pname}
 
     mkdir $out/share
     cp -r chain/* $out/share
