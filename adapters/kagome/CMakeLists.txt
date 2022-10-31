@@ -59,8 +59,8 @@ message(STATUS "Download from binary cache: ${HUNTER_USE_CACHE_SERVERS}")
 # Setup hunter
 include(cmake/HunterGate.cmake)
 HunterGate(
-  URL "https://github.com/soramitsu/soramitsu-hunter/archive/refs/tags/v0.23.257-soramitsu31.zip"
-  SHA1 "a13dcf6dae9e926441715e67c409838630f6f3e0"
+  URL "https://github.com/soramitsu/soramitsu-hunter/archive/refs/tags/v0.23.257-soramitsu35.zip"
+  SHA1 "d0ca69603681f322884c6066161b0dea09af4905"
   FILEPATH "${CMAKE_SOURCE_DIR}/cmake/HunterConfig.cmake"
 )
 
