@@ -1,6 +1,6 @@
-{ polkadot-tests, naerskWasm, protobuf }:
+{ polkadot-tests, naersk, protobuf }:
 
-naerskWasm.buildPackage {
+naersk.buildPackage {
   pname = "tester-runtime";
   inherit (polkadot-tests) version;
 

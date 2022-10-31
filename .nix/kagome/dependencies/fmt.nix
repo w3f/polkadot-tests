@@ -1,5 +1,6 @@
 { stdenv, fetchFromGitHub, fetchpatch, cmake, enableShared ? true }:
 
+# NOTE: Hunter uses 6.1.2
 stdenv.mkDerivation rec {
   pname = "fmt";
   version = "6.2.1";

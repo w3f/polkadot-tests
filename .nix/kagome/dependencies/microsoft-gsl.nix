@@ -1,5 +1,6 @@
 { stdenv, fetchFromGitHub, catch, cmake }:
 
+# NOTE: Hunter uses 2.0.0-p0
 stdenv.mkDerivation rec {
   pname = "microsoft_gsl";
   version = "2.1.0+cmake";

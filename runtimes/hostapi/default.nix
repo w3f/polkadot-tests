@@ -1,6 +1,6 @@
-{ polkadot-tests, naerskWasm }:
+{ polkadot-tests, naersk }:
 
-naerskWasm.buildPackage rec {
+naersk.buildPackage rec {
   name = "hostapi-runtime";
   inherit (polkadot-tests) version;
 

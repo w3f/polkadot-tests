@@ -2,16 +2,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "schnorrkel_crust";
-  version = "1.0.5";
+  version = "1.0.8";
 
   src = fetchFromGitHub {
     owner = "Soramitsu";
     repo = "soramitsu-sr25519-crust";
-    rev = version;
-    sha256 = "EiuqKkU0BhWF7LaQIMiDH1POK0yz8YN3Lk1IsjVoFKc=";
+    rev = "62795502ac50b82f3d5a1b084513f6defea002ba";
+    sha256 = "qModF/eSqOsuYCjBZk/ikmI8Gov9BKNzjqdPgMwa6dE=";
   };
 
-  cargoSha256 = "G1LI9Ibx/3t2E2wzMmYTQrK8hrV9+4zYR2sm8iX2G84=";
+  cargoSha256 = "4Gx/EoKsQftrwtI9pXj1N/2/pqkwG7s+OImdGKEnmNY=";
 
   postInstall = ''
     cp -r include $out

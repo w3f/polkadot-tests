@@ -15,16 +15,15 @@
 , withTests ? false
 }:
 
-
 stdenv.mkDerivation rec {
-  name = "cpp-libp2p-${lib.substring 0 7 version}";
-  version = "69299a8182a976fbe6654ed367ba1fb5d89800e0";
+  pname = "cpp-libp2p";
+  version = "0.1.7";
 
   src = fetchFromGitHub {
     owner = "soramitsu";
     repo = "cpp-libp2p";
-    rev = version;
-    sha256 = "YB3Di5QEehWY0tsLp9TJUIvwdy6QXj/V0HB+aaHtubU=";
+    rev = "v${version}";
+    sha256 = "toP3VnGs2HwfhpuQC94hSdPZXNFotYTzo1eRY33xfVg=";
   };
 
   patches = [
@@ -64,5 +63,3 @@ stdenv.mkDerivation rec {
     "-DEXPOSE_MOCKS=true"
   ];
 }
-
-

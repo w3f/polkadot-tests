@@ -1,12 +1,12 @@
 { substrate-submodule
 , lib
-, naerskWasm
+, naersk
 , clang
 , llvmPackages
 , protobuf
 }:
 
-naerskWasm.buildPackage {
+naersk.buildPackage {
   name = "substrate-host";
 
   src = substrate-submodule;

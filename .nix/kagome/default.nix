@@ -7,7 +7,7 @@
 , boost172
 , microsoft-gsl_cmake
 , soralog
-, leveldb_cmake
+, rocksdb_cmake
 , rapidjson_cmake
 , jsonrpc-lean
 , xxHash_cmake
@@ -43,7 +43,6 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     # Working upstream dependencies 
-    libnsl
     protobuf
 
     # Patched upstream dependencies
@@ -59,11 +58,12 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = [
     boost172
+    libnsl
     openssl
     zstd
 
     binaryen_cmake
-    leveldb_cmake
+    rocksdb_cmake
     libsecp256k1_cmake
     microsoft-gsl_cmake
     xxHash_cmake

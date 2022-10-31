@@ -1,11 +1,11 @@
 diff --git a/core/runtime/common/CMakeLists.txt b/core/runtime/common/CMakeLists.txt
-index 336df1ef..50cbb313 100644
+index 4220f3b7..659a4687 100644
 --- a/core/runtime/common/CMakeLists.txt
 +++ b/core/runtime/common/CMakeLists.txt
-@@ -26,7 +26,7 @@ add_library(uncompress_if_needed
+@@ -25,7 +25,7 @@ add_library(uncompress_if_needed
+     uncompress_code_if_needed.cpp
      )
  target_link_libraries(uncompress_if_needed
-     buffer
 -    zstd::libzstd_static
 +    zstd
      )

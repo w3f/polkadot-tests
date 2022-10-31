@@ -1,8 +1,8 @@
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index 6fd79e1..36c6871 100644
+index 58957115..abddbb96 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
-@@ -37,7 +37,7 @@ find_package(OpenSSL REQUIRED)
+@@ -34,7 +34,7 @@ find_package(OpenSSL REQUIRED)
  
  # https://developers.google.com/protocol-buffers/
  hunter_add_package(Protobuf)

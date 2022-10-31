@@ -8,17 +8,49 @@
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1634005973,
-        "narHash": "sha256-BGEajbOhpnPe3vii1KYz/5PYkQ2+BjM4ZSpAntKy46c=",
+        "lastModified": 1666938628,
+        "narHash": "sha256-7lY6BsMV8eAOWg+9waziubnim9QYrWMF7nTRclzlvHw=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "d2d28502a9dba5b296f6daa055852147df2d0480",
+        "rev": "973c96878c0ed1eaffebee51c7a30855a2bc168f",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "fenix",
         "type": "github"
+      }
+    },
+    "gossamer-submodule": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1666365861,
+        "narHash": "sha256-0baCrfi861lu4ErRfblzD+KkzWfNzYpfQd3G59ECeKs=",
+        "ref": "69031a6f518f7e7bb51b3b1a016965bd4a5a1eae",
+        "rev": "69031a6f518f7e7bb51b3b1a016965bd4a5a1eae",
+        "revCount": 1423,
+        "type": "git",
+        "url": "file:./hosts/gossamer"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:./hosts/gossamer"
+      }
+    },
+    "kagome-submodule": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1666973806,
+        "narHash": "sha256-MXf2m47cu4S4ydGX23KYkElCLTSxyRFMvQzTZgBcE00=",
+        "ref": "dbee05c648f2c3440699e74fa38fbf7c4ce91ca0",
+        "rev": "dbee05c648f2c3440699e74fa38fbf7c4ce91ca0",
+        "revCount": 818,
+        "type": "git",
+        "url": "file:./hosts/kagome"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:./hosts/kagome"
       }
     },
     "naersk": {
@@ -28,26 +60,25 @@
         ]
       },
       "locked": {
-        "lastModified": 1641569028,
-        "narHash": "sha256-jLSxvjyU80mUtZFOEU6M4tyvbGz2glW9cL3Wu5tOaQg=",
-        "owner": "FlorianFranzen",
+        "lastModified": 1662220400,
+        "narHash": "sha256-9o2OGQqu4xyLZP9K6kNe1pTHnyPz0Wr3raGYnr9AIgY=",
+        "owner": "nix-community",
         "repo": "naersk",
-        "rev": "04b81187f6e6bba01cf4034cd55a99c1453348c6",
+        "rev": "6944160c19cb591eb85bbf9b2f2768a935623ed3",
         "type": "github"
       },
       "original": {
-        "owner": "FlorianFranzen",
-        "ref": "git-deps",
+        "owner": "nix-community",
         "repo": "naersk",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1637929634,
-        "narHash": "sha256-HtvB8lqSjUtUlHq4TuMz4EBBWqT8Sg0LdII3OYf2jNQ=",
-        "path": "/nix/store/47sp6hykbcwcnmg8dnsd4np4dr7vxs54-source",
-        "rev": "1909e7ee0d189051d54be2bc959b15ea81bf5784",
+        "lastModified": 1660926553,
+        "narHash": "sha256-19Ib1b7Ny+yGhnxwnH1KhhB2hvALuNuqevA6XzqkQmo=",
+        "path": "/nix/store/5mdm97ryfgnsh02h7jiragdmcgh6vbvp-source",
+        "rev": "00e376e3f3c22d991052dfeaf154c42b09deeb29",
         "type": "path"
       },
       "original": {
@@ -58,35 +89,54 @@
     "root": {
       "inputs": {
         "fenix": "fenix",
+        "gossamer-submodule": "gossamer-submodule",
+        "kagome-submodule": "kagome-submodule",
         "naersk": "naersk",
         "nixpkgs": "nixpkgs",
+        "substrate-submodule": "substrate-submodule",
         "utils": "utils"
       }
     },
     "rust-analyzer-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1633982307,
-        "narHash": "sha256-5GNbEo5Xdy6Qyd/NDBFNF4e3TTfgPh9P9oIee0sGFY0=",
-        "owner": "rust-analyzer",
+        "lastModified": 1666877865,
+        "narHash": "sha256-j137oEYf9TwTdOA9wWBg/XL4XITsfoGH7i6Rutmbc3s=",
+        "owner": "rust-lang",
         "repo": "rust-analyzer",
-        "rev": "098284aec8c8282e77682deace6c61603a88ee01",
+        "rev": "d022e0ec536948ced38ac67dec0d64c312264f7c",
         "type": "github"
       },
       "original": {
-        "owner": "rust-analyzer",
+        "owner": "rust-lang",
         "ref": "nightly",
         "repo": "rust-analyzer",
         "type": "github"
       }
     },
+    "substrate-submodule": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1666427951,
+        "narHash": "sha256-r86Wrc3Z8lAGAUvo5rMAywY+PwZ4io8N7SqtQCOUliI=",
+        "ref": "a06097555c3d811184a30bed85d1238eca4ae2d6",
+        "rev": "a06097555c3d811184a30bed85d1238eca4ae2d6",
+        "revCount": 3583,
+        "type": "git",
+        "url": "file:./hosts/substrate"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:./hosts/substrate"
+      }
+    },
     "utils": {
       "locked": {
-        "lastModified": 1623875721,
-        "narHash": "sha256-A8BU7bjS5GirpAUv4QA+QnJ4CceLHkcXdRp4xITDB0s=",
+        "lastModified": 1659877975,
+        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "f7e004a55b120c02ecb6219596820fcd32ca8772",
+        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
         "type": "github"
       },
       "original": {

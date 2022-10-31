@@ -1,6 +1,6 @@
-{ polkadot-tests, lib, naerskWasm }:
+{ polkadot-tests, lib, naersk }:
 
-naerskWasm.buildPackage {
+naersk.buildPackage {
   name = "substrate-adapter";
   inherit (polkadot-tests) version;
 
