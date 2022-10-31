@@ -8,7 +8,7 @@ buildGo118Module rec {
 
   proxyVendor = true;
 
-  vendorSha256 = "tOPORNYUQpUEOEE7MA58JgMEy6wExwzk7OusUMPE+rk=";
+  vendorSha256 = "nExywPbVXEsEsTJBPfzCYpxub21ZgIl23BxfIkrEpZ0=";
 
   nativeBuildInputs = [ patchelf ];
 

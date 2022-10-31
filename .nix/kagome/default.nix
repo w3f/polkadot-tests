@@ -34,6 +34,7 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./dependencies.patch
+    ./install.patch
     ./zstd.patch
   ];
 
@@ -77,8 +78,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [ "-DHUNTER_ENABLED=false" "-DTESTING=false" ];
 
-#  postInstall = ''
-#    mkdir $out/share
-#    cp -r $src/node/config $out/share
-#  '';
+  postInstall = ''
+    ln -s $out/bin/kagome/kagome $out/bin/${pname}
+  '';
 }
