@@ -111,7 +111,6 @@ target_link_libraries(kagome-adapter
   yaml-cpp
   scale::scale
   kagome::block_header_repository
-  kagome::buffer
   kagome::binaryen_instance_environment_factory
   kagome::binaryen_module_factory
   kagome::bip39_provider
