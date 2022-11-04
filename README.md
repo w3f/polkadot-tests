@@ -121,10 +121,10 @@ export CXX=g++-8
 
 ## Using Nix
 
-We provide full nix flake integration, but for most packages it is necessary to include git submodules for a successful build, i.e. using the `?submodules=1` suffix in the flake url:
+We provide nix flake integration, however due to the use of submodules, integration is a bit unreliable. To intialize the repo, after cloning it and its submodules, just run the following command:
 
 ```sh
-nix build github:w3f/polkadot-tests?submodules=1
+nix flake lock --update-input substrate-submodule --update-input kagome-submodule --update-input gossamer-submodule
 ```
 
 # Running tests

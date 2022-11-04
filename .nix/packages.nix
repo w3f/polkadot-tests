@@ -53,6 +53,7 @@ let
     };
     gossamer-adapter  = callPackage ../adapters/gossamer {
       inherit (sources) polkadot-tests;
+      inherit (sources) gossamer-submodule;
     };
 
     # Runtimes
