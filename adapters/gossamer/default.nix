@@ -1,10 +1,17 @@
-{ polkadot-tests, buildGo118Module, patchelf, glibc }:
+{ polkadot-tests, gossamer-submodule, buildGo118Module, patchelf, glibc }:
 
-buildGo118Module rec {
+let
+  modRoot = "adapters/gossamer";
+
+  postPatch = ''
+    substituteInPlace "${modRoot}/go.mod" --replace "../../hosts/gossamer" "${gossamer-submodule}"
+  '';
+in buildGo118Module rec {
   pname = "gossamer-adapter";
   inherit (polkadot-tests) src version;
 
-  modRoot = "adapters/gossamer";
+  inherit modRoot postPatch;
+  overrideModAttrs = _: { inherit postPatch; };
 
   proxyVendor = true;
 
