@@ -30,7 +30,7 @@ jobs:
     - name: Setup rust toolchain
       run: rustup show
     - name: Setup and cache sccache
-      uses: visvirial/sccache-action@v1.0.0
+      uses: visvirial/sccache-action@v1.0.1
       with:
         cache-key: sccache-host-substrate
     - name: Cache cargo registry and index
@@ -67,7 +67,7 @@ jobs:
     - name: Install gitpython
       run: sudo apt-get install -y python3-git
     - name: Setup and cache sccache
-      uses: visvirial/sccache-action@v1.0.0
+      uses: visvirial/sccache-action@v1.0.1
       with:
         cache-key: sccache-host-kagome
     - name: Build kagome host (with caching)
