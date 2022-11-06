@@ -1,8 +1,8 @@
 # Polkadot Conformance Testsuite
 
 [![License](https://img.shields.io/github/license/w3f/polkadot-tests.svg)](https://github.com/w3f/polkadot-tests/blob/main/LICENSE)
-[![Conformance Testsuite](https://github.com/w3f/polkadot-tests/workflows/conformance.yml/badge.svg)](https://github.com/w3f/polkadot-tests/actions/workflows/conformance.yml)
-[![Integration Testsuite](https://github.com/w3f/polkadot-tests/workflows/integration.yml/badge.svg)](https://github.com/w3f/polkadot-tests/actions/workflows/integration.yml)
+[![Conformance Testsuite](https://github.com/w3f/polkadot-tests/actions/workflows/conformance.yml/badge.svg)](https://github.com/w3f/polkadot-tests/actions/workflows/conformance.yml)
+[![Integration Testsuite](https://github.com/w3f/polkadot-tests/actions/workflows/integration.yml/badge.svg)](https://github.com/w3f/polkadot-tests/actions/workflows/integration.yml)
 [![Cachix Cache](https://img.shields.io/badge/cachix-polkadot--tests-blue.svg)](https://polkadot-tests.cachix.org)
 [![Nix Integration](https://github.com/w3f/polkadot-tests/actions/workflows/nix-flake.yml/badge.svg)](https://github.com/w3f/polkadot-tests/actions/workflows/nix-flake.yml)
 
