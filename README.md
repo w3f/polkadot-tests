@@ -1,8 +1,10 @@
 # Polkadot Conformance Testsuite
 
 [![License](https://img.shields.io/github/license/w3f/polkadot-tests.svg)](https://github.com/w3f/polkadot-tests/blob/main/LICENSE)
-[![Conformance Testsuite](https://github.com/w3f/polkadot-tests/workflows/Conformance%20Testsuite/badge.svg)](https://github.com/w3f/polkadot-tests/actions?query=workflow%3A%22Conformance+Testsuite%22)
-[![Integration Testsuite](https://github.com/w3f/polkadot-tests/workflows/Integration%20Testsuite/badge.svg)](https://github.com/w3f/polkadot-tests/actions?query=workflow%3A%22Integration+Testsuite%22)
+[![Conformance Testsuite](https://github.com/w3f/polkadot-tests/workflows/conformance.yml/badge.svg)](https://github.com/w3f/polkadot-tests/actions/workflows/conformance.yml)
+[![Integration Testsuite](https://github.com/w3f/polkadot-tests/workflows/integration.yml/badge.svg)](https://github.com/w3f/polkadot-tests/actions/workflows/integration.yml)
+[![Cachix Cache](https://img.shields.io/badge/cachix-polkadot--tests-blue.svg)](https://polkadot-tests.cachix.org)
+[![Nix Integration](https://github.com/w3f/polkadot-tests/actions/workflows/nix-flake.yml/badge.svg)](https://github.com/w3f/polkadot-tests/actions/workflows/nix-flake.yml)
 
 This repository contains specification tests of the different components of Polkadot, which are run against the different implementations (i.e in Rust, C++ and Golang) of Polkadot
 
