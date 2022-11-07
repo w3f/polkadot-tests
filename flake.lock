@@ -40,11 +40,11 @@
     "kagome-submodule": {
       "flake": false,
       "locked": {
-        "lastModified": 1666973806,
-        "narHash": "sha256-MXf2m47cu4S4ydGX23KYkElCLTSxyRFMvQzTZgBcE00=",
-        "ref": "dbee05c648f2c3440699e74fa38fbf7c4ce91ca0",
-        "rev": "dbee05c648f2c3440699e74fa38fbf7c4ce91ca0",
-        "revCount": 818,
+        "lastModified": 1667467061,
+        "narHash": "sha256-UmVf2cg1TlUhP5zga8dOjiutd/yrhmwtCwTKFg8dm2Y=",
+        "ref": "e47d231f8db01a04826f40016e7fff1c29e30d2e",
+        "rev": "e47d231f8db01a04826f40016e7fff1c29e30d2e",
+        "revCount": 821,
         "type": "git",
         "url": "file:./hosts/kagome"
       },

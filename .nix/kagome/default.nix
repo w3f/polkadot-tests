@@ -34,7 +34,6 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./dependencies.patch
-    ./install.patch
     ./zstd.patch
   ];
 
