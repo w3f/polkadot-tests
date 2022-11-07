@@ -1,4 +1,4 @@
-.PHONY: all substrate kagome gossamer sync sync-adapter-substrate sync-runtime-tester version clean
+.PHONY: all substrate kagome gossamer sync-substrate sync-adapter-substrate sync-runtime-tester sync-gossamer sync-adapter-gossamer version clean
 
 
 all: substrate kagome gossamer
@@ -23,7 +23,7 @@ gossamer:
 	chmod u+w ../lib/libwasmer.so
 
 
-sync: sync-adapter-substrate sync-runtime-tester sync-adapter-gossamer
+sync-substrate: sync-adapter-substrate sync-runtime-tester 
 
 sync-adapter-substrate:
 	cp substrate/Cargo.lock ../adapters/substrate/
@@ -32,6 +32,9 @@ sync-adapter-substrate:
 sync-runtime-tester:
 	cp substrate/Cargo.lock ../runtimes/tester
 	cargo metadata --manifest-path ../runtimes/tester/Cargo.toml --format-version 1 > /dev/null
+
+
+sync-gossamer: sync-adapter-gossamer
 
 sync-adapter-gossamer:
 	cd ../adapters/gossamer && go mod tidy
