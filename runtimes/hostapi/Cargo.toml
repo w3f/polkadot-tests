@@ -5,7 +5,7 @@ edition = "2018"
 build = "build.rs"
 
 [dependencies]
-sp-core            = { version = "6.0", default-features = false, optional = true }
+sp-core            = { version = "7.0", default-features = false, optional = true }
 parity-scale-codec = { version = "3.2", default-features = false, optional = true }
 
 [build-dependencies]
