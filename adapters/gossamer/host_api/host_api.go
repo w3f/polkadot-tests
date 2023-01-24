@@ -96,7 +96,7 @@ func ProcessHostApiCommand(args []string) {
 func executeHostApiTest(function string, inputs []string, environment, runtimePath string) error {
 	// Initialize storage
 	store := storage.NewTrieState(nil)
-	store.Set([]byte(":code"), []byte{})
+	store.Put([]byte(":code"), []byte{})
 
 	// Initialize runtime environment..
 	var rtm runtime.Instance
