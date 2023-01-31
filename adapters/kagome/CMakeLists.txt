@@ -111,30 +111,25 @@ target_link_libraries(kagome-adapter
   Boost::program_options
   yaml-cpp
   scale::scale
-  kagome::block_header_repository
+  kagome::blockchain
   kagome::binaryen_instance_environment_factory
   kagome::binaryen_module_factory
   kagome::bip39_provider
   kagome::chain_spec
-  kagome::changes_tracker
   kagome::core_api
   kagome::crypto_store
   kagome::ed25519_provider
   kagome::hasher
   kagome::host_api_factory
-  kagome::in_memory_storage
   kagome::key_file_storage
   kagome::log_configurator
   kagome::offchain_persistent_storage
   kagome::offchain_worker_pool
   kagome::pbkdf2_provider
-  kagome::polkadot_codec
-  kagome::polkadot_trie_factory
+  kagome::runtime_properties_cache
   kagome::sr25519_provider
   kagome::storage_code_provider
-  kagome::trie_serializer
-  kagome::trie_storage
-  kagome::trie_storage_backend
+  kagome::storage
   kagome::trie_storage_provider
   kagome::runtime_wavm
 )
