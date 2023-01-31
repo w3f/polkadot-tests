@@ -17,6 +17,7 @@
 , wavm
 , cpp-libp2p
 , boost-di
+, erasure-coding-crust
 , prometheus-cpp
 , schnorrkel-crust
 , libnsl
@@ -48,12 +49,10 @@ stdenv.mkDerivation rec {
     # Patched upstream dependencies
     backward-cpp_cmake
     gtest_cmake
-    rapidjson_cmake
 
     # Custom packaged dependencies
     boost-di
     jsonrpc-lean
-    prometheus-cpp
   ];
 
   propagatedBuildInputs = [
@@ -63,12 +62,15 @@ stdenv.mkDerivation rec {
     zstd
 
     binaryen_cmake
-    rocksdb_cmake
     libsecp256k1_cmake
     microsoft-gsl_cmake
+    rapidjson_cmake
+    rocksdb_cmake
     xxHash_cmake
 
     cpp-libp2p
+    erasure-coding-crust
+    prometheus-cpp
     scale-codec-cpp
     schnorrkel-crust
     soralog

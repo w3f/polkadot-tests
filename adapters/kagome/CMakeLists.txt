@@ -88,6 +88,7 @@ find_package(scale REQUIRED CONFIG)
 hunter_add_package(kagome)
 find_package(kagome REQUIRED CONFIG)
 
+get_target_property(kagome_INCLUDE_DIRS kagome::kagome INTERFACE_INCLUDE_DIRECTORIES)
 message(STATUS "Found kagome: ${kagome_INCLUDE_DIRS}")
 
 # Compile and link tester
