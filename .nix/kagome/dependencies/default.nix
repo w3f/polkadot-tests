@@ -36,6 +36,8 @@ in {
     inherit boost-di gtest_cmake microsoft-gsl_cmake soralog sqlite-modern-cpp tsl-hat-trie;
   };
 
+  erasure-coding-crust = callPackage ./erasure-coding-crust.nix {}; 
+
   jsonrpc-lean = callPackage ./jsonrpc-lean.nix {
     inherit rapidjson_cmake;
   };

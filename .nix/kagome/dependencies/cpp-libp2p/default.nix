@@ -17,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "cpp-libp2p";
-  version = "0.1.7";
+  version = "0.1.8";
 
   src = fetchFromGitHub {
     owner = "soramitsu";
     repo = "cpp-libp2p";
     rev = "v${version}";
-    sha256 = "toP3VnGs2HwfhpuQC94hSdPZXNFotYTzo1eRY33xfVg=";
+    sha256 = "1xsufDtYS7NO/KtSrUDJbbijSvy1TH2QQnC5Wh2lW/g=";
   };
 
   patches = [

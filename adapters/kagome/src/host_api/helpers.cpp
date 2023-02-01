@@ -42,6 +42,7 @@
 #include <kagome/runtime/module.hpp>
 #include <kagome/runtime/runtime_code_provider.hpp>
 #include <kagome/runtime/trie_storage_provider.hpp>
+#include <kagome/runtime/runtime_api/impl/runtime_properties_cache_impl.hpp>
 
 #include <kagome/runtime/binaryen/instance_environment_factory.hpp>
 #include <kagome/runtime/binaryen/module/module_factory_impl.hpp>
@@ -51,6 +52,8 @@
 #include <kagome/runtime/wavm/intrinsics/intrinsic_functions.hpp>
 #include <kagome/runtime/wavm/intrinsics/intrinsic_module.hpp>
 #include <kagome/runtime/wavm/module_factory_impl.hpp>
+
+#include <kagome/storage/spaces.hpp>
 
 #include <kagome/storage/changes_trie/impl/storage_changes_tracker_impl.hpp>
 
@@ -93,11 +96,15 @@ namespace helpers {
   using kagome::runtime::ModuleFactory;
   using kagome::runtime::RuntimeCodeProvider;
   using kagome::runtime::SingleModuleCache;
+  using kagome::runtime::RuntimePropertiesCacheImpl;
 
   namespace binaryen = kagome::runtime::binaryen;
   namespace wavm = kagome::runtime::wavm;
 
+  using kagome::storage::BufferStorage;
   using kagome::storage::InMemoryStorage;
+  using kagome::storage::Space;
+  using kagome::storage::SpacedStorage;
   using kagome::storage::changes_trie::StorageChangesTrackerImpl;
   using kagome::storage::trie::PolkadotCodec;
   using kagome::storage::trie::PolkadotTrieFactoryImpl;
@@ -142,6 +149,17 @@ namespace helpers {
     Buffer code_;
   };
 
+  class InMemorySpace : public SpacedStorage {
+    public:
+      InMemorySpace(std::shared_ptr<InMemoryStorage> s) : storage_(s) {}
+
+      std::shared_ptr<BufferStorage> getSpace(Space) override {
+        return storage_;
+      }
+    private:
+      std::shared_ptr<InMemoryStorage> storage_;
+  };
+
   // Default backend to use
   const RuntimeEnvironment::Backend RuntimeEnvironment::DEFAULT_BACKEND =
       RuntimeEnvironment::Backend::Binaryen;
@@ -154,9 +172,9 @@ namespace helpers {
 
     // Initialize storage and trie factory
     auto storage = std::make_shared<InMemoryStorage>();
+    auto space = std::make_shared<InMemorySpace>(storage);
 
-    auto storage_backend =
-        std::make_shared<TrieStorageBackendImpl>(storage, Buffer{});
+    auto storage_backend = std::make_shared<TrieStorageBackendImpl>(storage);
 
     auto trie_factory = std::make_shared<PolkadotTrieFactoryImpl>();
     auto codec = std::make_shared<PolkadotCodec>();
@@ -198,7 +216,7 @@ namespace helpers {
 
     // Initialize offchain storage and worker pool
     auto offchain_storage =
-        std::make_shared<OffchainPersistentStorageImpl>(storage);
+        std::make_shared<OffchainPersistentStorageImpl>(space);
     auto offchain_worker_pool = std::make_shared<OffchainWorkerPoolImpl>();
 
     // Initialize host api factory
@@ -216,7 +234,10 @@ namespace helpers {
 
     // Initialize header repo
     auto header_repo =
-        std::make_shared<BlockHeaderRepositoryImpl>(storage, hasher);
+        std::make_shared<BlockHeaderRepositoryImpl>(space, hasher);
+
+    // Initialize runtime property cache
+    auto prop_cache = std::make_shared<RuntimePropertiesCacheImpl>();
 
     // Initialize module factory (backend dependent)
     std::shared_ptr<ModuleFactory> module_factory;
@@ -230,10 +251,11 @@ namespace helpers {
                 serializer,
                 host_api_factory,
                 header_repo,
-                changes_tracker);
+                changes_tracker,
+                prop_cache);
 
         module_factory = std::make_shared<binaryen::ModuleFactoryImpl>(
-            instance_env_factory, trie_db);
+            instance_env_factory, trie_db, hasher);
       } break;
 
       case Backend::WAVM: {
@@ -258,14 +280,16 @@ namespace helpers {
                                                                host_api_factory,
                                                                header_repo,
                                                                changes_tracker,
-                                                               module_cache);
+                                                               module_cache,
+                                                               prop_cache);
 
         module_factory =
             std::make_shared<wavm::ModuleFactoryImpl>(compartment,
                                                       parameters,
                                                       instance_env_factory,
                                                       intrinsic_module,
-                                                      std::nullopt);
+                                                      std::nullopt,
+                                                      hasher);
       } break;
     };
 

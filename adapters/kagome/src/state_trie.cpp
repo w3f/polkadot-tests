@@ -53,6 +53,7 @@ using kagome::storage::InMemoryStorage;
 using kagome::storage::trie::PolkadotCodec;
 using kagome::storage::trie::PolkadotTrieFactoryImpl;
 using kagome::storage::trie::PolkadotTrieImpl;
+using kagome::storage::trie::StateVersion;
 using kagome::storage::trie::TrieSerializerImpl;
 using kagome::storage::trie::TrieStorageBackendImpl;
 using kagome::storage::trie::TrieStorageImpl;
@@ -147,8 +148,8 @@ std::pair<std::vector<Buffer>, std::vector<Buffer>> parseYamlStateFile(
 
 void processTrieCommand(const TrieCommandArgs &args) {
   // Initialize empty trie
-  auto backend = std::make_shared<TrieStorageBackendImpl>(
-      std::make_shared<InMemoryStorage>(), kagome::common::Buffer{});
+  auto storage = std::make_shared<InMemoryStorage>();
+  auto backend = std::make_shared<TrieStorageBackendImpl>(storage);
 
   auto trie_factory = std::make_shared<PolkadotTrieFactoryImpl>();
   auto codec = std::make_shared<PolkadotCodec>();
@@ -161,42 +162,47 @@ void processTrieCommand(const TrieCommandArgs &args) {
   auto empty = serializer->getEmptyRootHash();
   auto trie = trie_db->getPersistentBatchAt(empty).value();
 
+  // Configuration options
+  auto version = StateVersion::V0;
+
   // Execute requested command
   SubcommandRouter<std::vector<Buffer>, std::vector<Buffer>> router;
   router.addSubcommand(
       "insert-and-delete",
-      [&trie, &args](std::vector<Buffer> keys, std::vector<Buffer> values) {
+      [&trie, &version](std::vector<Buffer> keys, std::vector<Buffer> values) {
+
         for (auto keys_it = keys.begin(), values_it = values.begin();
              keys_it != keys.end();
              keys_it++, values_it++) {
-          auto res = trie->put(*keys_it, *values_it);
+          auto res = trie->put(*keys_it, values_it->view());
           BOOST_ASSERT_MSG(res, "Error inserting to Trie");
-          std::cout << "state root: " << hex_lower(trie->commit().value())
-                    << "\n";
+          std::cout << "state root: " << hex_lower(trie->commit(version).value())
+                    << std::endl;
         }
         // drop random nodes
         while (not keys.empty()) {
-          auto key_index_to_drop = trie->commit().value()[0] % keys.size();
+          auto key_index_to_drop = trie->commit(version).value()[0] % keys.size();
           auto key_to_drop = keys.begin();
           std::advance(key_to_drop, key_index_to_drop);
-          BOOST_ASSERT_MSG(trie->remove(*key_to_drop),
-                           "Error removing from Trie");
-          std::cout << "state root: " << hex_lower(trie->commit().value())
-                    << "\n";
+          auto res = trie->remove(*key_to_drop);
+          BOOST_ASSERT_MSG(res, "Error removing from Trie");
+          std::cout << "state root: " << hex_lower(trie->commit(version).value())
+                    << std::endl;
           keys.erase(key_to_drop);
         }
       });
   router.addSubcommand(
       "trie-root",
-      [&trie, &args](std::vector<Buffer> keys, std::vector<Buffer> values) {
+      [&trie, &version](std::vector<Buffer> keys, std::vector<Buffer> values) {
+
         for (auto keys_it = keys.begin(), values_it = values.begin();
              keys_it != keys.end();
              keys_it++, values_it++) {
-          BOOST_ASSERT_MSG(trie->put(*keys_it, *values_it),
-                           "Error inserting to Trie");
+          auto res = trie->put(*keys_it, values_it->view());
+          BOOST_ASSERT_MSG(res, "Error inserting to Trie");
         }
-        std::cout << "state root: " << hex_lower(trie->commit().value())
-                  << "\n";
+        std::cout << "state root: " << hex_lower(trie->commit(version).value())
+                  << std::endl;
       });
 
   auto [keys, values] = parseYamlStateFile(
