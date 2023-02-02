@@ -17,16 +17,6 @@
 
 ///This file is an interface to run various Polkadot Host functions
 
-//extern crate clap;
-//extern crate base64;
-//extern crate data_encoding;
-
-// For Polkadot Host API
-//extern crate hex;
-//extern crate sc_executor;
-//extern crate sp_core;
-//extern crate sp_state_machine;
-
 use clap::command;
 
 // Fixture sub-adapters
