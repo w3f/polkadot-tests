@@ -39,8 +39,8 @@
 
         # Intialize rust toolchain based on toolchain file
         rustToolchain = fenix.packages.${system}.fromToolchainFile {
-      	  file = ./rust-toolchain.toml;
-      	  sha256 = "9+zeT1DZM0WEs3FoHnzVh7XRHiT4Xc7IWZnYOJFGYF8=";
+          file = ./rust-toolchain.toml;
+          sha256 = "R6uGJG/aH25t3CEXyD28m4b7HRYvjtCqzRtfBqIFfi4=";
         };
 
         naerskToolchain = naersk.lib.${system}.override {

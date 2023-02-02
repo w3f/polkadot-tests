@@ -1,11 +1,7 @@
 [package]
 name = 'tester-runtime'
-version = "0.9.31-40aefb4"
-edition = '2021'
-resolver = "2"
-
-[profile.release]
-panic = 'unwind'
+version.workspace = true 
+edition.workspace = true
 
 
 [dependencies.hex]

@@ -1,7 +1,8 @@
 [package]
 name = "substrate-adapter"
-version = "0.9.31-40aefb4"
+version = "0.9.31-f0e1ed0"
 edition = "2021"
+rust-version = "1.64.0"
 
 [dependencies]
 base64        = "0.13"
@@ -21,16 +22,10 @@ hash-db        = "0.15"
 trie-db        = "0.23"
 trie-root      = "0.17"
 
-# state-trie blake2 hashing (TODO: Use substrate implementation?)
-sp-serializer      = { git = "https://github.com/paritytech/substrate", branch = "master" }
-primitive-types    = { version = "0.2",  default-features = false, features = ["codec"] }
-hash256-std-hasher = { version = "0.12", default-features = false }
-blake2-rfc         = "*"
-
 # host-api
-sp-core            = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-io              = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sc-executor        = { git = "https://github.com/paritytech/substrate", branch = "master", features = ["wasmtime"] }
-sc-executor-common = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-keystore        = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-state-machine   = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sp-core            = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
+sp-io              = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
+sc-executor        = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
+sc-executor-common = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
+sp-keystore        = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
+sp-state-machine   = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }

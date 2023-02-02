@@ -31,7 +31,7 @@ pub use sp_runtime::{Permill, Perbill};
 pub use frame_support::{
 	construct_runtime, parameter_types, storage_root, runtime_print,
 	traits::{KeyOwnerProofSystem, Randomness},
-	weights::{Weight, RuntimeDbWeight, constants::WEIGHT_PER_SECOND},
+	weights::{Weight, RuntimeDbWeight, constants::WEIGHT_REF_TIME_PER_SECOND},
 };
 
 /// An index to a block.
@@ -133,7 +133,10 @@ parameter_types! {
 
 	/// We allow for 2 seconds of compute with a 6 second average block time.
 	pub BlockWeights: system::limits::BlockWeights = system::limits::BlockWeights
-		::with_sensible_defaults(WEIGHT_PER_SECOND.saturating_mul(2), NORMAL_DISPATCH_RATIO);
+		::with_sensible_defaults(
+			Weight::from_parts(2u64 * WEIGHT_REF_TIME_PER_SECOND, u64::MAX),
+			NORMAL_DISPATCH_RATIO
+		);
 
 	pub BlockLength: system::limits::BlockLength = system::limits::BlockLength
 		::max_with_normal_ratio(5 * 1024 * 1024, NORMAL_DISPATCH_RATIO);
@@ -259,6 +262,8 @@ impl grandpa::Config for Runtime {
 
 	type WeightInfo = ();
 	type MaxAuthorities = MaxAuthorities;
+
+	//type MaxSetIdSessionEntries = frame_support::traits::ConstU64<0>;
 }
 
 parameter_types! {
