@@ -17,7 +17,7 @@ buildGo118Module rec {
 
   proxyVendor = true;
 
-  vendorSha256 = "eJTKhwA0Q0ZA0ntjJ8BQTBbnrX6e3G7n9hs3K0nF8dE=";
+  vendorSha256 = "znCC5xkOzZzuy541MOtHK0J02eRU9zWwrKFKDpof30c=";
 
   subPackages = [ "cmd/gossamer" ];
 

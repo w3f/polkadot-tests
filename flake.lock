@@ -24,11 +24,11 @@
     "gossamer-submodule": {
       "flake": false,
       "locked": {
-        "lastModified": 1674074162,
-        "narHash": "sha256-Ip/LKJShnbXBiaRMZm1e25UGRSIv+y18fScuZjSSRFw=",
-        "ref": "043f5eb77f0468f61e5721b8833b032df9f84562",
-        "rev": "043f5eb77f0468f61e5721b8833b032df9f84562",
-        "revCount": 1512,
+        "lastModified": 1674836942,
+        "narHash": "sha256-DxT3DMwMChiNFSMBpCuKc7eA0Vri95zdnBKuO2nDZA8=",
+        "ref": "c9587208c74bad29b40163dbbbfc0a986d930ce2",
+        "rev": "c9587208c74bad29b40163dbbbfc0a986d930ce2",
+        "revCount": 1532,
         "type": "git",
         "url": "file:./hosts/gossamer"
       },
