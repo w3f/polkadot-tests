@@ -117,11 +117,11 @@
     "substrate-submodule": {
       "flake": false,
       "locked": {
-        "lastModified": 1667651155,
-        "narHash": "sha256-5mbKqTW/vJNZZ56W0EHyiqKEfQTWUXQQF1eCmRbEGpo=",
-        "ref": "40aefb4ac396bcd098755c6d57dac7b284a343e7",
-        "rev": "40aefb4ac396bcd098755c6d57dac7b284a343e7",
-        "revCount": 3602,
+        "lastModified": 1675033036,
+        "narHash": "sha256-/GBw0VBpFxTnl6NVnXC8UDWIgTNCvuTVObUWaCfpN0o=",
+        "ref": "f0e1ed0bab6d5cb542b84fa0ad464609198dd255",
+        "rev": "f0e1ed0bab6d5cb542b84fa0ad464609198dd255",
+        "revCount": 3789,
         "type": "git",
         "url": "file:./hosts/substrate"
       },
